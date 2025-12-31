@@ -4,8 +4,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// The keybinds for a player to move around.
 /// </summary>
-[System.Serializable]
-public struct PlayerKeybinds
+public class PlayerKeybinds
 {
     /// <summary>
     /// Up.

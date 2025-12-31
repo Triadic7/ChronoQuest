@@ -101,6 +101,12 @@ public class InputManager : MonoBehaviour
         Vector2 movement = Vector2.zero;
         Keyboard keyboard = Keyboard.current;
 
+        // Check for null keyboard.
+        if (keyboard == null)
+        {
+            return;
+        }
+
         // Up.
         if (keyboard[playerKeybinds.up].isPressed)
         {

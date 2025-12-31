@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditorInternal.ReorderableList;
 
 /// <summary>
 /// Manages player settings like keybinds and music volume.
@@ -43,9 +44,40 @@ public class SettingsManager : MonoBehaviour
         this.playerTwoKeybinds = p2;
 
         // Save keybinds to db.
+        SaveKeybinds();
 
         // Fire event.
         OnKeybindsUpdated?.Invoke(p1, p2);
+    }
+
+    // Resets keybinds to default.
+    public void ResetKeybinds()
+    {
+        // Deletes player prefs for keybinds.
+        PlayerPrefs.DeleteAll();
+
+        // Sets default keybinds.
+        playerOneKeybinds = new PlayerKeybinds
+        {
+            up = Key.W,
+            down = Key.S,
+            left = Key.A,
+            right = Key.D
+        };
+
+        playerTwoKeybinds = new PlayerKeybinds
+        {
+            up = Key.UpArrow,
+            down = Key.DownArrow,
+            left = Key.LeftArrow,
+            right = Key.RightArrow
+        };
+
+        // Save keybinds.
+        SaveKeybinds();
+
+        // Fire event.
+        OnKeybindsUpdated?.Invoke(playerOneKeybinds, playerTwoKeybinds);
     }
 
     /// <summary>
@@ -94,50 +126,48 @@ public class SettingsManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Converts database model into keybinds.
+    /// Saves both players' keybinds to the database.
     /// </summary>
-    /// <param name="save">The database model.</param>
-    /// <param name="defaultKeybinds">The default keybinds.</param>
-    /// <returns>Returns keybinds.</returns>
-    private PlayerKeybinds ConvertToKeybinds(PlayerKeybindsSave save, PlayerKeybinds defaultKeybinds)
+    private void SaveKeybinds()
     {
-        // Returns either saved keys or default values.
-        return new PlayerKeybinds
-        {
-            up = ParseOrDefault(save.Up, defaultKeybinds.up),
-            down = ParseOrDefault(save.Down, defaultKeybinds.down),
-            left = ParseOrDefault(save.Left, defaultKeybinds.left),
-            right = ParseOrDefault(save.Right, defaultKeybinds.right)
-        };
+        SavePlayer(1, playerOneKeybinds);
+        SavePlayer(2, playerTwoKeybinds);
+
+        PlayerPrefs.Save();
+    }
+
+    /// <summary>
+    /// Saves player keybinds.
+    /// </summary>
+    /// <param name="playerId">Player id.</param>
+    /// <param name="binds">The keybinds.</param>
+    private void SavePlayer(int playerId, PlayerKeybinds binds)
+    {
+        // Prefix.
+        string prefix = $"P{playerId}_";
+
+        PlayerPrefs.SetString(prefix + "Up", binds.up.ToString());
+        PlayerPrefs.SetString(prefix + "Down", binds.down.ToString());
+        PlayerPrefs.SetString(prefix + "Left", binds.left.ToString());
+        PlayerPrefs.SetString(prefix + "Right", binds.right.ToString());
     }
 
     /// <summary>
     /// Loads player keybinds based on player id.
     /// </summary>
     /// <param name="playerId">The players id.</param>
-    /// <param name="defaultKeys">Default keybinds for player.</param>
-    private PlayerKeybinds LoadPlayerKeybinds(int playerId, PlayerKeybinds defaultKeys)
+    /// <param name="defaults">Default keybinds for player.</param>
+    private PlayerKeybinds LoadPlayerKeybinds(int playerId, PlayerKeybinds defaults)
     {
-        // Gets db connection and loads keybinds from player id.
-        SQLHandler sql = new SQLHandler();
-        PlayerKeybindsSave loaded = sql.LoadKeybinds(playerId);
+        string prefix = $"P{playerId}_";
 
-        // If player keybinds arent found, use default keys.
-        if (loaded == null)
+        return new PlayerKeybinds
         {
-            loaded = new PlayerKeybindsSave
-            {
-                PlayerId = playerId,
-                Up = defaultKeys.up.ToString(),
-                Down = defaultKeys.down.ToString(),
-                Left = defaultKeys.left.ToString(),
-                Right = defaultKeys.right.ToString()
-            };
-            sql.SaveKeybinds(loaded);
-        }
-
-        // Converts and returns player keybinds.
-        return ConvertToKeybinds(loaded, defaultKeys);
+            up = ParseOrDefault(PlayerPrefs.GetString(prefix + "Up"), defaults.up),
+            down = ParseOrDefault(PlayerPrefs.GetString(prefix + "Down"), defaults.down),
+            left = ParseOrDefault(PlayerPrefs.GetString(prefix + "Left"), defaults.left),
+            right = ParseOrDefault(PlayerPrefs.GetString(prefix + "Right"), defaults.right)
+        };
     }
 
 }
