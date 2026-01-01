@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// The class for managing the game for things like settings and game events.
@@ -35,6 +36,11 @@ public class GameManager : MonoBehaviour
     /// On Game ready.
     /// </summary>
     public event Action OnGameInitialized;
+
+    /// <summary>
+    /// On game paused.
+    /// </summary>
+    public event Action OnGamePaused;
 
     /// <summary>
     /// On dialogue start.
@@ -73,6 +79,43 @@ public class GameManager : MonoBehaviour
     private TalkMenu talkMenu;
 
     /// <summary>
+    /// If the game is paused.
+    /// </summary>
+    public bool IsPaused { get; private set; }
+
+    /// <summary>
+    /// Resumes game.
+    /// </summary>
+    public void ResumeGame()
+    {
+        // Return if game not paused.
+        if (!this.IsPaused)
+        {
+            return;
+        }
+
+        this.IsPaused = false;
+        Time.timeScale = 1f;
+        this.UIManager.CloseMenu("PauseMenu");
+    }
+
+    /// <summary>
+    /// Quits to main menu.
+    /// </summary>
+    public void QuitToMainMenu()
+    {
+        // Checks if game is paused and resumes time scale.
+        if (this.IsPaused)
+        {
+            this.IsPaused = false;
+            Time.timeScale = 1f;
+        }
+
+        // Opens main menu.
+        this.UIManager.OpenMenu("MainMenu");
+    }
+
+    /// <summary>
     /// Fires once before start.
     /// </summary>
     private void Awake()
@@ -89,19 +132,19 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         // Get settings manager.
-        Settings = GetComponent<SettingsManager>();
+        this.Settings = GetComponent<SettingsManager>();
 
         // Get UI manager.
-        UIManager = GetComponent<UIManager>();
+        this.UIManager = GetComponent<UIManager>();
 
         // Get save manager.
-        SaveManager = GetComponent<SaveManager>();
+        this.SaveManager = GetComponent<SaveManager>();
 
         // Get scene manager.
-        GameStageManager = GetComponent<GameStageManager>();
+        this.GameStageManager = GetComponent<GameStageManager>();
 
         // Checks if settings are null.
-        if (Settings == null)
+        if (this.Settings == null)
         {
             Debug.LogError("GameManager requires a SettingsManager component.");
             return;
@@ -111,16 +154,19 @@ public class GameManager : MonoBehaviour
         this.loadMenu = FindAnyObjectByType<LoadMenu>();
         this.talkMenu = FindAnyObjectByType<TalkMenu>();
 
-        if (this.loadMenu == null || this.talkMenu == null) 
+        InputManager inputManager = FindAnyObjectByType<InputManager>();
+
+        if (this.loadMenu == null || this.talkMenu == null || inputManager == null) 
         {
-            Debug.LogError("Missing a menu.");
+            Debug.LogError("Missing a menu or input manager.");
             return;
         }
 
         // Adds event listners.
         this.loadMenu.OnGamePlayButtonHit += StartGame;
         this.talkMenu.OnDialogueFinished += OnDialogueFinished;
-        GameStageManager.OnStageFinished += OnStageFinished;
+        inputManager.OnPause += PauseGame;
+        this.GameStageManager.OnStageFinished += OnStageFinished;
     }
 
     /// <summary>
@@ -130,8 +176,41 @@ public class GameManager : MonoBehaviour
     private void StartGame(SaveModel save)
     {
         Debug.Log($"StartGame called for save: {save.Id}");
-        CurrentSave = save;
-        ChangeState(GameState.Dialogue);
+        this.CurrentSave = save;
+        this.ChangeState(GameState.Dialogue);
+    }
+
+    /// <summary>
+    /// Toggles pause on the game.
+    /// </summary>
+    private void PauseGame()
+    {
+        // Only pause during gameplay.
+        if (this.State != GameState.Gameplay)
+        {
+            return;
+        }
+
+        // Toggles the pause if already paused.
+        if (this.IsPaused)
+        {
+            this.ResumeGame();
+        }
+        else
+        {
+            this.DoPause();
+        }
+    }
+
+    /// <summary>
+    /// Sends event to pause game.
+    /// </summary>
+    private void DoPause()
+    {
+        this.IsPaused = true;
+        Time.timeScale = 0f;
+        this.OnGamePaused?.Invoke();
+        this.UIManager.OpenMenu("PauseMenu");
     }
 
     /// <summary>
@@ -139,13 +218,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void OnDialogueFinished()
     {
-        if (State == GameState.Dialogue)
+        if (this.State == GameState.Dialogue)
         {
-            ChangeState(GameState.Gameplay);
+            this.ChangeState(GameState.Gameplay);
         }
-        else if (State == GameState.Gameplay)
+        else if (this.State == GameState.Gameplay)
         {
-            AdvanceStageOrEnd();
+            this.AdvanceStageOrEnd();
         }
     }
 
@@ -154,7 +233,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void OnStageFinished()
     {
-        ChangeState(GameState.Dialogue);
+        this.ChangeState(GameState.Dialogue);
     }
 
     /// <summary>
@@ -164,27 +243,27 @@ public class GameManager : MonoBehaviour
     private void ChangeState(GameState newState)
     {
         Debug.Log($"Changing state from {State} to {newState}");
-        State = newState;
+        this.State = newState;
 
-        switch (State)
+        switch (this.State)
         {
             case GameState.MainMenu:
-                UIManager.OpenMenu("MainMenu");
+                this.UIManager.OpenMenu("MainMenu");
                 break;
 
             case GameState.Dialogue:
                 NPCModel currentNpc = SaveManager.DataContext.GetNPCFromStage(CurrentSave.StageId);
-                OnDialogueStart?.Invoke(currentNpc, CurrentSave.Stage.StageName);
-                UIManager.OpenMenu("TalkMenu");
+                this.OnDialogueStart?.Invoke(currentNpc, CurrentSave.Stage.StageName);
+                this.UIManager.OpenMenu("TalkMenu");
                 break;
 
             case GameState.Gameplay:
-                UIManager.CloseMenu("TalkMenu");
-                GameStageManager.StartGame(this.CurrentSave.StageId);
+                this.UIManager.CloseMenu("TalkMenu");
+                this.GameStageManager.StartGame(this.CurrentSave.StageId);
                 break;
 
             case GameState.Ending:
-                UIManager.OpenMenu("EndMenu");
+                this.UIManager.OpenMenu("EndMenu");
                 break;
         }
     }
@@ -195,23 +274,22 @@ public class GameManager : MonoBehaviour
     private void AdvanceStageOrEnd()
     {
         // Checks if stage is the final one.
-        if (CurrentSave.Stage.IsFinalStage)
+        if (this.CurrentSave.Stage.IsFinalStage)
         {
-            ChangeState(GameState.Ending);
+            this.ChangeState(GameState.Ending);
             return;
         }
 
         // Changes current stage to the next one.
-        CurrentSave.StageId = CurrentSave.Stage.StageId + 1;
-        CurrentSave.Stage = SaveManager.DataContext.GetStageById(CurrentSave.StageId);
+        this.CurrentSave.StageId = CurrentSave.Stage.StageId + 1;
+        this.CurrentSave.Stage = SaveManager.DataContext.GetStageById(CurrentSave.StageId);
 
         // Saves progress after stage.
-        SaveManager.SaveProgress(CurrentSave);
+        this.SaveManager.SaveProgress(CurrentSave);
 
         // Change state to next dialogue.
-        ChangeState(GameState.Dialogue);
+        this.ChangeState(GameState.Dialogue);
     }
-
 
     /// <summary>
     /// On start.
@@ -219,7 +297,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         this.OnGameInitialized?.Invoke();
-        LoadMenu();
+        this.LoadMenu();
     }
 
     /// <summary>
@@ -227,6 +305,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void LoadMenu()
     {
-        UIManager.OpenMenu("MainMenu");
+        this.UIManager.OpenMenu("MainMenu");
     }
 }

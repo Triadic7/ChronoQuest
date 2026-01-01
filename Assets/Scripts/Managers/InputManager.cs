@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,11 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class InputManager : MonoBehaviour
 {
+    /// <summary>
+    /// Event that gets fired when the player pauses.
+    /// </summary>
+    public event Action OnPause;
+
     /// <summary>
     /// Player one GameObject.
     /// </summary>
@@ -45,6 +51,14 @@ public class InputManager : MonoBehaviour
     private Rigidbody2D playerTwoRb;
 
     /// <summary>
+    /// Sends event for gamemanegr to pause game.
+    /// </summary>
+    public void PauseGame()
+    {
+        this.OnPause?.Invoke();
+    }
+
+    /// <summary>
     /// Fires once at game start.
     /// </summary>
     private void Start()
@@ -80,7 +94,26 @@ public class InputManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates every frame to manage input.
+    /// Updates every frame to handle input.
+    /// </summary>
+    private void Update()
+    {
+        // Gets keyboard.
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard == null)
+        {
+            return;
+        }
+
+        // Pause pressed.
+        if (keyboard.escapeKey.wasPressedThisFrame)
+        {
+            this.PauseGame();
+        }
+    }
+
+    /// <summary>
+    /// Updates every frame to manage physics.
     /// </summary>
     private void FixedUpdate()
     {
