@@ -41,7 +41,7 @@ public class SavePreview : MonoBehaviour
     /// The button to toggle coop or singleplayer.
     /// </summary>
     [SerializeField]
-    private Button toggleCoopButton;
+    private Toggle toggleCoop;
 
     /// <summary>
     /// The button to delete a save.
@@ -91,6 +91,9 @@ public class SavePreview : MonoBehaviour
             this.locationText.text = save.Stage.StageName;
             this.objectiveText.text = save.Stage.ObjectiveText;
             this.coopText.text = save.IsCoop ? "Coop" : "Singleplayer";
+
+            // Set isCoop for UI toggle.
+            this.isCoop = save.IsCoop;
         }
         else
         {
@@ -112,16 +115,9 @@ public class SavePreview : MonoBehaviour
         {
             save = new SaveModel(1, 0, isCoop);
         }
-        this.OnPlayButtonHit?.Invoke(this.save);
-    }
 
-    /// <summary>
-    /// Toggles coop button and updates text.
-    /// </summary>
-    private void CoopToggle()
-    {
-        this.isCoop = !this.isCoop;
-        this.coopText.text = this.isCoop ? "Coop" : "Singleplayer";
+        save.IsCoop = isCoop;
+        this.OnPlayButtonHit?.Invoke(this.save);
     }
 
     /// <summary>
@@ -181,36 +177,27 @@ public class SavePreview : MonoBehaviour
     private void Awake()
     {
         // Cache coop text.
-        this.coopText = toggleCoopButton.GetComponentInChildren<TMP_Text>();
+        this.coopText = toggleCoop.GetComponentInChildren<TMP_Text>();
 
         if(this.coopText == null)
         {
             Debug.LogError("No coop text found under button.");
             return;
         }
-    }
 
-    /// <summary>
-    /// Add event listeners.
-    /// </summary>
-    private void OnEnable()
-    {
+        // Add event listeners.
         this.playButton.onClick.AddListener(this.PlaySave);
-        this.toggleCoopButton.onClick.AddListener(this.CoopToggle);
+
+        // Toggle for coop.
+        toggleCoop.onValueChanged.AddListener((value) =>
+        {
+            this.isCoop = value;
+            this.coopText.text = this.isCoop ? "Coop" : "Singleplayer";
+            Debug.Log("Coop toggled to: " + this.isCoop);
+        });
+
         this.deleteButton.onClick.AddListener(this.ShowDeleteConfirm);
         this.cancelButton.onClick.AddListener(this.CancelDeleteButton);
         this.confirmDeleteButton.onClick.AddListener(this.DeleteSave);
-    }
-
-    /// <summary>
-    /// Remove event listeners.
-    /// </summary>
-    private void OnDisable()
-    {
-        this.playButton.onClick.RemoveListener(this.PlaySave);
-        this.toggleCoopButton.onClick.RemoveListener(this.CoopToggle);
-        this.deleteButton.onClick.RemoveListener(this.ShowDeleteConfirm);
-        this.cancelButton.onClick.RemoveListener(this.CancelDeleteButton);
-        this.confirmDeleteButton.onClick.RemoveListener(this.DeleteSave);
     }
 }

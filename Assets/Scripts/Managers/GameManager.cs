@@ -53,6 +53,11 @@ public class GameManager : MonoBehaviour
     public event Action OnStageStart;
 
     /// <summary>
+    /// On game start, event that's fired for coop.
+    /// </summary>
+    public event Action<bool> OnGameStartMultiplayer;
+
+    /// <summary>
     /// On game stage start.
     /// </summary>
     public event Action OnStageEnd;
@@ -277,6 +282,7 @@ public class GameManager : MonoBehaviour
             case GameState.Gameplay:
                 this.UIManager.CloseMenu("TalkMenu");
                 this.OnStageStart?.Invoke();
+                this.OnGameStartMultiplayer?.Invoke(this.CurrentSave.IsCoop);
                 this.GameStageManager.StartGame(this.CurrentSave.StageId);
                 break;
 
