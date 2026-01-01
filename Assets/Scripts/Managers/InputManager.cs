@@ -67,7 +67,7 @@ public class InputManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             SettingsManager settingsManager = GameManager.Instance.Settings;
-            settingsManager.OnKeybindsUpdated += SetPlayerKeybinds;
+            settingsManager.OnKeybindsUpdated += this.SetPlayerKeybinds;
 
             // Set keybinds.
             this.playerOneKeybinds = settingsManager.PlayerOneKeybinds;

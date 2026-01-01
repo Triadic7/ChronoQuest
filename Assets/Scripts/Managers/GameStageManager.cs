@@ -28,7 +28,7 @@ public class GameStageManager : MonoBehaviour
     {
         if(gameId == 1)
         {
-            this.currentGame = patternMinigame;
+            this.currentGame = this.patternMinigame;
         }
         this.currentGame.StartGame();
     }

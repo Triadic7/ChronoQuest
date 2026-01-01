@@ -43,6 +43,21 @@ public class GameManager : MonoBehaviour
     public event Action OnGamePaused;
 
     /// <summary>
+    /// On game resumed.
+    /// </summary>
+    public event Action OnGameResumed;
+
+    /// <summary>
+    /// On game stage start.
+    /// </summary>
+    public event Action OnStageStart;
+
+    /// <summary>
+    /// On game stage start.
+    /// </summary>
+    public event Action OnStageEnd;
+
+    /// <summary>
     /// On dialogue start.
     /// </summary>
     public event Action<NPCModel, string> OnDialogueStart;
@@ -96,6 +111,7 @@ public class GameManager : MonoBehaviour
 
         this.IsPaused = false;
         Time.timeScale = 1f;
+        this.OnGameResumed?.Invoke();
         this.UIManager.CloseMenu("PauseMenu");
     }
 
@@ -163,10 +179,10 @@ public class GameManager : MonoBehaviour
         }
 
         // Adds event listners.
-        this.loadMenu.OnGamePlayButtonHit += StartGame;
-        this.talkMenu.OnDialogueFinished += OnDialogueFinished;
-        inputManager.OnPause += PauseGame;
-        this.GameStageManager.OnStageFinished += OnStageFinished;
+        this.loadMenu.OnGamePlayButtonHit += this.StartGame;
+        this.talkMenu.OnDialogueFinished += this.OnDialogueFinished;
+        inputManager.OnPause += this.PauseGame;
+        this.GameStageManager.OnStageFinished += this.OnStageFinished;
     }
 
     /// <summary>
@@ -233,6 +249,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void OnStageFinished()
     {
+        this.OnStageEnd?.Invoke();
         this.ChangeState(GameState.Dialogue);
     }
 
@@ -252,13 +269,14 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Dialogue:
-                NPCModel currentNpc = SaveManager.DataContext.GetNPCFromStage(CurrentSave.StageId);
-                this.OnDialogueStart?.Invoke(currentNpc, CurrentSave.Stage.StageName);
+                NPCModel currentNpc = this.SaveManager.DataContext.GetNPCFromStage(CurrentSave.StageId);
+                this.OnDialogueStart?.Invoke(currentNpc, this.CurrentSave.Stage.StageName);
                 this.UIManager.OpenMenu("TalkMenu");
                 break;
 
             case GameState.Gameplay:
                 this.UIManager.CloseMenu("TalkMenu");
+                this.OnStageStart?.Invoke();
                 this.GameStageManager.StartGame(this.CurrentSave.StageId);
                 break;
 

@@ -39,8 +39,8 @@ public class MainMenu : Menu
         // Adds events for menu buttons.
         if(uIManager != null)
         {
-            settingsButton.onClick.AddListener(() => uIManager.OpenMenu("SettingsMenu"));
-            loadButton.onClick.AddListener(() => uIManager.OpenMenu("LoadMenu"));
+            this.settingsButton.onClick.AddListener(() => uIManager.OpenMenu("SettingsMenu"));
+            this.loadButton.onClick.AddListener(() => uIManager.OpenMenu("LoadMenu"));
         }
         else
         {
