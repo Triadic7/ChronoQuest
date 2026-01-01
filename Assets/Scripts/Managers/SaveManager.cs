@@ -21,17 +21,37 @@ public class SaveManager : MonoBehaviour
     {
         if (save.Id == 0)
         {
-            save.Id = DataContext.InsertSave(save);
+            save.Id = this.DataContext.InsertSave(save);
+            this.PlayerSaves.Add(save);
         }
         else
         {
-            DataContext.UpdateSave(save);
+            this.DataContext.UpdateSave(save);
         }
 
         // Make sure the Stage object is set using StageId.
-        save.Stage = DataContext.GetStageById(save.StageId);
+        save.Stage = this.DataContext.GetStageById(save.StageId);
 
         return save;
+    }
+
+    /// <summary>
+    /// Deletes a save.
+    /// </summary>
+    /// <param name="save">The save to delete.</param>
+    public void DeleteSave(SaveModel save)
+    {
+        if (save == null)
+        {
+            Debug.LogError("No save provided to delete.");
+            return;
+        }
+
+        // Delete from DB.
+        this.DataContext.DeleteSave(save.Id);
+
+        // Refresh saves list from DB.
+        this.PlayerSaves = this.DataContext.GetAllSaves();
     }
 
     /// <summary>
@@ -41,7 +61,7 @@ public class SaveManager : MonoBehaviour
     {
         // Load save from sql handler.
         this.DataContext = new DataContext();
-        this.PlayerSaves = DataContext.GetAllSaves();
+        this.PlayerSaves = this.DataContext.GetAllSaves();
     }
 
 

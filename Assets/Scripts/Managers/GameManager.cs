@@ -250,7 +250,7 @@ public class GameManager : MonoBehaviour
     private void OnStageFinished()
     {
         this.OnStageEnd?.Invoke();
-        this.ChangeState(GameState.Dialogue);
+        this.AdvanceStageOrEnd();
     }
 
     /// <summary>
@@ -291,21 +291,27 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void AdvanceStageOrEnd()
     {
-        // Checks if stage is the final one.
-        if (this.CurrentSave.Stage.IsFinalStage)
+        // Store to check if stage exists.
+        int nextStageId = this.CurrentSave.StageId + 1;
+
+        // Check if the next stage exists.
+        StageModel nextStage = SaveManager.DataContext.GetStageById(nextStageId);
+
+        // If no next stage, end game.
+        if (nextStage == null)
         {
             this.ChangeState(GameState.Ending);
             return;
         }
 
-        // Changes current stage to the next one.
-        this.CurrentSave.StageId = CurrentSave.Stage.StageId + 1;
-        this.CurrentSave.Stage = SaveManager.DataContext.GetStageById(CurrentSave.StageId);
+        // Otherwise advance normally.
+        this.CurrentSave.StageId = nextStageId;
+        this.CurrentSave.Stage = nextStage;
 
-        // Saves progress after stage.
+        // Save progress.
         this.SaveManager.SaveProgress(CurrentSave);
 
-        // Change state to next dialogue.
+        // Go to next dialogue.
         this.ChangeState(GameState.Dialogue);
     }
 

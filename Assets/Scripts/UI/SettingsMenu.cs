@@ -97,8 +97,8 @@ public class SettingsMenu : Menu
     /// </summary>
     public void ResetKeybinds()
     {
-        settingsManager.ResetKeybinds();
-        DisplayKeybinds();
+        this.settingsManager.ResetKeybinds();
+        this.DisplayKeybinds();
     }
 
     /// <summary>
@@ -110,21 +110,21 @@ public class SettingsMenu : Menu
     private void StartRebindKey(string player, string action, TMP_Text textLabel)
     {
         // Only one key at a time.
-        if (waitingForKey)
+        if (this.waitingForKey)
         {
             return;
         }
 
         // Sets waiting and current player.
-        waitingForKey = true;
-        currentPlayer = player;
-        currentAction = action;
-        currentTextToUpdate = textLabel;
+        this.waitingForKey = true;
+        this.currentPlayer = player;
+        this.currentAction = action;
+        this.currentTextToUpdate = textLabel;
 
         // Store original color if not already stored.
-        if (!originalColors.ContainsKey(textLabel))
+        if (!this.originalColors.ContainsKey(textLabel))
         {
-            originalColors[textLabel] = textLabel.color;
+            this.originalColors[textLabel] = textLabel.color;
         }
 
         // Displays text to prompt user input.
@@ -139,25 +139,25 @@ public class SettingsMenu : Menu
     /// <returns>Returns true if key is already bound.</returns>
     private bool IsKeyAlreadyBound(Key key)
     {
-        var p1 = settingsManager.PlayerOneKeybinds;
-        var p2 = settingsManager.PlayerTwoKeybinds;
+        var p1 = this.settingsManager.PlayerOneKeybinds;
+        var p2 = this.settingsManager.PlayerTwoKeybinds;
 
         // Only check other keys, skip the one we're rebinding.
-        if (currentPlayer == "PlayerOne")
+        if (this.currentPlayer == "PlayerOne")
         {
-            if (currentAction != "up" && key == p1.up)
+            if (this.currentAction != "up" && key == p1.up)
             {
                 return true;
             }
-            if (currentAction != "down" && key == p1.down)
+            if (this.currentAction != "down" && key == p1.down)
             {
                 return true;
             }
-            if (currentAction != "left" && key == p1.left)
+            if (this.currentAction != "left" && key == p1.left)
             {
                 return true;
             }
-            if (currentAction != "right" && key == p1.right)
+            if (this.currentAction != "right" && key == p1.right)
             {
                 return true;
             }
@@ -165,38 +165,38 @@ public class SettingsMenu : Menu
         // PlayerTwo.
         else
         {
-            if (currentAction != "up" && key == p2.up)
+            if (this.currentAction != "up" && key == p2.up)
             {
                 return true;
             }
-            if (currentAction != "down" && key == p2.down)
+            if (this.currentAction != "down" && key == p2.down)
             {
                 return true;
             }
-            if (currentAction != "left" && key == p2.left)
+            if (this.currentAction != "left" && key == p2.left)
             {
                 return true;
             }
-            if (currentAction != "right" && key == p2.right)
+            if (this.currentAction != "right" && key == p2.right)
             {
                 return true;
             }
         }
 
         // Also check other player's keys.
-        if (key == (currentPlayer == "PlayerOne" ? p2.up : p1.up))
+        if (key == (this.currentPlayer == "PlayerOne" ? p2.up : p1.up))
         {
             return true;
         }
-        if (key == (currentPlayer == "PlayerOne" ? p2.down : p1.down))
+        if (key == (this.currentPlayer == "PlayerOne" ? p2.down : p1.down))
         {
             return true;
         }
-        if (key == (currentPlayer == "PlayerOne" ? p2.left : p1.left))
+        if (key == (this.currentPlayer == "PlayerOne" ? p2.left : p1.left))
         {
             return true;
         }
-        if (key == (currentPlayer == "PlayerOne" ? p2.right : p1.right))
+        if (key == (this.currentPlayer == "PlayerOne" ? p2.right : p1.right))
         {
             return true;
         }

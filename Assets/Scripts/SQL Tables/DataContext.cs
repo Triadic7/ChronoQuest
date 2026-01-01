@@ -127,8 +127,29 @@ public class DataContext
     /// <returns>Returns a list of all saves.</returns>
     public List<SaveModel> GetAllSaves()
     {
+        // The max stage id.
+        int maxStageId = this.db.Table<StageTable>().Max(s => s.StageId);
+
+        // Returns a list of SaveModels with their stage clamped to avoid corrupt saves.
         return this.db.Table<SaveTable>()
-            .Select(s => new SaveModel(s, this.GetStageById(s.StageId)))
+            .Select(s =>
+            {
+                int safeStageId = s.StageId;
+
+                // Clamp invalid stages to final stage.
+                if (safeStageId > maxStageId || safeStageId <= 0)
+                {
+                    Debug.LogWarning($"Invalid StageId {s.StageId} detected in save {s.Id}. Clamping to {maxStageId}.");
+
+                    safeStageId = maxStageId;
+
+                    // Fix incorrect stage id..
+                    s.StageId = safeStageId;
+                    this.db.Update(s);
+                }
+
+                return new SaveModel(s, this.GetStageById(safeStageId));
+            })
             .ToList();
     }
 
@@ -206,6 +227,24 @@ public class DataContext
 
         // If table isn't null, return new save model.
         return tableRow != null ? new SaveModel(tableRow, this.GetStageById(tableRow.StageId)) : null;
+    }
+
+    /// <summary>
+    /// Deletes a save by id from the database.
+    /// </summary>
+    /// <param name="saveId">The save ID.</param>
+    public void DeleteSave(int saveId)
+    {
+        var saveRow = this.db.Table<SaveTable>().FirstOrDefault(s => s.Id == saveId);
+        if (saveRow != null)
+        {
+            this.db.Delete(saveRow);
+            Debug.Log($"Deleted save with ID {saveId}");
+        }
+        else
+        {
+            Debug.LogWarning($"No save found with ID {saveId} to delete");
+        }
     }
 
     /// <summary>

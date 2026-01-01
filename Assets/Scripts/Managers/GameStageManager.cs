@@ -34,6 +34,14 @@ public class GameStageManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Debug to win the game.
+    /// </summary>
+    public void DebugWinGame()
+    {
+        this.EndGame();
+    }
+
+    /// <summary>
     /// Cache mini games.
     /// </summary>
     private void Awake()

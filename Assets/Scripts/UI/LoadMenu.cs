@@ -80,6 +80,7 @@ public class LoadMenu : Menu
     private void Awake()
     {
         this.previewPanel.OnPlayButtonHit += LoadSave;
+        this.previewPanel.OnDeleteSave += DeleteSaveFromDb;
 
         // Cache save manager.
         this.saveManager = GameManager.Instance.SaveManager;
@@ -115,14 +116,36 @@ public class LoadMenu : Menu
     /// </summary>
     private void DeleteSavesSlotPrefabs()
     {
-        // If there's prefabs present, delete them.
-        if (this.savePrefabs.Count > 1)
+        // If there are prefabs present, delete them.
+        foreach (GameObject prefab in savePrefabs)
         {
-            foreach (GameObject prefab in this.savePrefabs)
-            {
-                Destroy(prefab);
-            }
+            Destroy(prefab);
         }
+
+        // Clear the list so we start fresh.
+        this.savePrefabs.Clear();
+    }
+
+    /// <summary>
+    /// Deletes a save from the db.
+    /// </summary>
+    /// <param name="save"></param>
+    private void DeleteSaveFromDb(SaveModel save)
+    {
+        if(save == null)
+        {
+            Debug.LogError("No save found.");
+            return;
+        }
+
+        // Delete save.
+        this.saveManager.DeleteSave(save);
+
+        // Refresh the list UI.
+        this.DisplayAllSaves();
+
+        // Hide the preview panel.
+        this.HidePreviewPanel();
     }
 
     /// <summary>

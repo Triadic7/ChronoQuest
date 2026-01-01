@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,11 @@ public class SavePreview : MonoBehaviour
     /// Action thats called when the play button is hit.
     /// </summary>
     public event Action<SaveModel> OnPlayButtonHit;
+
+    /// <summary>
+    /// Called when the player hits delete save.
+    /// </summary>
+    public event Action<SaveModel> OnDeleteSave;
 
     /// <summary>
     /// Displays the location title.
@@ -38,6 +44,24 @@ public class SavePreview : MonoBehaviour
     private Button toggleCoopButton;
 
     /// <summary>
+    /// The button to delete a save.
+    /// </summary>
+    [SerializeField]
+    private Button deleteButton;
+
+    /// <summary>
+    /// The button to cancel from deleting a save.
+    /// </summary>
+    [SerializeField]
+    private Button cancelButton;
+
+    /// <summary>
+    /// The button confirm to delete a save.
+    /// </summary>
+    [SerializeField]
+    private Button confirmDeleteButton;
+
+    /// <summary>
     /// The text saying if it's coop or not.
     /// </summary>
     private TMP_Text coopText;
@@ -58,8 +82,11 @@ public class SavePreview : MonoBehaviour
     /// <param name="save">The save to show.</param>
     public void DisplaySavePreview(SaveModel save)
     {
-        // If save is present, display it. Otherwise display new save.
-        if(save != null)
+        // Cache the save first.
+        this.save = save;
+
+        // Display info.
+        if (save != null)
         {
             this.locationText.text = save.Stage.StageName;
             this.objectiveText.text = save.Stage.ObjectiveText;
@@ -72,13 +99,14 @@ public class SavePreview : MonoBehaviour
             this.coopText.text = isCoop ? "Coop" : "Singleplayer";
         }
 
-        this.save = save;
+        // Shows delete button but not confirm delete buttons.
+        this.CancelDeleteButton();
     }
 
     /// <summary>
     /// Plays the selected save.
     /// </summary>
-    public void PlaySave()
+    private void PlaySave()
     {
         if (save == null) 
         {
@@ -90,10 +118,61 @@ public class SavePreview : MonoBehaviour
     /// <summary>
     /// Toggles coop button and updates text.
     /// </summary>
-    public void CoopToggle()
+    private void CoopToggle()
     {
         this.isCoop = !this.isCoop;
         this.coopText.text = this.isCoop ? "Coop" : "Singleplayer";
+    }
+
+    /// <summary>
+    /// Hides all delete buttons.
+    /// </summary>
+    private void HideDeleteButtons()
+    {
+        this.deleteButton.gameObject.SetActive(false);
+        this.cancelButton.gameObject.SetActive(false);
+        this.confirmDeleteButton.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Shows confirm delete buttons.
+    /// </summary>
+    private void ShowDeleteConfirm()
+    {
+        this.deleteButton.gameObject.SetActive(false);
+        this.cancelButton.gameObject.SetActive(true);
+        this.confirmDeleteButton.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Cancels the delete operation.
+    /// </summary>
+    private void CancelDeleteButton()
+    {
+        if(save != null)
+        {
+            this.deleteButton.gameObject.SetActive(true);
+            this.cancelButton.gameObject.SetActive(false);
+            this.confirmDeleteButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            this.HideDeleteButtons();
+        }
+    }
+
+    /// <summary>
+    /// Deletes the save.
+    /// </summary>
+    public void DeleteSave()
+    {
+        if(this.save == null)
+        {
+            Debug.LogError("No save found");
+            return;
+        }
+
+        this.OnDeleteSave?.Invoke(this.save);
     }
 
     /// <summary>
@@ -109,5 +188,29 @@ public class SavePreview : MonoBehaviour
             Debug.LogError("No coop text found under button.");
             return;
         }
+    }
+
+    /// <summary>
+    /// Add event listeners.
+    /// </summary>
+    private void OnEnable()
+    {
+        this.playButton.onClick.AddListener(this.PlaySave);
+        this.toggleCoopButton.onClick.AddListener(this.CoopToggle);
+        this.deleteButton.onClick.AddListener(this.ShowDeleteConfirm);
+        this.cancelButton.onClick.AddListener(this.CancelDeleteButton);
+        this.confirmDeleteButton.onClick.AddListener(this.DeleteSave);
+    }
+
+    /// <summary>
+    /// Remove event listeners.
+    /// </summary>
+    private void OnDisable()
+    {
+        this.playButton.onClick.RemoveListener(this.PlaySave);
+        this.toggleCoopButton.onClick.RemoveListener(this.CoopToggle);
+        this.deleteButton.onClick.RemoveListener(this.ShowDeleteConfirm);
+        this.cancelButton.onClick.RemoveListener(this.CancelDeleteButton);
+        this.confirmDeleteButton.onClick.RemoveListener(this.DeleteSave);
     }
 }
