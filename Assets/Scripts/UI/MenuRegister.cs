@@ -10,9 +10,16 @@ public class MenuRegister : MonoBehaviour
     /// </summary>
     [SerializeField] private string menuKey;
 
-    private void Start()
+    private void Awake()
     {
-        GameManager.Instance.OnGameInitialized += RegisterMenu;
+        if(GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameInitialized += RegisterMenu;
+        }
+        else
+        {
+            Debug.LogError("GameManager Instance not found.");
+        }
     }
 
     /// <summary>
@@ -21,7 +28,7 @@ public class MenuRegister : MonoBehaviour
     private void RegisterMenu()
     {
         // Get menu from gameobject.
-        IMenu menu = GetComponent<IMenu>();
+        Menu menu = GetComponent<Menu>();
         if (menu != null)
         {
             // Get UIManager and subscribe to event.
@@ -34,7 +41,7 @@ public class MenuRegister : MonoBehaviour
         }
         else
         {
-            Debug.LogError("No menu interface found.");
+            Debug.LogError("No menu found.");
         }
     }
 }

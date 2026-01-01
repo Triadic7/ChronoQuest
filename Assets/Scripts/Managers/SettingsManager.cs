@@ -44,10 +44,10 @@ public class SettingsManager : MonoBehaviour
         this.playerTwoKeybinds = p2;
 
         // Save keybinds to db.
-        SaveKeybinds();
+        this.SaveKeybinds();
 
         // Fire event.
-        OnKeybindsUpdated?.Invoke(p1, p2);
+        this.OnKeybindsUpdated?.Invoke(p1, p2);
     }
 
     // Resets keybinds to default.
@@ -57,7 +57,7 @@ public class SettingsManager : MonoBehaviour
         PlayerPrefs.DeleteAll();
 
         // Sets default keybinds.
-        playerOneKeybinds = new PlayerKeybinds
+        this.playerOneKeybinds = new PlayerKeybinds
         {
             up = Key.W,
             down = Key.S,
@@ -65,7 +65,7 @@ public class SettingsManager : MonoBehaviour
             right = Key.D
         };
 
-        playerTwoKeybinds = new PlayerKeybinds
+        this.playerTwoKeybinds = new PlayerKeybinds
         {
             up = Key.UpArrow,
             down = Key.DownArrow,
@@ -74,10 +74,10 @@ public class SettingsManager : MonoBehaviour
         };
 
         // Save keybinds.
-        SaveKeybinds();
+        this.SaveKeybinds();
 
         // Fire event.
-        OnKeybindsUpdated?.Invoke(playerOneKeybinds, playerTwoKeybinds);
+        this.OnKeybindsUpdated?.Invoke(playerOneKeybinds, playerTwoKeybinds);
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class SettingsManager : MonoBehaviour
     private void Awake()
     {
         // Loads player one keybinds.
-        playerOneKeybinds = LoadPlayerKeybinds(1, new PlayerKeybinds 
+        this.playerOneKeybinds = LoadPlayerKeybinds(1, new PlayerKeybinds 
         { 
             up = Key.W, 
             down = Key.S, 
@@ -95,7 +95,7 @@ public class SettingsManager : MonoBehaviour
         });
 
         // Loads player two keybinds.
-        playerTwoKeybinds = LoadPlayerKeybinds(2, new PlayerKeybinds 
+        this.playerTwoKeybinds = LoadPlayerKeybinds(2, new PlayerKeybinds 
         { 
             up = Key.UpArrow, 
             down = Key.DownArrow, 
@@ -104,7 +104,7 @@ public class SettingsManager : MonoBehaviour
         });
 
         // Fire event.
-        OnKeybindsUpdated?.Invoke(this.playerOneKeybinds, this.playerTwoKeybinds);
+        this.OnKeybindsUpdated?.Invoke(this.playerOneKeybinds, this.playerTwoKeybinds);
     }
 
     /// <summary>
@@ -130,8 +130,8 @@ public class SettingsManager : MonoBehaviour
     /// </summary>
     private void SaveKeybinds()
     {
-        SavePlayer(1, playerOneKeybinds);
-        SavePlayer(2, playerTwoKeybinds);
+        this.SavePlayer(1, playerOneKeybinds);
+        this.SavePlayer(2, playerTwoKeybinds);
 
         PlayerPrefs.Save();
     }

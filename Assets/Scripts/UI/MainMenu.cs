@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour, IMenu
+public class MainMenu : Menu
 {
     /// <summary>
     /// Settings button.
@@ -14,27 +14,6 @@ public class MainMenu : MonoBehaviour, IMenu
     /// </summary>
     [SerializeField] 
     private Button loadButton;
-
-    /// <summary>
-    /// Hides main menu.
-    /// </summary>
-    public void Close()
-    {
-        this.gameObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// Nothing, main menu has no back button.
-    /// </summary>
-    public void OnBack() { }
-
-    /// <summary>
-    /// Shows main menu.
-    /// </summary>
-    public void Open()
-    {
-        this.gameObject.SetActive(true);
-    }
 
     /// <summary>
     /// Quits application.

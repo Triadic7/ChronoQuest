@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Class that handles the settings menu UI.
 /// </summary>
-public class SettingsMenu : MonoBehaviour, IMenu
+public class SettingsMenu : Menu
 {
     #region Keybind Text
     [SerializeField]
@@ -91,27 +91,6 @@ public class SettingsMenu : MonoBehaviour, IMenu
     /// Original colors of the texts before rebinding.
     /// </summary>
     private Dictionary<TMP_Text, Color> originalColors = new Dictionary<TMP_Text, Color>();
-
-    /// <summary>
-    /// Opens settings menu.
-    /// </summary>
-    public void Open()
-    {
-        this.gameObject.SetActive(true);
-    }
-
-    /// <summary>
-    /// Hides settings menu.
-    /// </summary>
-    public void Close()
-    {
-        this.gameObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// On back button clicked.
-    /// </summary>
-    public void OnBack(){}
 
     /// <summary>
     /// Resets keybinds to default.

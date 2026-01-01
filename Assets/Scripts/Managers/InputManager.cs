@@ -66,7 +66,7 @@ public class InputManager : MonoBehaviour
         }
 
         // Checks for missing players.
-        if (playerOne == null || playerTwo == null)
+        if (this.playerOne == null || this.playerTwo == null)
         {
             Debug.LogError("Missing player GameObject.");
             return;
@@ -74,8 +74,8 @@ public class InputManager : MonoBehaviour
         else
         {
             // Set rigidbodies if players found.
-            playerOneRb = playerOne.GetComponent<Rigidbody2D>();
-            playerTwoRb = playerTwo.GetComponent<Rigidbody2D>();
+            this.playerOneRb = this.playerOne.GetComponent<Rigidbody2D>();
+            this.playerTwoRb = this.playerTwo.GetComponent<Rigidbody2D>();
         }
     }
 
@@ -85,10 +85,10 @@ public class InputManager : MonoBehaviour
     private void FixedUpdate()
     {
         // Check for player one movement.
-        MovePlayer(playerOneRb, playerOneKeybinds);
+        this.MovePlayer(playerOneRb, playerOneKeybinds);
 
         // Check for player two movement.
-        MovePlayer(playerTwoRb, playerTwoKeybinds);
+        this.MovePlayer(playerTwoRb, playerTwoKeybinds);
     }
 
     /// <summary>

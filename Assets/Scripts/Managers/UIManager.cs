@@ -9,19 +9,19 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Store menus by key.
     /// </summary>
-    private Dictionary<string, IMenu> menus = new Dictionary<string, IMenu>();
+    private Dictionary<string, Menu> menus = new Dictionary<string, Menu>();
 
     /// <summary>
     /// Stack for navigation.
     /// </summary>
-    private Stack<IMenu> menuStack = new Stack<IMenu>();
+    private Stack<Menu> menuStack = new Stack<Menu>();
 
     /// <summary>
     /// Registers a menu.
     /// </summary>
     /// <param name="key">The menu key.</param>
     /// <param name="menu">The menu.</param>
-    public void RegisterMenu(string key, IMenu menu)
+    public void RegisterMenu(string key, Menu menu)
     {
         if (!menus.ContainsKey(key))
         {
@@ -39,21 +39,27 @@ public class UIManager : MonoBehaviour
     /// <param name="key">The menu key to open.</param>
     public void OpenMenu(string key)
     {
+        Debug.Log($"UIManager.OpenMenu called with key: {key}.");
+
         if (!menus.ContainsKey(key))
         {
+            Debug.LogWarning($"Menu key not found: {key}.");
             return;
         }
 
         // Hide current menu if any.
         if (menuStack.Count > 0)
         {
+            Debug.Log($"Hiding menu: {menuStack.Peek().name}.");
             menuStack.Peek().Close();
         }
 
         // Opens menu based on key.
-        IMenu menu = menus[key];
+        Menu menu = menus[key];
         menu.Open();
         menuStack.Push(menu);
+
+        Debug.Log($"Opened menu: {menu.name}, stack count: {menuStack.Count}.");
     }
 
     /// <summary>
@@ -67,10 +73,7 @@ public class UIManager : MonoBehaviour
         }
 
         // Set current.
-        IMenu current = menuStack.Pop();
-
-        // Calls on back.
-        current.OnBack();
+        Menu current = menuStack.Pop();
 
         // Closes menu.
         current.Close();
@@ -81,4 +84,39 @@ public class UIManager : MonoBehaviour
             menuStack.Peek().Open();
         }
     }
+
+    /// <summary>
+    /// Closes a menu by key, if it exists.
+    /// </summary>
+    /// <param name="key">The menu key to close.</param>
+    public void CloseMenu(string key)
+    {
+        if (!menus.ContainsKey(key))
+        {
+            Debug.LogWarning($"Menu key not found: {key}.");
+            return;
+        }
+
+        Menu menuToClose = menus[key];
+
+        // Remove from stack if present.
+        Stack<Menu> tempStack = new Stack<Menu>();
+        while (menuStack.Count > 0)
+        {
+            Menu top = menuStack.Pop();
+            if (top != menuToClose)
+            {
+                tempStack.Push(top);
+            }
+        }
+        while (tempStack.Count > 0)
+        {
+            menuStack.Push(tempStack.Pop());
+        }
+
+        // Close the menu.
+        menuToClose.Close();
+        Debug.Log($"UIManager: Closed menu: {key}.");
+    }
+
 }
