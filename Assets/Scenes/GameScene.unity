@@ -5399,6 +5399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aed5f47cb107a6459641c6791839425, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  timeText: {fileID: 491180520}
 --- !u!1 &644765790
 GameObject:
   m_ObjectHideFlags: 0
@@ -9369,6 +9370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aa972485bf17b34d8a172f460dcc397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  resumeButton: {fileID: 1567143903}
   settingsButton: {fileID: 1369793115}
   loadButton: {fileID: 1808403071}
 --- !u!1 &1352356875

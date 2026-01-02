@@ -34,7 +34,7 @@ public class SaveSlotPrefab : MonoBehaviour
         {
             this.locationText.text = save.Stage.StageName;
             this.stageIdText.text = $"Level: {save.Stage.StageId}";
-            this.timeText.text = $"Time: {save.PlayTime.ToString()}";
+            this.timeText.text = $"Time: {this.FormatTime(save.PlayTime)}";
         }
         else
         {
@@ -50,5 +50,17 @@ public class SaveSlotPrefab : MonoBehaviour
     private void Awake()
     {
         this.DisplaySave();
+    }
+
+    /// <summary>
+    /// Formats the time into something readable.
+    /// </summary>
+    /// <param name="time">The time.</param>
+    /// <returns>Returns pretty string of the time.</returns>
+    private string FormatTime(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60f);
+        int seconds = Mathf.FloorToInt(time % 60f);
+        return $"{minutes:00}:{seconds:00}";
     }
 }

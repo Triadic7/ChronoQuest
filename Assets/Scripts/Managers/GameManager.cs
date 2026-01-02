@@ -186,11 +186,13 @@ public class GameManager : MonoBehaviour
         this.loadMenu = FindAnyObjectByType<LoadMenu>();
         this.talkMenu = FindAnyObjectByType<TalkMenu>();
 
+        PlayerGameplayUI ui = FindAnyObjectByType<PlayerGameplayUI>();
+
         InputManager inputManager = FindAnyObjectByType<InputManager>();
 
-        if (this.loadMenu == null || this.talkMenu == null || inputManager == null) 
+        if (this.loadMenu == null || this.talkMenu == null || inputManager == null || ui == null) 
         {
-            Debug.LogError("Missing a menu or input manager.");
+            Debug.LogError("Missing a dependency.");
             return;
         }
 
@@ -198,7 +200,24 @@ public class GameManager : MonoBehaviour
         this.loadMenu.OnGamePlayButtonHit += this.StartGame;
         this.talkMenu.OnDialogueFinished += this.OnDialogueFinished;
         inputManager.OnPause += this.PauseGame;
+        ui.OnStageTimeElapsed += AddTimeToCurrentSave;
         this.GameStageManager.OnStageFinished += this.OnStageFinished;
+    }
+
+    /// <summary>
+    /// Adds the time to a current save.
+    /// </summary>
+    /// <param name="time">The time to add.</param>
+    private void AddTimeToCurrentSave(float time)
+    {
+        if (CurrentSave == null)
+        {
+            return;
+        }
+
+        CurrentSave.PlayTime += time;
+        SaveManager.SaveProgress(CurrentSave);
+        Debug.Log($"Added {time} seconds to save {CurrentSave.Id}, total: {CurrentSave.PlayTime}");
     }
 
     /// <summary>
