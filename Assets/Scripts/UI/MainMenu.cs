@@ -4,6 +4,12 @@ using UnityEngine.UI;
 public class MainMenu : Menu
 {
     /// <summary>
+    /// The resume button for last save.
+    /// </summary>
+    [SerializeField]
+    private Button resumeButton;
+
+    /// <summary>
     /// Settings button.
     /// </summary>
     [SerializeField] 
@@ -30,6 +36,17 @@ public class MainMenu : Menu
     }
 
     /// <summary>
+    /// Refreshes last played game.
+    /// </summary>
+    public override void Open()
+    {
+        base.Open();
+
+        // Refresh resume button.
+        this.RefreshResumeButton();
+    }
+
+    /// <summary>
     /// On start.
     /// </summary>
     private void Start()
@@ -45,6 +62,29 @@ public class MainMenu : Menu
         else
         {
             Debug.LogError("No UIManager found on GameManager.");
+        }
+    }
+
+    /// <summary>
+    /// Refreshes the Resume button based on the last played save.
+    /// </summary>
+    private void RefreshResumeButton()
+    {
+        // Get last save.
+        SaveModel lastSave = GameManager.Instance.SaveManager.DataContext.GetLastPlayedSave();
+
+        // Clear events on resume button.
+        this.resumeButton.onClick.RemoveAllListeners();
+
+        // If last save isnt null, show resume button. Else hide it.
+        if (lastSave != null)
+        {
+            this.resumeButton.interactable = true;
+            this.resumeButton.onClick.AddListener(() => GameManager.Instance.StartGame(lastSave));
+        }
+        else
+        {
+            this.resumeButton.interactable = false;
         }
     }
 }

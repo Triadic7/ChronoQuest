@@ -1,5 +1,6 @@
 
 using SQLite;
+using System;
 
 /// <summary>
 /// Save table for SQLite.
@@ -27,4 +28,9 @@ public class SaveTable
     /// Gets or sets whether the game is coop or not.
     /// </summary>
     public bool IsCoop { get; set; }
+
+    /// <summary>
+    /// The data last played.
+    /// </summary>
+    public DateTime LastPlayed { get; set; }
 }

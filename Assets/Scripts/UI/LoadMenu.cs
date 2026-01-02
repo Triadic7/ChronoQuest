@@ -156,6 +156,8 @@ public class LoadMenu : Menu
         // Delete old prefabs.
         this.DeleteSavesSlotPrefabs();
 
+        this.saveManager.SyncData();
+
         // For each save slot, instance a new prefab and display save data.
         foreach (var save in this.saveManager.PlayerSaves)
         {

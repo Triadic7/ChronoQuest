@@ -1,6 +1,4 @@
-using Unity.VectorGraphics;
-using UnityEditor.SceneManagement;
-using static UnityEngine.Rendering.DebugUI;
+using System;
 
 /// <summary>
 /// Save data for loading a save.
@@ -34,6 +32,11 @@ public class SaveModel
     public bool IsCoop;
 
     /// <summary>
+    /// The data last played.
+    /// </summary>
+    public DateTime LastPlayed { get; set; }
+
+    /// <summary>
     /// Constructor.
     /// </summary>
     /// <param name="table">The sql table.</param>
@@ -45,6 +48,7 @@ public class SaveModel
         this.PlayTime = table.PlayTime;
         this.IsCoop = table.IsCoop;
         this.Stage = stage;
+        this.LastPlayed = table.LastPlayed;
     }
 
     /// <summary>

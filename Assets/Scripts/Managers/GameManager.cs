@@ -137,6 +137,17 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Starts game and loads dialogue.
+    /// </summary>
+    /// <param name="save"></param>
+    public void StartGame(SaveModel save)
+    {
+        Debug.Log($"StartGame called for save: {save.Id}");
+        this.CurrentSave = save;
+        this.ChangeState(GameState.Dialogue);
+    }
+
+    /// <summary>
     /// Fires once before start.
     /// </summary>
     private void Awake()
@@ -188,17 +199,6 @@ public class GameManager : MonoBehaviour
         this.talkMenu.OnDialogueFinished += this.OnDialogueFinished;
         inputManager.OnPause += this.PauseGame;
         this.GameStageManager.OnStageFinished += this.OnStageFinished;
-    }
-
-    /// <summary>
-    /// Starts game and loads dialogue.
-    /// </summary>
-    /// <param name="save"></param>
-    private void StartGame(SaveModel save)
-    {
-        Debug.Log($"StartGame called for save: {save.Id}");
-        this.CurrentSave = save;
-        this.ChangeState(GameState.Dialogue);
     }
 
     /// <summary>

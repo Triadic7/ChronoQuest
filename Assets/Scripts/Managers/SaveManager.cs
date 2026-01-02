@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,11 +15,22 @@ public class SaveManager : MonoBehaviour
     public DataContext DataContext { get; private set; }
 
     /// <summary>
+    /// Syncs data from db.
+    /// </summary>
+    public void SyncData()
+    {
+        this.PlayerSaves = this.DataContext.GetAllSaves();
+    }
+
+    /// <summary>
     /// Saves progress by either updating or inserting save data.
     /// </summary>
     /// <param name="save">The save data to insert or update.</param>
     public SaveModel SaveProgress(SaveModel save)
     {
+        // Store last played.
+        save.LastPlayed = DateTime.UtcNow;
+
         if (save.Id == 0)
         {
             save.Id = this.DataContext.InsertSave(save);

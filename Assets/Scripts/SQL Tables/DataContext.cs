@@ -1,4 +1,5 @@
 using SQLite;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -166,7 +167,9 @@ public class DataContext
             IsCoop = data.IsCoop,
 
             // Use stage id or default 1.
-            StageId = data.Stage != null ? data.Stage.StageId : 1
+            StageId = data.Stage != null ? data.Stage.StageId : 1,
+
+            LastPlayed = DateTime.UtcNow,
         };
 
         // Insert new data into db.
@@ -186,6 +189,7 @@ public class DataContext
             StageId = data.StageId,
             PlayTime = data.PlayTime,
             IsCoop = data.IsCoop,
+            LastPlayed = data.LastPlayed,
         };
 
         // Updates data.
@@ -227,6 +231,26 @@ public class DataContext
 
         // If table isn't null, return new save model.
         return tableRow != null ? new SaveModel(tableRow, this.GetStageById(tableRow.StageId)) : null;
+    }
+
+    /// <summary>
+    /// Returns the last played save.
+    /// </summary>
+    /// <returns>Returns the last played save.</returns>
+    public SaveModel GetLastPlayedSave()
+    {
+        // Sort by most recently played.
+        var lastSaveRow = this.db.Table<SaveTable>()
+            .OrderByDescending(s => s.LastPlayed)
+            .FirstOrDefault();
+
+        // If last row is null, return null.
+        if (lastSaveRow == null)
+        {
+            return null;
+        }
+
+        return new SaveModel(lastSaveRow, GetStageById(lastSaveRow.StageId));
     }
 
     /// <summary>

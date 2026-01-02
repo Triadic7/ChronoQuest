@@ -17,6 +17,21 @@ public class GameStageManager : MonoBehaviour
     private PatternMinigame patternMinigame;
 
     /// <summary>
+    /// The time game.
+    /// </summary>
+    private TimeMinigame timeMinigame;
+
+    /// <summary>
+    /// The tower defense minigame.
+    /// </summary>
+    private TowerDefenseMinigame towerDefenseMinigame;
+
+    /// <summary>
+    /// The space minigame.
+    /// </summary>
+    private SpaceMinigame spaceMinigame;
+
+    /// <summary>
     /// The current game.
     /// </summary>
     private Game currentGame;
@@ -26,9 +41,21 @@ public class GameStageManager : MonoBehaviour
     /// </summary>
     public void StartGame(int gameId)
     {
-        if(gameId == 1)
+        if (gameId == 1)
         {
             this.currentGame = this.patternMinigame;
+        }
+        else if (gameId == 2) 
+        {
+            this.currentGame = this.timeMinigame;
+        }
+        else if (gameId == 3)
+        {
+            this.currentGame = this.towerDefenseMinigame;
+        }
+        else if (gameId == 4)
+        {
+            this.currentGame = this.spaceMinigame;
         }
         this.currentGame.StartGame();
     }
@@ -47,6 +74,9 @@ public class GameStageManager : MonoBehaviour
     private void Awake()
     {
         this.patternMinigame = GetComponentInChildren<PatternMinigame>();
+        this.timeMinigame = GetComponentInChildren<TimeMinigame>();
+        this.towerDefenseMinigame = GetComponentInChildren<TowerDefenseMinigame>();
+        this.spaceMinigame = GetComponentInChildren<SpaceMinigame>();
     }
 
     /// <summary>
