@@ -23,6 +23,11 @@ public class StageTable
     public int NPCId { get; set; }
 
     /// <summary>
+    /// Gets or sets the stages description.
+    /// </summary>
+    public string StageDescription { get; set; }
+
+    /// <summary>
     /// Gets or sets the objective text.
     /// </summary>
     public string ObjectiveText { get; set; }

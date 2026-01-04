@@ -89,7 +89,7 @@ public class SavePreview : MonoBehaviour
         if (save != null)
         {
             this.locationText.text = save.Stage.StageName;
-            this.objectiveText.text = save.Stage.ObjectiveText;
+            this.objectiveText.text = save.Stage.StageDescription;
             this.coopText.text = save.IsCoop ? "Coop" : "Singleplayer";
 
             // Set isCoop for UI toggle.

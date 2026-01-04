@@ -200,7 +200,7 @@ public class GameManager : MonoBehaviour
         this.loadMenu.OnGamePlayButtonHit += this.StartGame;
         this.talkMenu.OnDialogueFinished += this.OnDialogueFinished;
         inputManager.OnPause += this.PauseGame;
-        ui.OnStageTimeElapsed += AddTimeToCurrentSave;
+        ui.OnStageTimeElapsed += this.AddTimeToCurrentSave;
         this.GameStageManager.OnStageFinished += this.OnStageFinished;
     }
 
@@ -210,13 +210,13 @@ public class GameManager : MonoBehaviour
     /// <param name="time">The time to add.</param>
     private void AddTimeToCurrentSave(float time)
     {
-        if (CurrentSave == null)
+        if (this.CurrentSave == null)
         {
             return;
         }
 
-        CurrentSave.PlayTime += time;
-        SaveManager.SaveProgress(CurrentSave);
+        this.CurrentSave.PlayTime += time;
+        this.SaveManager.SaveProgress(CurrentSave);
         Debug.Log($"Added {time} seconds to save {CurrentSave.Id}, total: {CurrentSave.PlayTime}");
     }
 
@@ -262,19 +262,16 @@ public class GameManager : MonoBehaviour
         {
             this.ChangeState(GameState.Gameplay);
         }
-        else if (this.State == GameState.Gameplay)
-        {
-            this.AdvanceStageOrEnd();
-        }
     }
 
     /// <summary>
     /// On game stage finished.
     /// </summary>
-    private void OnStageFinished()
+    /// <param name="hasWon">If the player has won.</param>
+    private void OnStageFinished(bool hasWon)
     {
         this.OnStageEnd?.Invoke();
-        this.AdvanceStageOrEnd();
+        this.AdvanceStageOrEnd(hasWon);
     }
 
     /// <summary>
@@ -302,7 +299,7 @@ public class GameManager : MonoBehaviour
                 this.UIManager.CloseMenu("TalkMenu");
                 this.OnStageStart?.Invoke();
                 this.OnGameStartMultiplayer?.Invoke(this.CurrentSave.IsCoop);
-                this.GameStageManager.StartGame(this.CurrentSave.StageId);
+                this.GameStageManager.StartGame(this.CurrentSave.Stage);
                 break;
 
             case GameState.Ending:
@@ -314,13 +311,16 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Checks for further stages, or ends the game.
     /// </summary>
-    private void AdvanceStageOrEnd()
+    /// <param name="hasWon">If the players have won.</param>
+    private void AdvanceStageOrEnd(bool hasWon)
     {
         // Store to check if stage exists.
         int nextStageId = this.CurrentSave.StageId + 1;
 
+        // Add win to save.
+
         // Check if the next stage exists.
-        StageModel nextStage = SaveManager.DataContext.GetStageById(nextStageId);
+        StageModel nextStage = this.SaveManager.DataContext.GetStageById(nextStageId);
 
         // If no next stage, end game.
         if (nextStage == null)

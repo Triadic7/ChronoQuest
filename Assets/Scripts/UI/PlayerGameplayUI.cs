@@ -26,14 +26,15 @@ public class PlayerGameplayUI : MonoBehaviour
     private TMP_Text timeText;
 
     /// <summary>
+    /// Objective text.
+    /// </summary>
+    [SerializeField]
+    private TMP_Text objectiveText;
+
+    /// <summary>
     /// Checks if timing.
     /// </summary>
     private bool isTiming;
-
-    /// <summary>
-    /// Gets the gameplay time.
-    /// </summary>
-    public float GetGameplayTime => gameplayTime;
 
     /// <summary>
     /// Cache playerGameplayUI.
@@ -69,7 +70,13 @@ public class PlayerGameplayUI : MonoBehaviour
         // Hide UI.
         gm.OnGamePaused += this.HideUI;
         gm.OnStageEnd += this.HideUI;
-        gm.OnStageEnd += StopTimerAndReport;
+        gm.OnStageEnd += this.StopTimerAndReport;
+
+        // Cache objective for text.
+        gm.GameStageManager.OnStageStarted += (stage) =>
+        {
+            this.objectiveText.text = stage.ObjectiveText;
+        };
 
         this.HideUI();
     }
@@ -79,12 +86,12 @@ public class PlayerGameplayUI : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (isTiming)
+        if (this.isTiming)
         {
-            gameplayTime += Time.deltaTime;
-            if (timeText != null)
+            this.gameplayTime += Time.deltaTime;
+            if (this.timeText != null)
             {
-                timeText.text = FormatTime(gameplayTime);
+                this.timeText.text = this.FormatTime(gameplayTime);
             }
         }
     }
@@ -96,6 +103,7 @@ public class PlayerGameplayUI : MonoBehaviour
     {
         this.isTiming = true;
         this.playerGameplayUI.SetActive(true);
+        this.objectiveText.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -105,6 +113,7 @@ public class PlayerGameplayUI : MonoBehaviour
     {
         this.isTiming = false;
         this.playerGameplayUI?.SetActive(false);
+        this.objectiveText.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -127,9 +136,9 @@ public class PlayerGameplayUI : MonoBehaviour
         this.isTiming = false;
 
         // Fire the event to let GameManager know how much time was played.
-        OnStageTimeElapsed?.Invoke(gameplayTime);
+        this.OnStageTimeElapsed?.Invoke(gameplayTime);
 
         // Reset timer for next stage.
-        gameplayTime = 0f;
+        this.gameplayTime = 0f;
     }
 }

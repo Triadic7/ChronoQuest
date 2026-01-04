@@ -43,12 +43,10 @@ public class TalkMenu : Menu
     /// </summary>
     private Button continueButton;
 
+    /// <summary>
+    /// The dialogues to display.
+    /// </summary>
     private List<string> dialogues;
-
-    public override void Open()
-    {
-        base.Open();
-    }
 
     /// <summary>
     /// Displays an npc to the talk menu.

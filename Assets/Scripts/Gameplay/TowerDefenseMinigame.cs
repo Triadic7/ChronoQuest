@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class TowerDefenseMinigame : Game
 {
-    // Spawn in tower in middle of screen.
-
     // Make enemies ignore players.
 
     // Spawn enemies on edges of the map and move towards tower.
@@ -14,12 +12,15 @@ public class TowerDefenseMinigame : Game
 
     // Defeating enemies will increase progress bar.
 
-    public override void EndGame()
+    public override void StartGame()
     {
-        
+        // Spawn in tower in middle of screen.
     }
 
-    public override void StartGame()
+    /// <summary>
+    /// Remove all enemies.
+    /// </summary>
+    public override void CleanUp()
     {
         
     }

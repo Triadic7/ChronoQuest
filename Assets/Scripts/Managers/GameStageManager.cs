@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 /// <summary>
@@ -9,7 +10,12 @@ public class GameStageManager : MonoBehaviour
     /// <summary>
     /// Fires after stage is finished.
     /// </summary>
-    public event Action OnStageFinished;
+    public event Action<bool> OnStageFinished;
+
+    /// <summary>
+    /// Starts the stage.
+    /// </summary>
+    public event Action<StageModel> OnStageStarted;
 
     /// <summary>
     /// The pattern minigame.
@@ -39,25 +45,42 @@ public class GameStageManager : MonoBehaviour
     /// <summary>
     /// Starts a game.
     /// </summary>
-    public void StartGame(int gameId)
+    public void StartGame(StageModel stage)
     {
-        if (gameId == 1)
+        // Map to minigame instance.
+        switch (stage.StageId)
         {
-            this.currentGame = this.patternMinigame;
+            case 1: 
+                currentGame = patternMinigame; 
+                break;
+            case 2: 
+                currentGame = towerDefenseMinigame; 
+                break;
+            case 3: 
+                currentGame = timeMinigame; 
+                break;
+            case 4: 
+                currentGame = spaceMinigame; 
+                break;
+            default:
+                Debug.LogError($"No minigame for stage {stage.StageId}");
+                return;
         }
-        else if (gameId == 2) 
-        {
-            this.currentGame = this.timeMinigame;
-        }
-        else if (gameId == 3)
-        {
-            this.currentGame = this.towerDefenseMinigame;
-        }
-        else if (gameId == 4)
-        {
-            this.currentGame = this.spaceMinigame;
-        }
+
+        // Assign the stage data.
+        currentGame.SetStage(stage);
+
+        // Subscribe to game end.
+        this.currentGame.OnGameEnd += this.EndGame;
+
+        // Initialize the game by starting it.
         this.currentGame.StartGame();
+
+        this.OnStageStarted?.Invoke(stage);
+
+        // Start coroutine for 5 - 10 seconds.
+
+        // Start game objective.
     }
 
     /// <summary>
@@ -65,7 +88,7 @@ public class GameStageManager : MonoBehaviour
     /// </summary>
     public void DebugWinGame()
     {
-        this.EndGame();
+        this.currentGame.EndGame();
     }
 
     /// <summary>
@@ -80,20 +103,17 @@ public class GameStageManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads a game for the player to play.
-    /// </summary>
-    /// <param name="game">The game to play.</param>
-    private void LoadGame(Game game)
-    {
-        this.currentGame = game;
-    }
-
-    /// <summary>
     /// Ends a game.
     /// </summary>
-    private void EndGame()
+    /// <param name="hasWon">If the player has won.</param>
+    private void EndGame(bool hasWon)
     {
-        this.currentGame.EndGame();
-        this.OnStageFinished?.Invoke();
+        // Unsubscribe from game.
+        this.currentGame.OnGameEnd -= this.EndGame;
+
+        // Start coroutine for 5 - 10 seconds.
+
+        // Clean up game and fire event.
+        this.OnStageFinished?.Invoke(hasWon);
     }
 }

@@ -23,6 +23,7 @@ public class DataContext
     {
         string dbPath = Path.Combine(Application.persistentDataPath, databaseName);
         this.db = new SQLiteConnection(dbPath);
+        Debug.Log(Application.persistentDataPath);
 
         // Create save table.
         this.db.CreateTable<SaveTable>();
@@ -31,14 +32,36 @@ public class DataContext
         this.db.CreateTable<StageTable>();
 
         // Seed stages. [Populate this with a JSON file]
-        if (!this.db.Table<StageTable>().Any())
-        {
-            this.db.Insert(new StageTable { StageId = 1, StageName = "Egypt", ObjectiveText = "To save Egypt, you must match the given pattern sequence to maintain balance. Failure is not an option." });
-            this.db.Insert(new StageTable { StageId = 2, StageName = "Medieval Europe", ObjectiveText = "The timeline is starting to decay. Hurry up and grab the fresh moments in time before they disappear and summon anomalies." });
-            this.db.Insert(new StageTable { StageId = 3, StageName = "Modern Day", ObjectiveText = "Protect the base at all costs! You're given a new suit that wards away evil forces. Simply coming into contact with anomalies will remove them from the timeline." });
-            this.db.Insert(new StageTable { StageId = 4, StageName = "Space Age", ObjectiveText = "Final boss time. Protect the space station and destroy the interlopers once and for all!", IsFinalStage = true });
-            Debug.Log($"Stages in DB: {this.db.Table<StageTable>().Count()}");
-        }
+        this.db.InsertOrReplace(new StageTable 
+        { 
+            StageId = 1, 
+            StageName = "Egypt", 
+            StageDescription = "To save Egypt, you must match the given pattern sequence to maintain balance. Failure is not an option.",
+            ObjectiveText = "Match the pattern"
+        });
+        this.db.InsertOrReplace(new StageTable 
+        { 
+            StageId = 2, 
+            StageName = "Medieval Europe", 
+            StageDescription = "Protect the base at all costs! You're given a new suit that wards away evil forces. Simply coming into contact with anomalies will remove them from the timeline.",
+            ObjectiveText = "Touch the anomalies to banish them"
+        });
+        this.db.InsertOrReplace(new StageTable 
+        { 
+            StageId = 3, 
+            StageName = "Modern Day", 
+            StageDescription = "Hurry up and grab the fresh moments in time before they disappear and summon anomalies.",
+            ObjectiveText = "Grab the objects before they fully appear"
+        });
+        this.db.InsertOrReplace(new StageTable 
+        { 
+            StageId = 4, 
+            StageName = "Space Age", 
+            StageDescription = "Final boss time. Protect the space station and destroy the interlopers once and for all!",
+            ObjectiveText = "Defeat the boss and protect the station",
+            IsFinalStage = true 
+        });
+        Debug.Log($"Stages in DB: {this.db.Table<StageTable>().Count()}");
 
         // Create npc table.
         this.db.CreateTable<NPCTable>();

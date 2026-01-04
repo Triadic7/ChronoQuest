@@ -17,16 +17,18 @@ public class PatternMinigame : Game
 
     // Win or lose => EndGame();
 
-
-    public override void EndGame()
-    {
-        // Hide plates.
-    }
-
     public override void StartGame()
     {
         Debug.Log("Starting pattern game!");
         // Display plates.
+    }
+
+    /// <summary>
+    /// Remove plates and enemies.
+    /// </summary>
+    public override void CleanUp()
+    {
+        
     }
 
     private void Awake()

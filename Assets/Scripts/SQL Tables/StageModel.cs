@@ -24,6 +24,11 @@ public class StageModel
     public NPCTable NPC { get; set; }
 
     /// <summary>
+    /// Gets or sets the stages description.
+    /// </summary>
+    public string StageDescription { get; set; }
+
+    /// <summary>
     /// Gets or sets the objective text.
     /// </summary>
     public string ObjectiveText { get; set; }
@@ -48,6 +53,6 @@ public class StageModel
         this.StageName = table.StageName;
         this.ObjectiveText = table.ObjectiveText;
         this.IsFinalStage = table.IsFinalStage;
-
+        this.StageDescription = table.StageDescription;
     }
 }

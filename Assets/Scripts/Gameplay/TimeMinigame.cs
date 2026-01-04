@@ -1,9 +1,10 @@
 using UnityEngine;
 
+/// <summary>
+/// Objects will spawn transparent and become more solid over time. If object becomes fully solid, spawn enemies to knock players around. Each spawn gives a failure.
+/// </summary>
 public class TimeMinigame : Game
 {
-    // Spawn in objects over time.
-
     // Objects start green => change to red over time.
 
     // If players dont grab objects in time => spawn enemies from red objects.
@@ -12,12 +13,15 @@ public class TimeMinigame : Game
 
     // Enemies touching players will lower progress bar.
 
-    public override void EndGame()
+    public override void StartGame()
     {
-        
+        // Spawn in objects over time.
     }
 
-    public override void StartGame()
+    /// <summary>
+    /// Remove any spawned objects.
+    /// </summary>
+    public override void CleanUp()
     {
         
     }
