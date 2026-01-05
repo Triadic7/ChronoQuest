@@ -99,6 +99,14 @@ public class SpaceMinigame : Game
     }
 
     /// <summary>
+    /// Clean up boss and enemies.
+    /// </summary>
+    public override void GameEnded()
+    {
+        this.CleanupEnemiesAndBoss();
+    }
+
+    /// <summary>
     /// Cleans up enemies and boss by destroying.
     /// </summary>
     private void CleanupEnemiesAndBoss()
@@ -136,13 +144,5 @@ public class SpaceMinigame : Game
                 Destroy(go);
             }
         }
-    }
-
-    /// <summary>
-    /// Clean up boss and enemies.
-    /// </summary>
-    public override void GameEnded()
-    {
-        this.CleanupEnemiesAndBoss();
     }
 }
