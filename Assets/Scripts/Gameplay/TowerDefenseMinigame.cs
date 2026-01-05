@@ -24,4 +24,9 @@ public class TowerDefenseMinigame : Game
     {
         
     }
+
+    public override void GameEnded()
+    {
+        
+    }
 }

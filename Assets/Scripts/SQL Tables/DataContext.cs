@@ -59,6 +59,7 @@ public class DataContext
             StageName = "Space Age", 
             StageDescription = "Final boss time. Protect the space station and destroy the interlopers once and for all!",
             ObjectiveText = "Defeat the boss and protect the station",
+            ObjectiveProgress = 20,
             IsFinalStage = true 
         });
         Debug.Log($"Stages in DB: {this.db.Table<StageTable>().Count()}");

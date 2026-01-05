@@ -35,4 +35,9 @@ public class PatternMinigame : Game
     {
         // subscribe to plates.
     }
+
+    public override void GameEnded()
+    {
+        
+    }
 }

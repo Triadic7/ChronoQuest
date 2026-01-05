@@ -23,16 +23,16 @@ public class PlayerSpawner : MonoBehaviour
     /// <param name="isCoop"></param>
     private void ShowPlayers(bool isCoop)
     {
-        playerOne.SetActive(true);
+        this.playerOne.SetActive(true);
 
         // If game is coop, show second player.
         if (!isCoop)
         {
-            playerTwo.SetActive(false);
+            this.playerTwo.SetActive(false);
         }
         else
         {
-            playerTwo.SetActive(true);
+            this.playerTwo.SetActive(true);
         }
     }
 
@@ -41,8 +41,8 @@ public class PlayerSpawner : MonoBehaviour
     /// </summary>
     private void HidePlayers()
     {
-        playerOne.SetActive(false);
-        playerTwo.SetActive(false);
+        this.playerOne.SetActive(false);
+        this.playerTwo.SetActive(false);
     }
 
     /// <summary>
@@ -59,9 +59,9 @@ public class PlayerSpawner : MonoBehaviour
         }
 
         // On game start, check if game is coop.
-        gm.OnGameStartMultiplayer += ShowPlayers;
+        gm.OnGameStartMultiplayer += this.ShowPlayers;
 
         // On game end hide players.
-        gm.OnStageEnd += HidePlayers;
+        gm.OnStageEnd += this.HidePlayers;
     }
 }

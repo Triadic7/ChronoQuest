@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerGameplayUI : MonoBehaviour
 {
@@ -32,9 +33,26 @@ public class PlayerGameplayUI : MonoBehaviour
     private TMP_Text objectiveText;
 
     /// <summary>
+    /// The slider showing current progress.
+    /// </summary>
+    [SerializeField]
+    private Slider progressSlider;
+
+    /// <summary>
     /// Checks if timing.
     /// </summary>
     private bool isTiming;
+
+    /// <summary>
+    /// The array of failure boxes.
+    /// </summary>
+    [SerializeField]
+    private TMP_Text[] failureBoxes;
+
+    /// <summary>
+    /// What failure the players are on.
+    /// </summary>
+    private int failureIndex;
 
     /// <summary>
     /// Cache playerGameplayUI.
@@ -67,6 +85,14 @@ public class PlayerGameplayUI : MonoBehaviour
             this.gameplayTime = 0f;
         };
 
+        GameStageManager stageManager = gm.GameStageManager;
+
+        // Add failure event.
+        stageManager.OnGameFailStrike += this.AddFailStrike;
+
+        // Add success event.
+        stageManager.OnGameProgressMade += this.AddProgress;
+
         // Hide UI.
         gm.OnGamePaused += this.HideUI;
         gm.OnStageEnd += this.HideUI;
@@ -76,6 +102,12 @@ public class PlayerGameplayUI : MonoBehaviour
         gm.GameStageManager.OnStageStarted += (stage) =>
         {
             this.objectiveText.text = stage.ObjectiveText;
+            this.ResetStrikes();
+
+            // Initialize progress bar.
+            progressSlider.minValue = 0;
+            progressSlider.maxValue = stage.ObjectiveProgress;
+            progressSlider.value = 0;
         };
 
         this.HideUI();
@@ -140,5 +172,53 @@ public class PlayerGameplayUI : MonoBehaviour
 
         // Reset timer for next stage.
         this.gameplayTime = 0f;
+
+        // Reset failure boxes for next stage.
+        this.ResetStrikes();
+    }
+
+    /// <summary>
+    /// Adds progress to the progress bar.
+    /// </summary>
+    /// <param name="progress">The progress made.</param>
+    /// <param name="winAmount">How much to win.</param>
+    private void AddProgress(int progress, int winAmount)
+    {
+        if (this.progressSlider == null)
+        {
+            return;
+        }
+
+        // Set max value on slider.
+        this.progressSlider.maxValue = winAmount;
+
+        this.progressSlider.value = progress;
+    }
+
+    /// <summary>
+    /// Resets strikes.
+    /// </summary>
+    private void ResetStrikes()
+    {
+        this.failureIndex = 0;
+
+        foreach (var box in this.failureBoxes)
+        {
+            box.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// Adds a fail strike to ui.
+    /// </summary>
+    private void AddFailStrike()
+    {
+        if (this.failureIndex >= this.failureBoxes.Length)
+        {
+            return;
+        }
+
+        this.failureBoxes[failureIndex].enabled = true;
+        this.failureIndex++;
     }
 }

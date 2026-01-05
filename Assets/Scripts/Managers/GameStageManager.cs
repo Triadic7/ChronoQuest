@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
@@ -16,6 +17,21 @@ public class GameStageManager : MonoBehaviour
     /// Starts the stage.
     /// </summary>
     public event Action<StageModel> OnStageStarted;
+
+    /// <summary>
+    /// On stage set.
+    /// </summary>
+    public event Action<Game> OnGameSet;
+
+    /// <summary>
+    /// Fired when game progress made.
+    /// </summary>
+    public event Action<int, int> OnGameProgressMade;
+
+    /// <summary>
+    /// Fired when fail strike received.
+    /// </summary>
+    public event Action OnGameFailStrike;
 
     /// <summary>
     /// The pattern minigame.
@@ -43,6 +59,12 @@ public class GameStageManager : MonoBehaviour
     private Game currentGame;
 
     /// <summary>
+    /// Delay for stage.
+    /// </summary>
+    [SerializeField]
+    private float stageDelay = 5f;
+
+    /// <summary>
     /// Starts a game.
     /// </summary>
     public void StartGame(StageModel stage)
@@ -50,17 +72,17 @@ public class GameStageManager : MonoBehaviour
         // Map to minigame instance.
         switch (stage.StageId)
         {
-            case 1: 
-                currentGame = patternMinigame; 
+            case 1:
+                this.currentGame = patternMinigame; 
                 break;
-            case 2: 
-                currentGame = towerDefenseMinigame; 
+            case 2:
+                this.currentGame = towerDefenseMinigame; 
                 break;
-            case 3: 
-                currentGame = timeMinigame; 
+            case 3:
+                this.currentGame = timeMinigame; 
                 break;
-            case 4: 
-                currentGame = spaceMinigame; 
+            case 4:
+                this.currentGame = spaceMinigame; 
                 break;
             default:
                 Debug.LogError($"No minigame for stage {stage.StageId}");
@@ -68,19 +90,24 @@ public class GameStageManager : MonoBehaviour
         }
 
         // Assign the stage data.
-        currentGame.SetStage(stage);
+        this.currentGame.SetStage(stage);
+
+        // Fire event.
+        this.OnGameSet?.Invoke(this.currentGame);
 
         // Subscribe to game end.
         this.currentGame.OnGameEnd += this.EndGame;
+        this.currentGame.OnGameProgress += this.OnGameProgressMade;
+        this.currentGame.OnFailStrike += this.OnGameFailStrike;
 
         // Initialize the game by starting it.
         this.currentGame.StartGame();
 
         this.OnStageStarted?.Invoke(stage);
 
-        // Start coroutine for 5 - 10 seconds.
+        // Start coroutine then start game.
+        StartCoroutine(this.StageDelay(this.currentGame.StartGameObjective));
 
-        // Start game objective.
     }
 
     /// <summary>
@@ -110,10 +137,32 @@ public class GameStageManager : MonoBehaviour
     {
         // Unsubscribe from game.
         this.currentGame.OnGameEnd -= this.EndGame;
+        this.currentGame.OnGameProgress -= this.OnGameProgressMade;
+        this.currentGame.OnFailStrike -= this.OnGameFailStrike;
 
-        // Start coroutine for 5 - 10 seconds.
+        // Start coroutine then cleanup game.
+        StartCoroutine(this.StageEndDelay(hasWon));
+    }
 
-        // Clean up game and fire event.
+    /// <summary>
+    /// Coroutine to delay the stage.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator StageDelay(Action function)
+    {
+        yield return new WaitForSeconds(this.stageDelay);
+        function?.Invoke();
+    }
+
+    /// <summary>
+    /// The end of stage delay.
+    /// </summary>
+    /// <param name="hasWon">If the player has end.</param>
+    /// <returns>Ends stage after.</returns>
+    private IEnumerator StageEndDelay(bool hasWon)
+    {
+        yield return new WaitForSeconds(stageDelay);
+        this.currentGame.CleanUp();
         this.OnStageFinished?.Invoke(hasWon);
     }
 }

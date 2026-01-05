@@ -12,19 +12,39 @@ public abstract class Game : MonoBehaviour
     public event Action<bool> OnGameEnd;
 
     /// <summary>
+    /// Fired after OnGameEnd, to cleanup game.
+    /// </summary>
+    public event Action OnGameCleanup;
+
+    /// <summary>
+    /// When the games objective starts.
+    /// </summary>
+    public event Action OnObjectiveStart;
+
+    /// <summary>
+    /// When progress has been made.
+    /// </summary>
+    public event Action<int, int> OnGameProgress;
+
+    /// <summary>
+    /// When fail strike recieved.
+    /// </summary>
+    public event Action OnFailStrike;
+
+    /// <summary>
     /// The count of how many points to win the game.
     /// </summary>
-    public int PointsToWin { get; private set; }
+    public int PointsToWin { get; protected set; }
 
     /// <summary>
     /// How many times the player can fail until they lose the stage.
     /// </summary>
-    public int FailureChances { get; private set; }
+    public int FailureChances { get; protected set; } = 3;
 
     /// <summary>
     /// The current stage data.
     /// </summary>
-    protected StageModel CurrentStage { get; private set; }
+    public StageModel CurrentStage { get; private set; }
 
     /// <summary>
     /// Whether the game has been won or not.
@@ -63,7 +83,7 @@ public abstract class Game : MonoBehaviour
     /// </summary>
     public virtual void StartGameObjective()
     {
-
+        this.OnObjectiveStart?.Invoke();
     }
 
     /// <summary>
@@ -72,12 +92,17 @@ public abstract class Game : MonoBehaviour
     public abstract void CleanUp();
 
     /// <summary>
+    /// Game ended, this is where you remove enemies.
+    /// </summary>
+    public abstract void GameEnded();
+
+    /// <summary>
     /// Ends game. This should be where you remove enemies.
     /// </summary>
     public void EndGame()
     {
+        this.GameEnded();
         this.OnGameEnd?.Invoke(this.wonGame);
-        this.ResetVariables();
     }
 
     /// <summary>
@@ -85,6 +110,7 @@ public abstract class Game : MonoBehaviour
     /// </summary>
     protected void ReceiveFailStrike()
     {
+        this.OnFailStrike?.Invoke();
         this.currentFailureCount++;
         this.CheckForFailure();
     }
@@ -95,18 +121,8 @@ public abstract class Game : MonoBehaviour
     protected void RegisterSuccess()
     {
         this.currentSuccessCount++;
+        this.OnGameProgress?.Invoke(this.currentSuccessCount, this.CurrentStage.ObjectiveProgress);
         this.CheckForSuccess();
-    }
-
-    /// <summary>
-    /// Resets failure and progress bars.
-    /// </summary>
-    protected virtual void ResetVariables()
-    {
-        this.InitializeGame();
-
-        // Clean up rest of game.
-        this.CleanUp();
     }
 
     /// <summary>
@@ -117,6 +133,7 @@ public abstract class Game : MonoBehaviour
         this.wonGame = false;
         this.currentFailureCount = 0;
         this.currentSuccessCount = 0;
+        this.PointsToWin = this.CurrentStage.ObjectiveProgress;
     }
 
     /// <summary>
@@ -125,6 +142,7 @@ public abstract class Game : MonoBehaviour
     /// <returns></returns>
     private void CheckForFailure()
     {
+        Debug.Log($"Current fails: {this.currentFailureCount}/{this.FailureChances}");
         if(this.currentFailureCount >= this.FailureChances)
         {
             this.wonGame = false;
@@ -137,6 +155,7 @@ public abstract class Game : MonoBehaviour
     /// </summary>
     private void CheckForSuccess()
     {
+        Debug.Log($"Current success: {this.currentSuccessCount}/{this.PointsToWin}");
         if (this.currentSuccessCount >= this.PointsToWin)
         {
             this.wonGame = true;

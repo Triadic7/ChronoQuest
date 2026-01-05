@@ -54,5 +54,6 @@ public class StageModel
         this.ObjectiveText = table.ObjectiveText;
         this.IsFinalStage = table.IsFinalStage;
         this.StageDescription = table.StageDescription;
+        this.ObjectiveProgress = table.ObjectiveProgress;
     }
 }
