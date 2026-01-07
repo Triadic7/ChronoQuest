@@ -31,7 +31,7 @@ public class DataContext
         // Create stage table.
         this.db.CreateTable<StageTable>();
 
-        // Seed stages. [Populate this with a JSON file]
+        // Seed stages. [Populate this with a JSON file?]
         this.db.InsertOrReplace(new StageTable 
         { 
             StageId = 1, 
@@ -51,7 +51,7 @@ public class DataContext
             StageId = 3, 
             StageName = "Modern Day", 
             StageDescription = "Hurry up and grab the fresh moments in time before they disappear and summon anomalies.",
-            ObjectiveText = "Grab the objects before they fully appear"
+            ObjectiveText = "Grab the disturbances before they fully appear"
         });
         this.db.InsertOrReplace(new StageTable 
         { 
@@ -67,7 +67,7 @@ public class DataContext
         // Create npc table.
         this.db.CreateTable<NPCTable>();
 
-        // Seed NPCs. [Populate this with a JSON file]
+        // Seed NPCs. [Populate this with a JSON file?]
         if (!this.db.Table<NPCTable>().Any())
         {
             this.db.Insert(new NPCTable { NPCId = 1, Name = "Pharoh" });
@@ -76,74 +76,420 @@ public class DataContext
             this.db.Insert(new NPCTable { NPCId = 4, Name = "Super Advanced AI" });
         }
 
-        // Create dialogue table.
-        this.db.CreateTable<NPCDialogueTable>();
+        // Create tables for dialogue if not present.
+        this.db.CreateTable<DialogueTable>();
+        this.db.CreateTable<DialogueNodeTable>();
+        this.db.CreateTable<DialogueChoiceTable>();
 
-        #region Dialogue Seeding
-        // Seed dialogue table. [Populate this with a JSON file]
-        if (!this.db.Table<NPCDialogueTable>().Any())
+        // Always reset dialogue data if data is present to prevent caching old conversation data.
+        db.DeleteAll<DialogueChoiceTable>();
+        db.DeleteAll<DialogueNodeTable>();
+        db.DeleteAll<DialogueTable>();
+
+        // Inserts dialogue into the dialogue table for npcs to use.
+        if (!this.db.Table<DialogueTable>().Any())
         {
-            // Pharoh.
-            this.db.Insert(new NPCDialogueTable
+            #region Pharoh Dialogue
+            // Pharoh's dialogue.
+            DialogueTable dialogue = new DialogueTable
             {
-                NPCId = 1,
+                NPCID = 1,
+                NPCName = "Pharoh"
+            };
+            db.Insert(dialogue);
+            int dialogueId = dialogue.DialogueID;
+
+            // Nodes.
+            var mainNode = new DialogueNodeTable
+            {
+                DialogueID = dialogueId,
                 Order = 0,
-                Text = "Test 1"
-            });
+                DialogueText = "Well? Are you gonna do it?",
+                IsEndNode = false
+            };
+            this.db.Insert(mainNode);
+            int mainNodeId = mainNode.NodeID;
 
-            this.db.Insert(new NPCDialogueTable
+            var savePeopleNode = new DialogueNodeTable
             {
-                NPCId = 1,
+                DialogueID = dialogueId,
                 Order = 1,
-                Text = "Test 2"
+                DialogueText = "You're here to save my people and I, are you not?",
+                IsEndNode = false
+            };
+            this.db.Insert(savePeopleNode);
+            int savePeopleNodeId = savePeopleNode.NodeID;
+
+            var ritualNode = new DialogueNodeTable
+            {
+                DialogueID = dialogueId,
+                Order = 2,
+                DialogueText = "I know not the year from which you come from, but I know of your purpose. You are the only ones who can stop them. I will start a ritual using a series of colors. Match the colors in the order I summon them, to activate the <link=pyramid><color=#00BFFF>Pyramid's</color></link> secret weapon and stop the <link=anomalies><color=#00BFFF>Anomalies</color></link>.",
+                IsEndNode = false
+            };
+            this.db.Insert(ritualNode);
+            int ritualNodeId = ritualNode.NodeID;
+
+            // Choices.
+            this.db.Insert(new DialogueChoiceTable
+            {
+                NodeID = mainNodeId,
+                ChoiceText = "<color=#FFA500>Let's do it.</color>",
+                // Triggers game action.
+                NextNodeID = -1
             });
 
-            // King Arthur.
-            this.db.Insert(new NPCDialogueTable
+            this.db.Insert(new DialogueChoiceTable
             {
-                NPCId = 2,
+                NodeID = mainNodeId,
+                ChoiceText = "Do what again?",
+                NextNodeID = savePeopleNodeId
+            });
+
+            this.db.Insert(new DialogueChoiceTable
+            {
+                NodeID = savePeopleNodeId,
+                ChoiceText = "I don't know what I'm doing here",
+                NextNodeID = ritualNodeId
+            });
+
+            this.db.Insert(new DialogueChoiceTable
+            {
+                NodeID = savePeopleNodeId,
+                ChoiceText = "Yes, I'm here to stop the <link=anomalies><color=#00BFFF>Anomalies</color></link>. They're breaching the timeline more than ever before.",
+                NextNodeID = mainNodeId
+            });
+
+            // Choice loops back to main.
+            this.db.Insert(new DialogueChoiceTable
+            {
+                NodeID = ritualNodeId,
+                ChoiceText = "Okay, I think I can handle it from here.",
+                NextNodeID = mainNodeId
+            });
+
+            #endregion
+
+            #region King Arthur Dialogue
+            // King Arthur's dialogue.
+            DialogueTable arthurDialogue = new DialogueTable
+            {
+                NPCID = 2,
+                NPCName = "King Arthur"
+            };
+            db.Insert(arthurDialogue);
+            int arthurDialogueId = arthurDialogue.DialogueID;
+
+            // Nodes.
+            var mainNodeArthur = new DialogueNodeTable
+            {
+                DialogueID = arthurDialogueId,
                 Order = 0,
-                Text = "Test 3"
-            });
+                DialogueText = "The <link=anomalies><color=#00BFFF>Anomalies</color></link> are attacking the <link=castle><color=#00BFFF>Castle</color></link>! We await your help, hurry!",
+                IsEndNode = false
+            };
+            db.Insert(mainNodeArthur);
+            int mainNodeArthurId = mainNodeArthur.NodeID;
 
-            this.db.Insert(new NPCDialogueTable
+            var explainNodeArthur = new DialogueNodeTable
             {
-                NPCId = 2,
+                DialogueID = arthurDialogueId,
                 Order = 1,
-                Text = "Test 4"
+                DialogueText = "You must defend the <link=castle><color=#00BFFF>Castle</color></link> walls. Hold out long enough for me to decipher the ancient code beneath the castle. We can use it to close the <link=void><color=#00BFFF>Void</color></link>. Fail, and we will never be able to close the rift.",
+                IsEndNode = false
+            };
+            db.Insert(explainNodeArthur);
+            int explainNodeArthurId = explainNodeArthur.NodeID;
+
+            var strategyNodeArthur = new DialogueNodeTable
+            {
+                DialogueID = arthurDialogueId,
+                Order = 2,
+                DialogueText = "I've heard in this timeline, travelers such as yourself are able to pierce their armor. Simply touching them sends them back to the <link=void><color=#00BFFF>Void</color></link>.",
+                IsEndNode = false
+            };
+            db.Insert(strategyNodeArthur);
+            int strategyNodeArthurId = strategyNodeArthur.NodeID;
+
+            var loreNodeArthur = new DialogueNodeTable
+            {
+                DialogueID = arthurDialogueId,
+                Order = 3,
+                DialogueText = "These anomalies are fragments of corrupted timelines. Failed experiments by powerful time mages. They seek to unravel catastrophe unless stopped.",
+                IsEndNode = false
+            };
+            db.Insert(loreNodeArthur);
+            int loreNodeArthurId = loreNodeArthur.NodeID;
+
+            // Choices.
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = mainNodeArthurId,
+                ChoiceText = "<color=#FFA500>I will defend the <link=castle><color=#00BFFF>Castle</color></link>!</color>",
+                // Starts game.
+                NextNodeID = -1
             });
 
-            // Superior.
-            this.db.Insert(new NPCDialogueTable
+            db.Insert(new DialogueChoiceTable
             {
-                NPCId = 3,
+                NodeID = mainNodeArthurId,
+                ChoiceText = "What is happening here?",
+                NextNodeID = explainNodeArthurId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = explainNodeArthurId,
+                ChoiceText = "Understood, I will hold the walls!",
+                // Loops back to main node for start action.
+                NextNodeID = mainNodeArthurId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = explainNodeArthurId,
+                ChoiceText = "Uh, how am I supposed to defend a whole <link=castle><color=#00BFFF>Castle</color></link>? Shouldn't you give me reinforcements?",
+                NextNodeID = strategyNodeArthurId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = strategyNodeArthurId,
+                ChoiceText = "I understand. Let's defend!",
+                // Loops back to main node for start action.
+                NextNodeID = mainNodeArthurId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = strategyNodeArthurId,
+                ChoiceText = "Tell me more about these anomalies and why they exist.",
+                NextNodeID = loreNodeArthurId
+            });
+
+            // Loops back to main node for start action.
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = loreNodeArthurId,
+                ChoiceText = "I see. Let's defend the castle!",
+                NextNodeID = mainNodeArthurId
+            });
+            #endregion
+
+            #region Modern Day Supervisor Dialogue
+            // Supervisor's dialogue.
+            DialogueTable supervisorDialogue = new DialogueTable
+            {
+                NPCID = 3,
+                NPCName = "Supervisor"
+            };
+            db.Insert(supervisorDialogue);
+            int supervisorDialogueId = supervisorDialogue.DialogueID;
+
+            // Nodes.
+            var mainNodeSupervisor = new DialogueNodeTable
+            {
+                DialogueID = supervisorDialogueId,
                 Order = 0,
-                Text = "Test 5"
-            });
+                DialogueText = "<link=disturbance><color=#00BFFF>Disturbances</color></link> are appearing around the city! You need to remove them before they fully materialize. Otherwise who knows what crazy tech random people will find. The last thing we need is another <link=incident><color=#00BFFF>incident</color></link>.",
+                IsEndNode = false
+            };
+            db.Insert(mainNodeSupervisor);
+            int mainNodeSupervisorId = mainNodeSupervisor.NodeID;
 
-            this.db.Insert(new NPCDialogueTable
+            var explainNodeSupervisor = new DialogueNodeTable
             {
-                NPCId = 3,
+                DialogueID = supervisorDialogueId,
                 Order = 1,
-                Text = "Test 6"
+                DialogueText = "These <link=anomalies><color=#00BFFF>Anomalies</color></link> spawn over time and can overwhelm you if ignored. Remove disturbances before they fully appear, society isn't ready for such technology.",
+                IsEndNode = false
+            };
+            db.Insert(explainNodeSupervisor);
+            int explainNodeSupervisorId = explainNodeSupervisor.NodeID;
+
+            var strategyNodeSupervisor = new DialogueNodeTable
+            {
+                DialogueID = supervisorDialogueId,
+                Order = 2,
+                DialogueText = "Each <link=disturbance><color=#00BFFF>Disturbance</color></link> are equally dangerous to leave unchecked. They will have to run out of <link=disturbance><color=#00BFFF>Disturbances</color></link> eventully, so just keep grabbing them until they stop coming.",
+                IsEndNode = false
+            };
+            db.Insert(strategyNodeSupervisor);
+            int strategyNodeSupervisorId = strategyNodeSupervisor.NodeID;
+
+            var loreNodeSupervisor = new DialogueNodeTable
+            {
+                DialogueID = supervisorDialogueId,
+                Order = 3,
+                DialogueText = "That's above your <link=pay><color=#00BFFF>paygrade</color></link>. How about we focus on the objective at hand? You ask too many questions.",
+                IsEndNode = false
+            };
+            db.Insert(loreNodeSupervisor);
+            int loreNodeSupervisorId = loreNodeSupervisor.NodeID;
+
+            // Choices.
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = mainNodeSupervisorId,
+                ChoiceText = "<color=#FFA500>I will do my job, just point me at them.</color>",
+                // Triggers gameplay start.
+                NextNodeID = -1
             });
 
-            // Advanced AI.
-            this.db.Insert(new NPCDialogueTable
+            db.Insert(new DialogueChoiceTable
             {
-                NPCId = 4,
+                NodeID = mainNodeSupervisorId,
+                ChoiceText = "What can I do?",
+                NextNodeID = explainNodeSupervisorId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = explainNodeSupervisorId,
+                ChoiceText = "I will prioritize the <link=disturbance><color=#00BFFF>Disturbance</color></link> above my own life.",
+                NextNodeID = mainNodeSupervisorId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = explainNodeSupervisorId,
+                ChoiceText = "Wait, how do these anomalies spawn?",
+                NextNodeID = strategyNodeSupervisorId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = strategyNodeSupervisorId,
+                ChoiceText = "Got it.",
+                NextNodeID = mainNodeSupervisorId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = strategyNodeSupervisorId,
+                ChoiceText = "Tell me more about these anomalies.",
+                NextNodeID = loreNodeSupervisorId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = loreNodeSupervisorId,
+                ChoiceText = "Understood.",
+                NextNodeID = mainNodeSupervisorId
+            });
+            #endregion
+
+            #region Super Intelligent AI Dialogue
+            // Super Intelligent AI dialogue.
+            DialogueTable aiDialogue = new DialogueTable
+            {
+                NPCID = 4,
+                NPCName = "Super Intelligent AI"
+            };
+            db.Insert(aiDialogue);
+            int aiDialogueId = aiDialogue.DialogueID;
+
+            // Nodes.
+            var mainNodeAI = new DialogueNodeTable
+            {
+                DialogueID = aiDialogueId,
                 Order = 0,
-                Text = "Test 7"
+                DialogueText = "Alert! A massive <link=interloper><color=#00BFFF>Interloper</color></link> has materialized from the <link=void><color=#00BFFF>Void</color></link> near orbital station coordinates. Engagement protocol FXD-938 is in effect.",
+                IsEndNode = false
+            };
+            db.Insert(mainNodeAI);
+            int mainNodeAIId = mainNodeAI.NodeID;
+
+            var explainNodeAI = new DialogueNodeTable
+            {
+                DialogueID = aiDialogueId,
+                Order = 1,
+                DialogueText = "The <link=interloper><color=#00BFFF>Interloper</color></link> exhibits unstable quantum behavior. If not dispatched quickly, it will induce secondary <link=anomalies><color=#00BFFF>Anomalies</color></link> via recursive spacetime perturbations, exceeding station defenses.",
+                IsEndNode = false
+            };
+            db.Insert(explainNodeAI);
+            int explainNodeAIId = explainNodeAI.NodeID;
+
+            var strategyNodeAI = new DialogueNodeTable
+            {
+                DialogueID = aiDialogueId,
+                Order = 2,
+                DialogueText = "Directive: prioritize engagement with the <link=interloper><color=#00BFFF>Interloper</color></link> using all available projectile and energy arrays until destabilization metrics reach threshold.",
+                IsEndNode = false
+            };
+            db.Insert(strategyNodeAI);
+            int strategyNodeAIId = strategyNodeAI.NodeID;
+
+            var loreNodeAI = new DialogueNodeTable
+            {
+                DialogueID = aiDialogueId,
+                Order = 3,
+                DialogueText = "For context: this type of <link=interloper><color=#00BFFF>Interloper</color></link> has appeared only twice in recorded history. Its energy signatures are highly unusual, and despite years of research, little is known.",
+                IsEndNode = false
+            };
+            db.Insert(loreNodeAI);
+            int loreNodeAIId = loreNodeAI.NodeID;
+
+            // Choices.
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = mainNodeAIId,
+                ChoiceText = "<color=#FFA500>Engaging the <link=interloper><color=#00BFFF>Interloper</color></link> now.</color>",
+                NextNodeID = -1
             });
 
-            this.db.Insert(new NPCDialogueTable
+            db.Insert(new DialogueChoiceTable
             {
-                NPCId = 4,
-                Order = 1,
-                Text = "Test 8"
+                NodeID = mainNodeAIId,
+                ChoiceText = "Wait… I need more info before engaging. You're smart, tell me something.",
+                NextNodeID = explainNodeAIId
             });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = explainNodeAIId,
+                ChoiceText = "Tell me what this Interloper is. What am I actually fighting?",
+                NextNodeID = loreNodeAIId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = explainNodeAIId,
+                ChoiceText = "Okay… so what's my strategy?",
+                NextNodeID = strategyNodeAIId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = strategyNodeAIId,
+                ChoiceText = "Okay, I think I'm ready to fire at will.",
+                NextNodeID = mainNodeAIId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = strategyNodeAIId,
+                ChoiceText = "Wait… what’s the history of this thing?",
+                NextNodeID = loreNodeAIId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = loreNodeAIId,
+                ChoiceText = "Got it. I’ll focus on the mission now.",
+                NextNodeID = mainNodeAIId
+            });
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = loreNodeAIId,
+                ChoiceText = "So how do I actually take it down?",
+                NextNodeID = strategyNodeAIId
+            });
+
+            #endregion
+
         }
-        #endregion
     }
 
     /// <summary>
@@ -300,12 +646,29 @@ public class DataContext
     /// </summary>
     /// <param name="npcId">The id of the npc.</param>
     /// <returns>Returns list of npc dialogue.</returns>
-    public List<NPCDialogueModel> GetDialoguesForNPC(int npcId)
+    public List<DialogueModel> GetDialoguesForNPC(int npcId)
     {
-        return this.db.Table<NPCDialogueTable>()
-            .Where(d => d.NPCId == npcId)
-            .OrderBy(d => d.Order)
-            .Select(d => new NPCDialogueModel(d))
+        // Fetch all dialogues for this NPC.
+        var dialogues = this.db.Table<DialogueTable>()
+            .Where(d => d.NPCID == npcId)
+            .ToList();
+
+        // Fetch all nodes for these dialogues.
+        var dialogueIds = dialogues.Select(d => d.DialogueID).ToList();
+        var nodes = this.db.Table<DialogueNodeTable>()
+            .Where(n => dialogueIds.Contains(n.DialogueID))
+            .OrderBy(n => n.Order)
+            .ToList();
+
+        // Fetch all choices for these nodes.
+        var nodeIds = nodes.Select(n => n.NodeID).ToList();
+        var choices = this.db.Table<DialogueChoiceTable>()
+            .Where(c => nodeIds.Contains(c.NodeID))
+            .ToList();
+
+        // Return dialogues.
+        return dialogues
+            .Select(d => new DialogueModel(d, nodes, choices))
             .ToList();
     }
 

@@ -19,14 +19,14 @@ public class NPCModel
     /// <summary>
     /// Gets or sets the npc dialogues.
     /// </summary>
-    public List<NPCDialogueModel> Dialogues { get; set; }
+    public List<DialogueModel> Dialogues { get; set; }
 
     /// <summary>
     /// Constructor.
     /// </summary>
     /// <param name="table">The sql table.</param>
     /// <param name="dialogues">The npc dialogues.</param>
-    public NPCModel(NPCTable table, List<NPCDialogueModel> dialogues)
+    public NPCModel(NPCTable table, List<DialogueModel> dialogues)
     {
         this.NPCId = table.NPCId;
         this.Name = table.Name;

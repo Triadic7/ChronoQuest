@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour
     public GameStageManager GameStageManager { get; private set; }
 
     /// <summary>
+    /// Gets the dialogue manager.
+    /// </summary>
+    public DialogueManager DialogueManager { get; private set; }
+
+    /// <summary>
     /// On Game ready.
     /// </summary>
     public event Action OnGameInitialized;
@@ -91,11 +96,6 @@ public class GameManager : MonoBehaviour
     /// The load menu.
     /// </summary>
     private LoadMenu loadMenu;
-
-    /// <summary>
-    /// The talk menu.
-    /// </summary>
-    private TalkMenu talkMenu;
 
     /// <summary>
     /// If the game is paused.
@@ -174,6 +174,9 @@ public class GameManager : MonoBehaviour
         // Get scene manager.
         this.GameStageManager = GetComponent<GameStageManager>();
 
+        // Get dialogue manager.
+        this.DialogueManager = GetComponent<DialogueManager>();
+
         // Checks if settings are null.
         if (this.Settings == null)
         {
@@ -183,13 +186,12 @@ public class GameManager : MonoBehaviour
 
         // Get menus.
         this.loadMenu = FindAnyObjectByType<LoadMenu>();
-        this.talkMenu = FindAnyObjectByType<TalkMenu>();
 
         PlayerGameplayUI ui = FindAnyObjectByType<PlayerGameplayUI>();
 
         InputManager inputManager = FindAnyObjectByType<InputManager>();
 
-        if (this.loadMenu == null || this.talkMenu == null || inputManager == null || ui == null) 
+        if (this.loadMenu == null || inputManager == null || ui == null) 
         {
             Debug.LogError("Missing a dependency.");
             return;
@@ -197,7 +199,6 @@ public class GameManager : MonoBehaviour
 
         // Adds event listners.
         this.loadMenu.OnGamePlayButtonHit += this.StartGame;
-        this.talkMenu.OnDialogueFinished += this.OnDialogueFinished;
         inputManager.OnPause += this.PauseGame;
         ui.OnStageTimeElapsed += this.AddTimeToCurrentSave;
         this.GameStageManager.OnStageFinished += this.OnStageFinished;
@@ -289,9 +290,18 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Dialogue:
-                NPCModel currentNpc = this.SaveManager.DataContext.GetNPCFromStage(CurrentSave.StageId);
-                this.OnDialogueStart?.Invoke(currentNpc, this.CurrentSave.Stage.StageName);
+                // Subscribe to dialogue finished.
+                this.DialogueManager.OnDialogueEnded -= OnDialogueFinished;
+                this.DialogueManager.OnDialogueEnded += OnDialogueFinished;
+
+                // Open talk menu.
                 this.UIManager.OpenMenu("TalkMenu");
+
+                // Gets the current npc from the stage the player is on.
+                NPCModel currentNpc = this.SaveManager.DataContext.GetNPCFromStage(CurrentSave.StageId);
+
+                // Start dialogue through DialogueManager.
+                this.DialogueManager.StartDialogue(currentNpc, this.CurrentSave.Stage);
                 break;
 
             case GameState.Gameplay:
