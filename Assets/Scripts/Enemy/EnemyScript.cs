@@ -23,6 +23,8 @@ public class EnemyScript : MonoBehaviour
 
     public AggroZone aggroZone;
 
+    public EnemyHitbox hitbox;
+
     Rigidbody2D rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

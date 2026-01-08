@@ -151,7 +151,7 @@ TextureImporter:
       name: slimes_1
       rect:
         serializedVersion: 2
-        x: 137
+        x: 140
         y: 150
         width: 98
         height: 100
@@ -173,7 +173,7 @@ TextureImporter:
       name: slimes_2
       rect:
         serializedVersion: 2
-        x: 235
+        x: 238
         y: 150
         width: 98
         height: 100
@@ -261,10 +261,10 @@ TextureImporter:
       name: slimes_6
       rect:
         serializedVersion: 2
-        x: 235
-        y: 50
-        width: 98
-        height: 100
+        x: 245
+        y: 76
+        width: 77
+        height: 65
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
