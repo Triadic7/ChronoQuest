@@ -44,10 +44,21 @@ public class StageModel
     public bool IsFinalStage { get; set; }
 
     /// <summary>
+    /// Gets or sets the location.
+    /// </summary>
+    public LocationModel Location { get; set; }
+
+    /// <summary>
+    /// Gets or sets the location id.
+    /// </summary>
+    public int LocationID { get; set; }
+
+    /// <summary>
     /// Constructor.
     /// </summary>
     /// <param name="table">The table to convert.</param>
-    public StageModel(StageTable table)
+    /// <param name="location">The location.</param>
+    public StageModel(StageTable table, LocationModel location = null)
     {
         this.StageId = table.StageId;
         this.StageName = table.StageName;
@@ -55,5 +66,7 @@ public class StageModel
         this.IsFinalStage = table.IsFinalStage;
         this.StageDescription = table.StageDescription;
         this.ObjectiveProgress = table.ObjectiveProgress;
+        this.LocationID = table.LocationID;
+        this.Location = location;
     }
 }

@@ -37,21 +37,24 @@ public class DataContext
             StageId = 1, 
             StageName = "Egypt", 
             StageDescription = "To save Egypt, you must match the given pattern sequence to maintain balance. Failure is not an option.",
-            ObjectiveText = "Match the pattern"
+            ObjectiveText = "Match the pattern",
+            LocationID = 1,
         });
         this.db.InsertOrReplace(new StageTable 
         { 
             StageId = 2, 
             StageName = "Medieval Europe", 
             StageDescription = "Protect the base at all costs! You're given a new suit that wards away evil forces. Simply coming into contact with anomalies will remove them from the timeline.",
-            ObjectiveText = "Touch the anomalies to banish them"
+            ObjectiveText = "Touch the anomalies to banish them",
+            LocationID = 2,
         });
         this.db.InsertOrReplace(new StageTable 
         { 
             StageId = 3, 
             StageName = "Modern Day", 
             StageDescription = "Hurry up and grab the fresh moments in time before they disappear and summon anomalies.",
-            ObjectiveText = "Grab the disturbances before they fully appear"
+            ObjectiveText = "Grab the disturbances before they fully appear",
+            LocationID = 3,
         });
         this.db.InsertOrReplace(new StageTable 
         { 
@@ -60,6 +63,7 @@ public class DataContext
             StageDescription = "Final boss time. Protect the space station and destroy the interlopers once and for all!",
             ObjectiveText = "Defeat the boss and protect the station",
             ObjectiveProgress = 20,
+            LocationID = 4,
             IsFinalStage = true 
         });
         Debug.Log($"Stages in DB: {this.db.Table<StageTable>().Count()}");
@@ -488,15 +492,72 @@ public class DataContext
             });
 
             #endregion
-
         }
+
+        // Create location table.
+        db.CreateTable<LocationTable>();
+
+        // Seed locations.
+        if (!db.Table<LocationTable>().Any())
+        {
+            db.Insert(new LocationTable
+            {
+                LocationID = 1,
+                LocationName = "Egypt",
+                BackgroundTileNames = "Sand1,Sand2",
+                ForegroundTileNames = "Cactus1"
+            });
+
+            db.Insert(new LocationTable
+            {
+                LocationID = 2,
+                LocationName = "Medieval Europe",
+                BackgroundTileNames = "grass1,grass2",
+                ForegroundTileNames = "tree1,tree2"
+            });
+
+            db.Insert(new LocationTable
+            {
+                LocationID = 3,
+                LocationName = "Modern Day",
+                BackgroundTileNames = "grass1,grass2",
+                ForegroundTileNames = ""
+            });
+
+            db.Insert(new LocationTable
+            {
+                LocationID = 4,
+                LocationName = "Space",
+                BackgroundTileNames = "space1,space2",
+                ForegroundTileNames = ""
+            });
+        }
+    }
+
+    /// <summary>
+    /// Gets all locations
+    /// </summary>
+    /// <returns></returns>
+    public List<LocationTable> GetLocations()
+    {
+        return db.Table<LocationTable>().ToList();
+    }
+
+    /// <summary>
+    /// Gets location table by id.
+    /// </summary>
+    /// <param name="locationId"></param>
+    /// <returns></returns>
+    public LocationTable GetLocationByID(int locationId)
+    {
+        return this.db.Table<LocationTable>().FirstOrDefault(l => l.LocationID == locationId); 
     }
 
     /// <summary>
     /// Returns a list of saves.
     /// </summary>
     /// <returns>Returns a list of all saves.</returns>
-    public List<SaveModel> GetAllSaves()
+    public List<SaveModel> GetSaves()
     {
         // The max stage id.
         int maxStageId = this.db.Table<StageTable>().Max(s => s.StageId);

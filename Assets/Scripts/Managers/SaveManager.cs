@@ -19,7 +19,7 @@ public class SaveManager : MonoBehaviour
     /// </summary>
     public void SyncData()
     {
-        this.PlayerSaves = this.DataContext.GetAllSaves();
+        this.PlayerSaves = this.DataContext.GetSaves();
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class SaveManager : MonoBehaviour
         this.DataContext.DeleteSave(save.Id);
 
         // Refresh saves list from DB.
-        this.PlayerSaves = this.DataContext.GetAllSaves();
+        this.PlayerSaves = this.DataContext.GetSaves();
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public class SaveManager : MonoBehaviour
     {
         // Load save from sql handler.
         this.DataContext = new DataContext();
-        this.PlayerSaves = this.DataContext.GetAllSaves();
+        this.PlayerSaves = this.DataContext.GetSaves();
     }
 
 

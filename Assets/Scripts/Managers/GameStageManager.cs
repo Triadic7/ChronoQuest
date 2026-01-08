@@ -14,6 +14,11 @@ public class GameStageManager : MonoBehaviour
     public event Action<bool> OnStageFinished;
 
     /// <summary>
+    /// Fires after objective is finished, win or lose.
+    /// </summary>
+    public event Action OnObjectiveStop;
+
+    /// <summary>
     /// Starts the stage.
     /// </summary>
     public event Action<StageModel> OnStageStarted;
@@ -111,6 +116,29 @@ public class GameStageManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Cleans up current game in case the user goes to main menu.
+    /// </summary>
+    public void CleanUpCurrentGame()
+    {
+        if (this.currentGame != null)
+        {
+            // Unsubscribe from events.
+            this.currentGame.OnGameEnd -= this.EndGame;
+            this.currentGame.OnGameProgress -= this.OnGameProgressMade;
+            this.currentGame.OnFailStrike -= this.OnGameFailStrike;
+
+            this.OnObjectiveStop?.Invoke();
+
+            // Call cleanup logic.
+            this.currentGame.CleanUp();
+
+            // Null out reference.
+            this.currentGame = null;
+        }
+    }
+
+
+    /// <summary>
     /// Debug to win the game.
     /// </summary>
     public void DebugWinGame()
@@ -127,6 +155,20 @@ public class GameStageManager : MonoBehaviour
         this.timeMinigame = GetComponentInChildren<TimeMinigame>();
         this.towerDefenseMinigame = GetComponentInChildren<TowerDefenseMinigame>();
         this.spaceMinigame = GetComponentInChildren<SpaceMinigame>();
+    }
+
+    private void Start()
+    {
+        GameManager gm = GameManager.Instance;
+
+        // Clean up current game.
+        if (gm == null)
+        {
+            Debug.Log("GameManager not found.");
+            return;
+        }
+
+        gm.OnMainMenu += this.CleanUpCurrentGame;
     }
 
     /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
 /// The class for managing the game for things like settings and game events.
@@ -57,6 +58,11 @@ public class GameManager : MonoBehaviour
     public event Action OnStageStart;
 
     /// <summary>
+    /// On game stage location selected.
+    /// </summary>
+    public event Action<LocationModel> OnLocationSelected;
+
+    /// <summary>
     /// On game start, event that's fired for coop.
     /// </summary>
     public event Action<bool> OnGameStartMultiplayer;
@@ -65,6 +71,11 @@ public class GameManager : MonoBehaviour
     /// On game stage start.
     /// </summary>
     public event Action OnStageEnd;
+
+    /// <summary>
+    /// On game stage start.
+    /// </summary>
+    public event Action OnMainMenu;
 
     /// <summary>
     /// On dialogue start.
@@ -130,6 +141,9 @@ public class GameManager : MonoBehaviour
             this.IsPaused = false;
             Time.timeScale = 1f;
         }
+
+        // Fire main menu event.
+        this.OnMainMenu?.Invoke();
 
         // Opens main menu.
         this.UIManager.OpenMenu("MainMenu");
@@ -302,12 +316,26 @@ public class GameManager : MonoBehaviour
 
                 // Start dialogue through DialogueManager.
                 this.DialogueManager.StartDialogue(currentNpc, this.CurrentSave.Stage);
+
+                // Display location in background.
+                if (this.CurrentSave.Stage.Location == null)
+                {
+                    LocationTable table = this.SaveManager.DataContext.GetLocationByID(this.CurrentSave.Stage.LocationID);
+                    this.CurrentSave.Stage.Location = new LocationModel(table, AssetLoader.Resolver);
+                }
+
+                // Fire event for selecting the current stage.
+                this.OnLocationSelected(this.CurrentSave.Stage.Location);
                 break;
 
             case GameState.Gameplay:
                 this.UIManager.CloseMenu("TalkMenu");
                 this.OnStageStart?.Invoke();
+
+                // Spawn either single or coop players.
                 this.OnGameStartMultiplayer?.Invoke(this.CurrentSave.IsCoop);
+
+                // Start game.
                 this.GameStageManager.StartGame(this.CurrentSave.Stage);
                 break;
 

@@ -96,6 +96,7 @@ public class SpaceMinigame : Game
     public override void CleanUp()
     {
         this.CleanupStation();
+        this.CleanupEnemiesAndBoss();
     }
 
     /// <summary>
@@ -103,18 +104,21 @@ public class SpaceMinigame : Game
     /// </summary>
     private void CleanupEnemiesAndBoss()
     {
-        foreach (GameObject go in this.gameObjects)
+        if(this.gameObjects.Count > 0)
         {
-            if(go != null)
+            foreach (GameObject go in this.gameObjects)
             {
-                BossEnemy bossEnemy = go.GetComponent<BossEnemy>();
-                if (bossEnemy)
+                if (go != null)
                 {
-                    // Spawn enemies on objective start.
-                    this.OnObjectiveStart -= bossEnemy.StartSpawningEnemies;
-                    bossEnemy.StopSpawningEnemies();
+                    BossEnemy bossEnemy = go.GetComponent<BossEnemy>();
+                    if (bossEnemy)
+                    {
+                        // Spawn enemies on objective start.
+                        this.OnObjectiveStart -= bossEnemy.StartSpawningEnemies;
+                        bossEnemy.StopSpawningEnemies();
+                    }
+                    Destroy(go);
                 }
-                Destroy(go);
             }
         }
     }

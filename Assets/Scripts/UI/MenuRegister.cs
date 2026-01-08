@@ -33,7 +33,6 @@ public class MenuRegister : MonoBehaviour
         {
             // Get UIManager and subscribe to event.
             UIManager uiManager = GameManager.Instance.UIManager;
-            Debug.Log($"Menu registered: {menuKey} ({gameObject.name})");
             if (uiManager != null)
             {
                 uiManager.RegisterMenu(menuKey, menu);

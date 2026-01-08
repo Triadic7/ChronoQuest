@@ -40,7 +40,16 @@ public class PlayerShootController : MonoBehaviour
     {
         this.canFire = false;
 
-        GameStageManager stageManager = GameManager.Instance.GameStageManager;
+        // Get game manager.
+        GameManager gm = GameManager.Instance;
+        if (gm == null)
+        {
+            Debug.LogError("No GameManager found.");
+            return;
+        }
+
+        // Get game stage manager.
+        GameStageManager stageManager = gm.GameStageManager;
         if (stageManager == null)
         {
             Debug.LogError("No StageManager found.");
@@ -64,10 +73,10 @@ public class PlayerShootController : MonoBehaviour
         };
 
         // Prevent firing.
-        stageManager.OnStageFinished += (_) =>
-        {
-            this.canFire = false;
-        };
+        stageManager.OnObjectiveStop += () => this.canFire = false;
+
+        // Stop shooting on going to main menu.
+        gm.OnMainMenu += () => this.canFire = false;
     }
 
     /// <summary>
