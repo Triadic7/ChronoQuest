@@ -38,6 +38,7 @@ public class DataContext
             StageName = "Egypt", 
             StageDescription = "To save Egypt, you must match the given pattern sequence to maintain balance. Failure is not an option.",
             ObjectiveText = "Match the pattern",
+            ObjectiveProgress = 5,
             LocationID = 1,
         });
         this.db.InsertOrReplace(new StageTable 

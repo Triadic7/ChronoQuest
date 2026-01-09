@@ -9,10 +9,34 @@ using UnityEngine;
 public class PatternMinigame : Game
 {
     /// <summary>
-    /// List of pressure plates in the game.
+    /// The amount of pressure plates to spawn in.
     /// </summary>
     [SerializeField]
-    private List<PressurePlate> pressurePlates;
+    private int pressurePlateCount;
+
+    /// <summary>
+    /// How many plates are in the pattern.
+    /// </summary>
+    [SerializeField]
+    private int patternCount;
+
+    /// <summary>
+    /// The distance between plates.
+    /// </summary>
+    [SerializeField]
+    private int pressurePlateOffset;
+
+    /// <summary>
+    /// The prefab of the pressure plate.
+    /// </summary>
+    [SerializeField]
+    private GameObject pressurePlatePrefab;
+
+    /// <summary>
+    /// The spawn point for the pressure plate.
+    /// </summary>
+    [SerializeField]
+    private Transform pressurePlateSpawnPoint;
 
     /// <summary>
     /// Speed at which to display the pattern.
@@ -27,6 +51,11 @@ public class PatternMinigame : Game
     private float patternDisplayDelay = 0.5f;
 
     private List<PressurePlate> currentPattern = new List<PressurePlate>();
+
+    /// <summary>
+    /// The current pressure plates.
+    /// </summary>
+    private List<PressurePlate> instancedPressurePlates = new List<PressurePlate>();
 
     private int currentPatternIndex;
 
@@ -50,11 +79,10 @@ public class PatternMinigame : Game
     /// </summary>
     public override void StartGame()
     {
+        base.StartGame();
+
+        this.InstancePressurePlates();
         Debug.Log("Starting pattern game!");
-        foreach (PressurePlate plate in this.pressurePlates)
-        {
-            plate.gameObject.SetActive(true);
-        }
     }
 
     /// <summary>
@@ -72,20 +100,10 @@ public class PatternMinigame : Game
     /// </summary>
     public override void CleanUp()
     {
-        foreach (PressurePlate plate in this.pressurePlates)
+        foreach (PressurePlate plate in this.instancedPressurePlates)
         {
-            plate.gameObject.SetActive(false);
-        }
-    }
 
-    /// <summary>
-    /// Initializes event subscriptions for each pressure plate when the component is loaded.
-    /// </summary>
-    private void Awake()
-    {
-        foreach (PressurePlate plate in this.pressurePlates)
-        {
-            plate.OnPressed += this.OnPlatePressed;
+            Destroy(plate.gameObject);
         }
     }
 
@@ -94,13 +112,16 @@ public class PatternMinigame : Game
     /// </summary>
     private void OnDestroy()
     {
-        foreach (PressurePlate plate in this.pressurePlates)
+        foreach (PressurePlate plate in this.instancedPressurePlates)
         {
             if (plate != null)
             {
                 plate.OnPressed -= this.OnPlatePressed;
             }
         }
+
+        // Clear list of pressure plates.
+        this.instancedPressurePlates.Clear();
     }
 
     /// <summary>
@@ -115,6 +136,25 @@ public class PatternMinigame : Game
     }
 
     /// <summary>
+    /// Instance the panels at game start.
+    /// </summary>
+    private void InstancePressurePlates()
+    {
+        for (int i = 0; i < this.pressurePlateCount; i++)
+        {
+            Vector3 spawnPos = new Vector3(this.pressurePlateSpawnPoint.position.x + (i * this.pressurePlateOffset), this.pressurePlateSpawnPoint.position.y, 0);
+
+            // Instance pressure plates from spwan point, going to the right.
+            GameObject pressurePlate = Instantiate(this.pressurePlatePrefab, spawnPos, Quaternion.identity);
+            PressurePlate plate = pressurePlate.GetComponent<PressurePlate>();
+            this.instancedPressurePlates.Add(plate);
+
+            // Add event listener.
+            plate.OnPressed += this.OnPlatePressed;
+        }
+    }
+
+    /// <summary>
     /// Generates a new random pattern of pressure plates based on the current stage's objective progress.
     /// </summary>
     private void GeneratePattern()
@@ -123,11 +163,11 @@ public class PatternMinigame : Game
         this.currentPatternIndex = 0;
 
         // Use pattern length from stage data, but ensure it's at least 3 for testing.
-        int patternLength = Mathf.Max(3, this.CurrentStage.PatternLength);
+        int patternLength = Mathf.Max(3, this.patternCount);
 
         for (int i = 0; i < patternLength; i++)
         {
-            this.currentPattern.Add(this.pressurePlates[Random.Range(0, this.pressurePlates.Count)]);
+            this.currentPattern.Add(this.instancedPressurePlates[Random.Range(0, this.instancedPressurePlates.Count)]);
         }
     }
 
@@ -144,8 +184,11 @@ public class PatternMinigame : Game
 
         foreach (PressurePlate plate in this.currentPattern)
         {
-            plate.Highlight(this.patternDisplaySpeed);
-            yield return new WaitForSeconds(this.patternDisplaySpeed + this.patternDisplayDelay);
+            if(plate != null)
+            {
+                plate.Highlight(this.patternDisplaySpeed);
+                yield return new WaitForSeconds(this.patternDisplaySpeed + this.patternDisplayDelay);
+            }
         }
     }
 
