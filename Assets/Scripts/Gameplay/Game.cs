@@ -106,6 +106,15 @@ public abstract class Game : MonoBehaviour
     }
 
     /// <summary>
+    /// Determines whether the game has reached a finished state based on the current success and failure counts.
+    /// </summary>
+    /// <returns>true if the required number of successes or failures has been reached; otherwise, false.</returns>
+    public bool IsGameFinished()
+    {
+        return this.currentSuccessCount >= this.PointsToWin || this.currentFailureCount >= this.FailureChances;
+    }
+
+    /// <summary>
     /// Receive a failure strike.
     /// </summary>
     protected void ReceiveFailStrike()

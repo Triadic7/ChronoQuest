@@ -151,10 +151,10 @@ public class GameStageManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        this.patternMinigame = GetComponentInChildren<PatternMinigame>();
-        this.timeMinigame = GetComponentInChildren<TimeMinigame>();
-        this.towerDefenseMinigame = GetComponentInChildren<TowerDefenseMinigame>();
-        this.spaceMinigame = GetComponentInChildren<SpaceMinigame>();
+        this.patternMinigame = GetComponentInChildren<PatternMinigame>(true);
+        this.timeMinigame = GetComponentInChildren<TimeMinigame>(true);
+        this.towerDefenseMinigame = GetComponentInChildren<TowerDefenseMinigame>(true);
+        this.spaceMinigame = GetComponentInChildren<SpaceMinigame>(true);
     }
 
     private void Start()

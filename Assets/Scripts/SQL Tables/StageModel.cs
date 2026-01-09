@@ -14,6 +14,11 @@ public class StageModel
     public string StageName { get; set; }
 
     /// <summary>
+    /// Gets or sets the length of the pattern used for matching or validation operations.
+    /// </summary>
+    public int PatternLength { get; set; }
+
+    /// <summary>
     /// Gets or sets the npc id.
     /// </summary>
     public int NPCId { get; set; }
