@@ -28,6 +28,9 @@ public class DataContext
         // Create save table.
         this.db.CreateTable<SaveTable>();
 
+        // Create progress table.
+        this.db.CreateTable<StageProgressTable>();
+
         // Create stage table.
         this.db.CreateTable<StageTable>();
 
@@ -40,6 +43,7 @@ public class DataContext
             ObjectiveText = "Match the pattern",
             ObjectiveProgress = 5,
             LocationID = 1,
+            NPCId = 1,
         });
         this.db.InsertOrReplace(new StageTable 
         { 
@@ -48,6 +52,7 @@ public class DataContext
             StageDescription = "Protect the base at all costs! You're given a new suit that wards away evil forces. Simply coming into contact with anomalies will remove them from the timeline.",
             ObjectiveText = "Touch the anomalies to banish them",
             LocationID = 2,
+            NPCId = 2,
         });
         this.db.InsertOrReplace(new StageTable 
         { 
@@ -56,6 +61,7 @@ public class DataContext
             StageDescription = "Hurry up and grab the fresh moments in time before they disappear and summon anomalies.",
             ObjectiveText = "Grab the disturbances before they fully appear",
             LocationID = 3,
+            NPCId = 3,
         });
         this.db.InsertOrReplace(new StageTable 
         { 
@@ -65,9 +71,9 @@ public class DataContext
             ObjectiveText = "Defeat the boss and protect the station",
             ObjectiveProgress = 20,
             LocationID = 4,
+            NPCId = 4,
             IsFinalStage = true 
         });
-        Debug.Log($"Stages in DB: {this.db.Table<StageTable>().Count()}");
 
         // Create npc table.
         this.db.CreateTable<NPCTable>();
@@ -94,7 +100,7 @@ public class DataContext
         // Inserts dialogue into the dialogue table for npcs to use.
         if (!this.db.Table<DialogueTable>().Any())
         {
-            #region Pharoh Dialogue
+            #region Pharoh Intro Dialogue
             // Pharoh's dialogue.
             DialogueTable dialogue = new DialogueTable
             {
@@ -175,7 +181,66 @@ public class DataContext
 
             #endregion
 
-            #region King Arthur Dialogue
+            #region Pharoh Outro Dialogue
+
+            // Success outro.
+            DialogueTable outroWinDialogue = new DialogueTable
+            {
+                NPCID = 1,
+                NPCName = "Pharoh",
+                IsOutro = true,
+                IsWin = true
+            };
+            db.Insert(outroWinDialogue);
+            int outroWinDialogueId = outroWinDialogue.DialogueID;
+
+            var outroWinNode = new DialogueNodeTable
+            {
+                DialogueID = outroWinDialogueId,
+                Order = 0,
+                DialogueText = "Pass",
+                IsEndNode = false
+            };
+            db.Insert(outroWinNode);
+            int outroWinNodeId = outroWinNode.NodeID;
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = outroWinNodeId,
+                ChoiceText = "Continue",
+                NextNodeID = -1
+            });
+
+            // Failure outro.
+            DialogueTable outroLoseDialogue = new DialogueTable
+            {
+                NPCID = 1,
+                NPCName = "Pharoh",
+                IsOutro = true,
+                IsWin = false
+            };
+            db.Insert(outroLoseDialogue);
+            int outroLoseDialogueId = outroLoseDialogue.DialogueID;
+
+            var outroLoseNode = new DialogueNodeTable
+            {
+                DialogueID = outroLoseDialogueId,
+                Order = 0,
+                DialogueText = "Fail",
+                IsEndNode = false
+            };
+            db.Insert(outroLoseNode);
+            int outroLoseNodeId = outroLoseNode.NodeID;
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = outroLoseNodeId,
+                ChoiceText = "Continue",
+                NextNodeID = -1
+            });
+            #endregion
+
+            #region King Arthur Intro Dialogue
             // King Arthur's dialogue.
             DialogueTable arthurDialogue = new DialogueTable
             {
@@ -281,7 +346,67 @@ public class DataContext
             });
             #endregion
 
-            #region Modern Day Supervisor Dialogue
+            #region King Arthur Outro Dialogue
+
+            // Success outro.
+            DialogueTable arthurWinDialogue = new DialogueTable
+            {
+                NPCID = 2,
+                NPCName = "King Arthur",
+                IsOutro = true,
+                IsWin = true
+            };
+            db.Insert(arthurWinDialogue);
+            int arthurWinDialogueId = arthurWinDialogue.DialogueID;
+
+            var arthurWinNode = new DialogueNodeTable
+            {
+                DialogueID = arthurWinDialogueId,
+                Order = 0,
+                DialogueText = "Pass",
+                IsEndNode = false
+            };
+            db.Insert(arthurWinNode);
+            int arthurWinNodeId = arthurWinNode.NodeID;
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = arthurWinNodeId,
+                ChoiceText = "Continue",
+                NextNodeID = -1
+            });
+
+            // Failure outro.
+            DialogueTable arthurLoseDialogue = new DialogueTable
+            {
+                NPCID = 2,
+                NPCName = "King Arthur",
+                IsOutro = true,
+                IsWin = false
+            };
+            db.Insert(arthurLoseDialogue);
+            int arthurLoseDialogueId = arthurLoseDialogue.DialogueID;
+
+            var arthurLoseNode = new DialogueNodeTable
+            {
+                DialogueID = arthurLoseDialogueId,
+                Order = 0,
+                DialogueText = "Fail",
+                IsEndNode = false
+            };
+            db.Insert(arthurLoseNode);
+            int arthurLoseNodeId = arthurLoseNode.NodeID;
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = arthurLoseNodeId,
+                ChoiceText = "Continue",
+                NextNodeID = -1
+            });
+
+            #endregion
+
+            #region Modern Day Supervisor Intro Dialogue
             // Supervisor's dialogue.
             DialogueTable supervisorDialogue = new DialogueTable
             {
@@ -384,7 +509,67 @@ public class DataContext
             });
             #endregion
 
-            #region Super Intelligent AI Dialogue
+            #region Modern Day Supervisor Outro Dialogue
+
+            // Success outro.
+            DialogueTable supervisorWinDialogue = new DialogueTable
+            {
+                NPCID = 3,
+                NPCName = "Supervisor",
+                IsOutro = true,
+                IsWin = true
+            };
+            db.Insert(supervisorWinDialogue);
+            int supervisorWinDialogueId = supervisorWinDialogue.DialogueID;
+
+            var supervisorWinNode = new DialogueNodeTable
+            {
+                DialogueID = supervisorWinDialogueId,
+                Order = 0,
+                DialogueText = "Pass",
+                IsEndNode = false
+            };
+            db.Insert(supervisorWinNode);
+            int supervisorWinNodeId = supervisorWinNode.NodeID;
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = supervisorWinNodeId,
+                ChoiceText = "Continue",
+                NextNodeID = -1
+            });
+
+            // Failure outro.
+            DialogueTable supervisorLoseDialogue = new DialogueTable
+            {
+                NPCID = 3,
+                NPCName = "Supervisor",
+                IsOutro = true,
+                IsWin = false
+            };
+            db.Insert(supervisorLoseDialogue);
+            int supervisorLoseDialogueId = supervisorLoseDialogue.DialogueID;
+
+            var supervisorLoseNode = new DialogueNodeTable
+            {
+                DialogueID = supervisorLoseDialogueId,
+                Order = 0,
+                DialogueText = "Fail",
+                IsEndNode = false
+            };
+            db.Insert(supervisorLoseNode);
+            int supervisorLoseNodeId = supervisorLoseNode.NodeID;
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = supervisorLoseNodeId,
+                ChoiceText = "Continue",
+                NextNodeID = -1
+            });
+
+            #endregion
+
+            #region Super Intelligent AI Intro Dialogue
             // Super Intelligent AI dialogue.
             DialogueTable aiDialogue = new DialogueTable
             {
@@ -493,6 +678,66 @@ public class DataContext
             });
 
             #endregion
+
+            #region Super Intelligent AI Outro Dialogue
+
+            // Success outro.
+            DialogueTable aiWinDialogue = new DialogueTable
+            {
+                NPCID = 4,
+                NPCName = "Super Intelligent AI",
+                IsOutro = true,
+                IsWin = true
+            };
+            db.Insert(aiWinDialogue);
+            int aiWinDialogueId = aiWinDialogue.DialogueID;
+
+            var aiWinNode = new DialogueNodeTable
+            {
+                DialogueID = aiWinDialogueId,
+                Order = 0,
+                DialogueText = "Pass",
+                IsEndNode = false
+            };
+            db.Insert(aiWinNode);
+            int aiWinNodeId = aiWinNode.NodeID;
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = aiWinNodeId,
+                ChoiceText = "Continue",
+                NextNodeID = -1
+            });
+
+            // Failure outro.
+            DialogueTable aiLoseDialogue = new DialogueTable
+            {
+                NPCID = 4,
+                NPCName = "Super Intelligent AI",
+                IsOutro = true,
+                IsWin = false
+            };
+            db.Insert(aiLoseDialogue);
+            int aiLoseDialogueId = aiLoseDialogue.DialogueID;
+
+            var aiLoseNode = new DialogueNodeTable
+            {
+                DialogueID = aiLoseDialogueId,
+                Order = 0,
+                DialogueText = "Fail",
+                IsEndNode = false
+            };
+            db.Insert(aiLoseNode);
+            int aiLoseNodeId = aiLoseNode.NodeID;
+
+            db.Insert(new DialogueChoiceTable
+            {
+                NodeID = aiLoseNodeId,
+                ChoiceText = "Continue",
+                NextNodeID = -1
+            });
+
+            #endregion
         }
 
         // Create location table.
@@ -538,7 +783,7 @@ public class DataContext
     /// <summary>
     /// Gets all locations
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Returns a list of all locations.</returns>
     public List<LocationTable> GetLocations()
     {
         return db.Table<LocationTable>().ToList();
@@ -548,7 +793,7 @@ public class DataContext
     /// Gets location table by id.
     /// </summary>
     /// <param name="locationId"></param>
-    /// <returns></returns>
+    /// <returns>Returns a location by id.</returns>
     public LocationTable GetLocationByID(int locationId)
     {
         return this.db.Table<LocationTable>().FirstOrDefault(l => l.LocationID == locationId); 
@@ -593,20 +838,16 @@ public class DataContext
     /// <returns>Returns id of new save.</returns>
     public int InsertSave(SaveModel data)
     {
-        SaveTable model = new SaveTable
-        {
-            PlayTime = data.PlayTime,
-            IsCoop = data.IsCoop,
+        data.LastPlayed = DateTime.UtcNow;
 
-            // Use stage id or default 1.
-            StageId = data.Stage != null ? data.Stage.StageId : 1,
+        // Converts save model to save table.
+        SaveTable table = this.ToTable(data);
 
-            LastPlayed = DateTime.UtcNow,
-        };
+        // Insert into table.
+        db.Insert(table);
 
-        // Insert new data into db.
-        this.db.Insert(model);
-        return model.Id;
+        // Returns inserted table id.
+        return table.Id;
     }
 
     /// <summary>
@@ -615,17 +856,11 @@ public class DataContext
     /// <param name="data">The data to update.</param>
     public void UpdateSave(SaveModel data)
     {
-        SaveTable model = new SaveTable
-        {
-            Id = data.Id,
-            StageId = data.StageId,
-            PlayTime = data.PlayTime,
-            IsCoop = data.IsCoop,
-            LastPlayed = data.LastPlayed,
-        };
+        // Put last played.
+        data.LastPlayed = DateTime.UtcNow;
 
-        // Updates data.
-        this.db.Update(model);
+        // Update table using the model to table method.
+        db.Update(this.ToTable(data));
     }
 
     /// <summary>
@@ -704,6 +939,55 @@ public class DataContext
     }
 
     /// <summary>
+    /// Insert stage progress.
+    /// </summary>
+    /// <param name="saveId">The save id.</param>
+    /// <param name="progress">The progress model.</param>
+    public void InsertStageProgress(int saveId, StageProgressModel progress)
+    {
+        var table = new StageProgressTable
+        {
+            SaveId = saveId,
+            StageId = progress.StageID,
+            // Parse enum to int.
+            Result = (int)progress.Result,
+        };
+
+        db.Insert(table);
+    }
+
+    /// <summary>
+    /// Update stage progress.
+    /// </summary>
+    /// <param name="saveId">The save id.</param>
+    /// <param name="progress">The progress model.</param>
+    public void UpdateStageProgress(int saveId, StageProgressModel progress)
+    {
+        var table = new StageProgressTable
+        {
+            SaveId = saveId,
+            StageId = progress.StageID,
+            // Parse enum to int.
+            Result = (int)progress.Result,
+        };
+
+        db.Update(table);
+    }
+
+    /// <summary>
+    /// Checks if stage progress exists at save id.
+    /// </summary>
+    /// <param name="saveId">The save id.</param>
+    /// <param name="stageId">The stage id.</param>
+    /// <returns>Returns true if found.</returns>
+    public bool StageProgressExists(int saveId, int stageId)
+    {
+        return db.Table<StageProgressTable>()
+                 .Where(x => x.SaveId == saveId && x.StageId == stageId)
+                 .Count() > 0;
+    }
+
+    /// <summary>
     /// Gets all dialogue from npc by id.
     /// </summary>
     /// <param name="npcId">The id of the npc.</param>
@@ -735,6 +1019,49 @@ public class DataContext
     }
 
     /// <summary>
+    /// Gets the outro dialogue for a specific stage and NPC, optionally by win/loss.
+    /// </summary>
+    /// <param name="stageId">The stage id.</param>
+    /// <param name="won">Whether the stage was won or lost.</param>
+    /// <returns>The outro dialogue for the stage.</returns>
+    public DialogueModel GetOutroDialogueForStage(int stageId, bool won)
+    {
+        // Fetch the NPC for this stage.
+        StageModel stage = this.GetStageById(stageId);
+        if (stage == null)
+        {
+            return null;
+        }
+
+        // Get npc id.
+        int npcId = stage.NPCId;
+
+        // Get outro dialogue based on win or lose.
+        var dialogueTable = this.db.Table<DialogueTable>()
+            .FirstOrDefault(d => d.NPCID == npcId && d.IsOutro == true && d.IsWin == won);
+
+        if (dialogueTable == null)
+        {
+            return null;
+        }
+
+        // Fetch nodes for this dialogue.
+        var nodes = this.db.Table<DialogueNodeTable>()
+            .Where(n => n.DialogueID == dialogueTable.DialogueID)
+            .OrderBy(n => n.Order)
+            .ToList();
+
+        // Fetch choices for these nodes.
+        var nodeIds = nodes.Select(n => n.NodeID).ToList();
+        var choices = this.db.Table<DialogueChoiceTable>()
+            .Where(c => nodeIds.Contains(c.NodeID))
+            .ToList();
+
+        return new DialogueModel(dialogueTable, nodes, choices);
+    }
+
+
+    /// <summary>
     /// Gets npc from stage id.
     /// </summary>
     /// <param name="stageId">The stage id.</param>
@@ -747,5 +1074,23 @@ public class DataContext
         // If table isn't null, return new save model.
         return tableRow != null ? new NPCModel(tableRow, this.GetDialoguesForNPC(tableRow.NPCId)) : null;
     }
+
+    /// <summary>
+    /// Converts SaveModel to table for sqlite.
+    /// </summary>
+    /// <param name="data">The model.</param>
+    /// <returns>Returns a SaveTable.</returns>
+    private SaveTable ToTable(SaveModel data)
+    {
+        return new SaveTable
+        {
+            Id = data.Id,
+            StageId = data.CurrentStageId,
+            PlayTime = data.PlayTime,
+            IsCoop = data.IsCoop,
+            LastPlayed = data.LastPlayed
+        };
+    }
+
 
 }

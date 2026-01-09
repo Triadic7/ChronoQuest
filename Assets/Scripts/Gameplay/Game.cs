@@ -47,11 +47,6 @@ public abstract class Game : MonoBehaviour
     public StageModel CurrentStage { get; private set; }
 
     /// <summary>
-    /// Whether the game has been won or not.
-    /// </summary>
-    private bool wonGame;
-
-    /// <summary>
     /// How many fails the player currently has.
     /// </summary>
     private int currentFailureCount;
@@ -99,10 +94,11 @@ public abstract class Game : MonoBehaviour
     /// <summary>
     /// Ends game. This should be where you remove enemies.
     /// </summary>
-    public void EndGame()
+    /// <param name="won">If the game was won.</param>
+    public void EndGame(bool won)
     {
         this.GameEnded();
-        this.OnGameEnd?.Invoke(this.wonGame);
+        this.OnGameEnd?.Invoke(won);
     }
 
     /// <summary>
@@ -139,7 +135,6 @@ public abstract class Game : MonoBehaviour
     /// </summary>
     private void InitializeGame()
     {
-        this.wonGame = false;
         this.currentFailureCount = 0;
         this.currentSuccessCount = 0;
         this.PointsToWin = this.CurrentStage.ObjectiveProgress;
@@ -154,8 +149,7 @@ public abstract class Game : MonoBehaviour
         Debug.Log($"Current fails: {this.currentFailureCount}/{this.FailureChances}");
         if(this.currentFailureCount >= this.FailureChances)
         {
-            this.wonGame = false;
-            this.EndGame();
+            this.EndGame(false);
         }
     }
 
@@ -167,8 +161,7 @@ public abstract class Game : MonoBehaviour
         Debug.Log($"Current success: {this.currentSuccessCount}/{this.PointsToWin}");
         if (this.currentSuccessCount >= this.PointsToWin)
         {
-            this.wonGame = true;
-            this.EndGame();
+            this.EndGame(true);
         }
     }
 }

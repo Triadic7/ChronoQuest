@@ -33,7 +33,7 @@ public class SaveSlotPrefab : MonoBehaviour
         if(save != null)
         {
             this.locationText.text = save.Stage.StageName;
-            this.stageIdText.text = $"Level: {save.Stage.StageId}";
+            this.stageIdText.text = $"Level: {save.Stage.StageID}";
             this.timeText.text = $"Time: {this.FormatTime(save.PlayTime)}";
         }
         else

@@ -41,8 +41,21 @@ public class SaveManager : MonoBehaviour
             this.DataContext.UpdateSave(save);
         }
 
+        // Saves stage progress here by inserting or updating.
+        foreach (var progress in save.StageProgress.Values)
+        {
+            if (DataContext.StageProgressExists(save.Id, progress.StageID))
+            {
+                DataContext.UpdateStageProgress(save.Id, progress);
+            }
+            else
+            {
+                DataContext.InsertStageProgress(save.Id, progress);
+            }
+        }
+
         // Make sure the Stage object is set using StageId.
-        save.Stage = this.DataContext.GetStageById(save.StageId);
+        save.Stage = this.DataContext.GetStageById(save.CurrentStageId);
 
         return save;
     }

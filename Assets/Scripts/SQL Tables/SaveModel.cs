@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Save data for loading a save.
+/// This is the runtime model.
 /// </summary>
 [System.Serializable]
 public class SaveModel
@@ -14,7 +17,7 @@ public class SaveModel
     /// <summary>
     /// Gets the stage id.
     /// </summary>
-    public int StageId;
+    public int CurrentStageId;
 
     /// <summary>
     /// Gets the stage.
@@ -37,6 +40,11 @@ public class SaveModel
     public DateTime LastPlayed { get; set; }
 
     /// <summary>
+    /// The stage progress for each stage.
+    /// </summary>
+    public Dictionary<int, StageProgressModel> StageProgress;
+
+    /// <summary>
     /// Constructor.
     /// </summary>
     /// <param name="table">The sql table.</param>
@@ -44,11 +52,12 @@ public class SaveModel
     public SaveModel(SaveTable table, StageModel stage)
     {
         this.Id = table.Id;
-        this.StageId = table.StageId;
+        this.CurrentStageId = table.StageId;
         this.PlayTime = table.PlayTime;
         this.IsCoop = table.IsCoop;
         this.Stage = stage;
         this.LastPlayed = table.LastPlayed;
+        this.StageProgress = new Dictionary<int, StageProgressModel>();
     }
 
     /// <summary>
@@ -59,8 +68,32 @@ public class SaveModel
     /// <param name="isCoop">If game is coop.</param>
     public SaveModel(int stageId, float playtime, bool isCoop)
     {
-        this.StageId = stageId;
+        this.CurrentStageId = stageId;
         this.PlayTime = playtime;
         this.IsCoop = isCoop;
+
+        this.StageProgress = new Dictionary<int, StageProgressModel>();
+    }
+
+    /// <summary>
+    /// Adds stage result to dictionary.
+    /// </summary>
+    /// <param name="stageId">The stage id.</param>
+    /// <param name="won">If the players won.</param>
+    public void AddStageResult(int stageId, bool won)
+    {
+        // Tries to update dictionary first.
+        if (!StageProgress.TryGetValue(stageId, out var progress))
+        {
+            progress = new StageProgressModel
+            {
+                StageID = stageId,
+                Result = StageResult.NotPlayed
+            };
+            StageProgress[stageId] = progress;
+        }
+
+        // Update result.
+        progress.Result = won ? StageResult.Won : StageResult.Lost;
     }
 }

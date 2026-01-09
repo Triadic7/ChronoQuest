@@ -60,8 +60,8 @@ public class TalkMenu : Menu
     /// <param name="node">The dialogue node to display.</param>
     private void DisplayNode(DialogueNodeModel node)
     {
-        npcText.text = node.DialogueText;
-        npcText.ForceMeshUpdate();
+        this.npcText.text = node.DialogueText;
+        this.npcText.ForceMeshUpdate();
 
         // Clear old choice buttons.
         foreach (Transform child in this.choicesContainer)
@@ -100,16 +100,6 @@ public class TalkMenu : Menu
     }
 
     /// <summary>
-    /// Called when the dialogue ends. Can be used to close the menu or trigger events.
-    /// </summary>
-    private void OnDialogueComplete()
-    {
-        Debug.Log("Dialogue ended.");
-        // Close the TalkMenu.
-        this.Close();
-    }
-
-    /// <summary>
     /// Subscribe to events.
     /// </summary>
     private void OnEnable()
@@ -121,7 +111,6 @@ public class TalkMenu : Menu
 
         this.dialogueManager.OnNPCUpdated += this.UpdateNPCInfo;
         this.dialogueManager.OnNodeUpdated += this.DisplayNode;
-        this.dialogueManager.OnDialogueEnded += this.OnDialogueComplete;
         this.dialogueManager.OnPlayerChoiceSelected += this.DisplayPlayerResponse;
 
         this.DisplayPlayerResponse();
@@ -134,7 +123,6 @@ public class TalkMenu : Menu
     {
         this.dialogueManager.OnNPCUpdated -= this.UpdateNPCInfo;
         this.dialogueManager.OnNodeUpdated -= this.DisplayNode;
-        this.dialogueManager.OnDialogueEnded -= this.OnDialogueComplete;
         this.dialogueManager.OnPlayerChoiceSelected -= this.DisplayPlayerResponse;
     }
 
@@ -155,8 +143,8 @@ public class TalkMenu : Menu
     /// <param name="response">The player response in dialogue.</param>
     private void DisplayPlayerResponse(string response = "")
     {
-        // If no string is passed, hide the panel.
-        if (response == string.Empty) 
+        // If no string is passed or continue, hide the panel.
+        if (response == string.Empty || response == "Continue") 
         {
             this.playerResponsePanel.SetActive(false);
         }

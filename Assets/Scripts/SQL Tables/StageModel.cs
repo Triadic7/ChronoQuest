@@ -1,3 +1,5 @@
+using UnityEngine;
+
 /// <summary>
 /// The class which represents a stage.
 /// </summary>
@@ -6,7 +8,7 @@ public class StageModel
     /// <summary>
     /// Gets or sets the stage id.
     /// </summary>
-    public int StageId { get; set; }
+    public int StageID { get; set; }
 
     /// <summary>
     /// Gets or sets the stage name.
@@ -65,7 +67,7 @@ public class StageModel
     /// <param name="location">The location.</param>
     public StageModel(StageTable table, LocationModel location = null)
     {
-        this.StageId = table.StageId;
+        this.StageID = table.StageId;
         this.StageName = table.StageName;
         this.ObjectiveText = table.ObjectiveText;
         this.IsFinalStage = table.IsFinalStage;
@@ -73,5 +75,7 @@ public class StageModel
         this.ObjectiveProgress = table.ObjectiveProgress;
         this.LocationID = table.LocationID;
         this.Location = location;
+        this.NPCId = table.NPCId;
     }
+
 }

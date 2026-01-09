@@ -75,7 +75,7 @@ public class GameStageManager : MonoBehaviour
     public void StartGame(StageModel stage)
     {
         // Map to minigame instance.
-        switch (stage.StageId)
+        switch (stage.StageID)
         {
             case 1:
                 this.currentGame = patternMinigame; 
@@ -90,7 +90,7 @@ public class GameStageManager : MonoBehaviour
                 this.currentGame = spaceMinigame; 
                 break;
             default:
-                Debug.LogError($"No minigame for stage {stage.StageId}");
+                Debug.LogError($"No minigame for stage {stage.StageID}");
                 return;
         }
 
@@ -143,7 +143,7 @@ public class GameStageManager : MonoBehaviour
     /// </summary>
     public void DebugWinGame()
     {
-        this.currentGame.EndGame();
+        this.currentGame.EndGame(true);
     }
 
     /// <summary>
@@ -204,7 +204,10 @@ public class GameStageManager : MonoBehaviour
     private IEnumerator StageEndDelay(bool hasWon)
     {
         yield return new WaitForSeconds(stageDelay);
-        this.currentGame.CleanUp();
-        this.OnStageFinished?.Invoke(hasWon);
+        if(this.currentGame != null)
+        {
+            this.currentGame.CleanUp();
+            this.OnStageFinished?.Invoke(hasWon);
+        }
     }
 }

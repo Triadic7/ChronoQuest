@@ -21,4 +21,14 @@ public class DialogueTable
     /// Gets or sets the npcs id.
     /// </summary>
     public int NPCID { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this dialogue is an outro.
+    /// </summary>
+    public bool IsOutro { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this outro is for a winning outcome.
+    /// </summary>
+    public bool IsWin { get; set; }
 }

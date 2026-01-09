@@ -1189,7 +1189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c77bf306ca6b24488f3ffb87113f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuRegister
-  menuKey: PauseMenu
+  MenuKey: PauseMenu
 --- !u!114 &133339142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4714,7 +4714,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c77bf306ca6b24488f3ffb87113f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuRegister
-  menuKey: SettingsMenu
+  MenuKey: SettingsMenu
 --- !u!1 &491180518
 GameObject:
   m_ObjectHideFlags: 0
@@ -7111,7 +7111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c77bf306ca6b24488f3ffb87113f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuRegister
-  menuKey: EndMenu
+  MenuKey: EndMenu
 --- !u!114 &774588640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10331,7 +10331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c77bf306ca6b24488f3ffb87113f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuRegister
-  menuKey: LoadMenu
+  MenuKey: LoadMenu
 --- !u!114 &1294033241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10406,7 +10406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c77bf306ca6b24488f3ffb87113f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuRegister
-  menuKey: MainMenu
+  MenuKey: MainMenu
 --- !u!114 &1338607278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13462,7 +13462,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c77bf306ca6b24488f3ffb87113f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuRegister
-  menuKey: TalkMenu
+  MenuKey: TalkMenu
 --- !u!114 &1857318544
 MonoBehaviour:
   m_ObjectHideFlags: 0
