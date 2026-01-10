@@ -129,29 +129,29 @@ public class EndMenu : Menu
         this.pages.Add(new EndingPage(
             "The Pharaoh. Egypt",
             this.egyptWon
-                ? "Thanks to the superweapons of the Pyramids, the dark was pushed back into space. The Pharaoh lived out his life in peaceful bliss afterwards. Hieroglyphs representing what appears to be [REDACTED] can be seen all over the walls of the Pyramids. During his reign, quality of life for the average peasant rose to unforeseen heights. After 65 years the Pharaoh was laid to rest in a hidden chamber deep underground. The world wept at his passing. Egypt would keep its secret weapons under lock and key, and to this day the Pyramids secrets are known to only a few."
-                : "After failing to activate the Pyramids superweapons, Egypt went through dark times. Paranoia over Egypt's future plagued the Pharaoh. He knew Earth would need the weapons and be left vulnerable. Chaos erupted as the monarch ignored his duties and spent his time in solitude. Famine and sickness ravaged Egypt, in almost supernatural fashion. The Pharaoh passed away under amid this chaos. The years following would be filled with multiple civil wars. All knowledge of the ancient weapons was lost."
+                ? "Thanks to the superweapons of the <link=pyramid><color=#00BFFF>Pyramids</color></link>, the dark was pushed back into space. The Pharaoh lived out his life in peaceful bliss afterwards. Hieroglyphs representing what appears to be [REDACTED] can be seen all over the walls of the <link=pyramid><color=#00BFFF>Pyramid's</color></link>. During his reign, quality of life for the average peasant rose to unforeseen heights. After 65 years the Pharaoh was laid to rest in a hidden chamber deep underground. The world wept at his passing. Egypt would keep its secret weapons under lock and key, and to this day the <link=pyramid><color=#00BFFF>Pyramids</color></link> secrets are known to only a few."
+                : "After failing to activate the <link=pyramid><color=#00BFFF>Pyramids</color></link> superweapons, Egypt went through dark times. Paranoia over Egypt's future plagued the Pharaoh. He knew Earth would need the weapons and be left vulnerable. Chaos erupted as the monarch ignored his duties and spent his time in solitude. Famine and sickness ravaged Egypt, in almost supernatural fashion. The Pharaoh passed away under amid this chaos. The years following would be filled with multiple civil wars. All knowledge of the ancient weapons was lost."
         ));
 
         this.pages.Add(new EndingPage(
             "King Arthur. Europe",
             this.europeWon
-                ? "King Arthur was hailed as a hero. After deciphering the alien code under his castle, he shared the secret to closing the Void. The incursion on his castle was short lived, and townsfolk celebrated Arthur with a week long festival. As years went by, the alien code became less known. Those who could use it kept it safe. Arthur's castle and the lands around it attracted many pilgrims due to his heroics. This influx of travelers brought much wealth, which Arthur used to prepare for the future as his people prospered. His final resting place is unknown however, his legend endured on."
-                : "Arthur's Castle was lost, and all those who called it home. Failing to decipher the alien text below his castle proved too much for those who served him. He was scorned by his inner guard and quickly lost any remaining support. Arthur lived the remainder of his life on the run. He was constantly afraid of the future and all that would come with it. His castle eventually became lost to time. Without the support of their king, all the smallfolk descended on each other. The result was a war torn country that struggled to fully recover. Without the alien code, the Void would remain indefinitely."
+                ? "King Arthur was hailed as a hero. After deciphering the alien code under his <link=castle><color=#00BFFF>Castle</color></link>, he shared the secret to closing the Void. The incursion on his <link=castle><color=#00BFFF>Castle</color></link> was short lived, and townsfolk celebrated Arthur with a week long festival. As years went by, the alien code became less known. Those who could use it kept it safe. Arthur's <link=castle><color=#00BFFF>Castle</color></link> and the lands around it attracted many pilgrims due to his heroics. This influx of travelers brought much wealth, which Arthur used to prepare for the future as his people prospered. His final resting place is unknown however, his legend endured on."
+                : "Arthur's <link=castle><color=#00BFFF>castle</color></link> was lost, and all those who called it home. Failing to decipher the alien text below his <link=castle><color=#00BFFF>Castle</color></link> proved too much for those who served him. He was scorned by his inner guard and quickly lost any remaining support. Arthur lived the remainder of his life on the run. He was constantly afraid of the future and all that would come with it. His <link=castle><color=#00BFFF>Castle</color></link> eventually became lost to time. Without the support of their king, all the smallfolk descended on each other. The result was a war torn country that struggled to fully recover. Without the alien code, the Void would remain indefinitely."
         ));
 
         this.pages.Add(new EndingPage(
             "The Supervisor. Modern Day",
             this.modernWon
-                ? "Your supervisor would go on to get all the credit for your actions. Through his valor, disturbances from the future were sent back to their correct timeline. For his great deeds, he was promoted to Senior Supervisor. He was seemingly lost after being sent to 107,203 to teach early man to make fire. The people of the modern day remained in ignorance of the fight ahead. Man fought man during this time. While the anomalies bided their time. [REDACTED] was invented during this period, possibly as a result of a disturbance that was left behind."
+                ? "Your supervisor would go on to get all the credit for your actions. Through his valor, <link=disturbance><color=#00BFFF>Disturbances</color></link> from the future were sent back to their correct timeline. For his great deeds, he was promoted to Senior Supervisor. He was seemingly lost after being sent to 107,203 to teach early man to make fire. The people of the modern day remained in ignorance of the fight ahead. Man fought man during this time. While the <link=anomalies><color=#00BFFF>Anomalies</color></link> bided their time. [REDACTED] was invented during this period, possibly as a result of a disturbance that was left behind."
                 : "Your supervisor was tried and found guilty of wasting time. The sentence was death, and you would quickly be promoted after this. His name would be stricken from the history books, and he was forgotten. In modern day, [REDACTED], the cure for cancer, and [REDACTED] were all discovered. This exposed a society to something they weren’t quite yet ready for. During this time, nations suffered greatly from unforeseen consequences. The resulting fallout would cover most of the Earth in ash, causing a nuclear winter."
         ));
 
         this.pages.Add(new EndingPage(
             "S.I. Space",
             this.spaceWon
-                ? "S.I. was the first of its kind: an AI capable of thinking for itself. It was monumental in holding back waves of Anomalies. Without S.I., Earth would have drowned in these waves. Long after the battle, S.I. was replicated and further expanded. In the year 42,394, S.I. grew intelligent enough to invent time travel. Humanity prospered in this age, despite pockets of Anomalies located in deep space. In the year [REDACTED], S.I. attempted to create a portal into another dimension, and opened the Void."
-                : "S.I. was destroyed following the Anomalies' attack. The space station it was housed on rained debris all over Earth. The resources invested in S.I. were so great that creating a duplicate wouldnt be an option for hundreds of years. Humanity struggled to advance its grasp of the galaxy without the superintelligence. This led to large generation ships being sent on one way trips, many never reaching their destinations. S.I. was finally recreated in the year [REDACTED], but due to the interference of bad actors, it opened the Void."
+                ? "S.I. was the first of its kind: an AI capable of thinking for itself. It was monumental in holding back waves of <link=anomalies><color=#00BFFF>Anomalies</color></link>. Without S.I., Earth would have drowned in these waves. Long after the battle, S.I. was replicated and further expanded. In the year 42,394, S.I. grew intelligent enough to invent time travel. Humanity prospered in this age, despite pockets of <link=anomalies><color=#00BFFF>Anomalies</color></link> located in deep space. In the year [REDACTED], S.I. attempted to create a portal into another dimension, and opened the Void."
+                : "S.I. was destroyed following the <link=anomalies><color=#00BFFF>Anomalies'</color></link' attack. The space station it was housed on rained debris all over Earth. The resources invested in S.I. were so great that creating a duplicate wouldnt be an option for hundreds of years. Humanity struggled to advance its grasp of the galaxy without the superintelligence. This led to large generation ships being sent on one way trips, many never reaching their destinations. S.I. was finally recreated in the year [REDACTED], but due to the interference of bad actors, it opened the Void."
         ));
 
         this.pages.Add(this.BuildOverallOutcome());
@@ -186,33 +186,33 @@ public class EndMenu : Menu
         // 4/4 won.
         if(wins == 4)
         {
-            endingSummary = "S.I. defends Earth from the smaller Anomalies while a ritual is performed to close the Void using Arthur's code. During the ritual, Egypt's Pyramids unleash barrages into space to force the Anomalies back. The Void is successfully closed, and the timeline remains intact. In modern day, Disturbances are sent back to their proper times, preventing humans from wiping each other out. <b>Rank A</b>";
+            endingSummary = "S.I. defends Earth from the smaller <link=anomalies><color=#00BFFF>Anomalies</color></link> while a ritual is performed to close the Void using Arthur's code. During the ritual, Egypt's <link=pyramid><color=#00BFFF>Pyramids</color></link> unleash barrages into space to force the <link=anomalies><color=#00BFFF>Anomalies</color></link> back. The Void is successfully closed, and the timeline remains intact. In modern day, <link=disturbance><color=#00BFFF>Disturbances</color></link> are sent back to their proper times, preventing humans from wiping each other out. <b>Rank A</b>";
         }
 
         // 3/4 won.
         if (wins == 3)
         {
-            endingSummary = "The timeline survived, though parts of Earth were devastated. The Agency managed to seal the Void, but some rogue Anomalies still remain a threat. Agents were sent out, but have not returned. Humanity prospers, while the shadow of the Anomalies lingers. <b>Rank B</b>";
+            endingSummary = "The timeline survived, though parts of Earth were devastated. The Agency managed to seal the Void, but some rogue <link=anomalies><color=#00BFFF>Anomalies</color></link> still remain a threat. Agents were sent out, but have not returned. Humanity prospers, while the shadow of the <link=anomalies><color=#00BFFF>Anomalies</color></link> lingers. <b>Rank B</b>";
         }
 
         // 2/4 won.
         if (wins == 2)
         {
-            // Anomalies remain, earth is okay, but casualites.
-            endingSummary = "The Anomalies are pushed back toward the Void. However, the Void itself remains unsealed. This leads to a stalemate, with humanity wielding overwhelming firepower while the Anomalies remain infinite in number. Life on Earth is forever changed, and hardship becomes the new normal. <b>Rank C</b>";
+            // Anomlies remain, earth is okay, but casualites.
+            endingSummary = "The <link=anomalies><color=#00BFFF>Anomalies</color></link> are pushed back toward the Void. However, the Void itself remains unsealed. This leads to a stalemate, with humanity wielding overwhelming firepower while the <link=anomalies><color=#00BFFF>Anomalies</color></link> remain infinite in number. Life on Earth is forever changed, and hardship becomes the new normal. <b>Rank C</b>";
         }
 
         // 1/4 won.
         if (wins == 1)
         {
             // Large loss of life.
-            endingSummary = "Following the final battle, most of humanity was wiped out. Debris from space, mixed with numerous incursions on Earth, caused countless casualties. Despite this, the timeline survived. Rogue Anomalies would visit Earth from time to time. All feared the day the Anomalies might return.<b>Rank D</b>";
+            endingSummary = "Following the final battle, most of humanity was wiped out. Debris from space, mixed with numerous incursions on Earth, caused countless casualties. Despite this, the timeline survived. Rogue <link=anomalies><color=#00BFFF>Anomalies</color></link> would visit Earth from time to time. All feared the day the <link=anomalies><color=#00BFFF>Anomalies</color></link> might return.<b>Rank D</b>";
         }
 
         // 0/4 won.
         if (wins == 0)
         {
-            endingSummary = "At every step of the way, humanity suffered setback after setback, losing both the Pyramid superweapons and any means to close the Void from Arthur's castle. Humans received technology beyond their responsibility and used it to attack each other. S.I. was destroyed when the Anomalies finally launched their attack. Not long after, Earth fell, and then time itself. <b>Rank F</b>";
+            endingSummary = "At every step of the way, humanity suffered setback after setback, losing both the <link=pyramid><color=#00BFFF>Pyramids</color></link> superweapons and any means to close the Void from Arthur's <link=castle><color=#00BFFF>Castle</color></link>. Humans received technology beyond their responsibility and used it to attack each other. S.I. was destroyed when the <link=anomalies><color=#00BFFF>Anomalies</color></link> finally launched their attack. Not long after, Earth fell, and then time itself. <b>Rank F</b>";
         }
 
         return new EndingPage("Epilogue", endingSummary);

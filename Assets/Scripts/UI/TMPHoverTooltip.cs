@@ -78,7 +78,6 @@ public class TMPHoverTooltipMulti : MonoBehaviour
         // Reference to the active EventSystem.
         this.eventSystem = EventSystem.current;
 
-        // Initially hide the tooltip.
         this.tooltipPanel.SetActive(false);
     }
 
@@ -145,7 +144,7 @@ public class TMPHoverTooltipMulti : MonoBehaviour
         // If no link is hovered, hide the tooltip panel.
         if (!foundLink)
         {
-            tooltipPanel.SetActive(false);
+            this.tooltipPanel.SetActive(false);
         }
     }
 }
