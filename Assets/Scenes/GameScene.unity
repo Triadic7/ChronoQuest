@@ -954,10 +954,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9042e7125e81574a9d0f1db09f170fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  movementSpeed: 1000
-  _health: 1
-  aggroZone: {fileID: 213773715}
-  rb: {fileID: 0}
 --- !u!70 &70131697
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -6401,7 +6397,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1151994598}
-  m_Father: {fileID: 1857318540}
+  m_Father: {fileID: 977572618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -8050,6 +8046,7 @@ RectTransform:
   - {fileID: 1294033237}
   - {fileID: 1857318540}
   - {fileID: 1338607274}
+  - {fileID: 707181413}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -9079,7 +9076,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1151994598
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13459,7 +13456,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1431030865}
-  - {fileID: 707181413}
   m_Father: {fileID: 977572618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
