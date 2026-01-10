@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 
 /// <summary>
@@ -11,7 +10,7 @@ public class PatternMinigame : Game
     /// <summary>
     /// The amount of pressure plates to spawn in.
     /// </summary>
-    [SerializeField]
+    [SerializeField, Range(1, 8)]
     private int pressurePlateCount;
 
     /// <summary>
@@ -60,6 +59,12 @@ public class PatternMinigame : Game
     private int currentPatternIndex;
 
     private Coroutine displayPatternCoroutine;
+
+    [SerializeField]
+    private List<Sprite> heiroglyphs;
+
+    [SerializeField]
+    private List<Sprite> activatedHeiroglyphs;
 
     // On game start, display pressure plates players can walk on.
 
@@ -148,6 +153,14 @@ public class PatternMinigame : Game
             GameObject pressurePlate = Instantiate(this.pressurePlatePrefab, spawnPos, Quaternion.identity);
             PressurePlate plate = pressurePlate.GetComponent<PressurePlate>();
             this.instancedPressurePlates.Add(plate);
+
+            // Assign heiroglyph sprite.
+            if (i < this.heiroglyphs.Count)
+            {
+                SpriteRenderer renderer = pressurePlate.GetComponent<SpriteRenderer>();
+                renderer.sprite = this.heiroglyphs[i];
+                plate.SetSprites(this.heiroglyphs[i], this.activatedHeiroglyphs[i]);
+            }
 
             // Add event listener.
             plate.OnPressed += this.OnPlatePressed;

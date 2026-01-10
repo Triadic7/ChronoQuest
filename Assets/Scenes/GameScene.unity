@@ -11217,6 +11217,24 @@ MonoBehaviour:
   pressurePlateSpawnPoint: {fileID: 1436427288}
   patternDisplaySpeed: 1
   patternDisplayDelay: 0.5
+  heiroglyphs:
+  - {fileID: 8397437401720534272, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: 2804477886633425854, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: -906938750437260300, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: 8109128605969221946, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: 3206816369459094875, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: -4995462433237887524, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: -3846437944187744181, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: 8601830959657573982, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  activatedHeiroglyphs:
+  - {fileID: 8260743660877525743, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: 3507274345229874042, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: -5126662742016173384, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: 2959391224534601798, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: -8774030150084805332, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: 5424030558251266638, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: 5862287982462496835, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
+  - {fileID: 5590358152315943207, guid: 14bc1ee67e6b48d45aae6d6b06bb7123, type: 3}
 --- !u!114 &1516380756
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -750,8 +750,8 @@ public class DataContext
             {
                 LocationID = 1,
                 LocationName = "Egypt",
-                BackgroundTileNames = "Sand1,Sand2",
-                ForegroundTileNames = "Cactus1"
+                BackgroundTileNames = "sand,sand3,sand4",
+                ForegroundTileNames = "cactus2,cactus3"
             });
 
             db.Insert(new LocationTable
