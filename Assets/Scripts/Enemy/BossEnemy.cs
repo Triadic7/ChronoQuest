@@ -4,28 +4,8 @@ using UnityEngine;
 /// <summary>
 /// Boss enemy for the space minigame.
 /// </summary>
-public class BossEnemy : MonoBehaviour, IHealth
+public class BossEnemy : Enemy, IHealth
 {
-    /// <summary>
-    /// Event thats fired whenever the boss takes damage.
-    /// </summary>
-    public event Action OnTakeDamage;
-
-    /// <summary>
-    /// Fires event using the enemy.
-    /// </summary>
-    public event Action<GameObject> OnSpawnEnemy;
-
-    /// <summary>
-    /// The health of the boss.
-    /// </summary>
-    public int Health { get; set; } = 100;
-
-    /// <summary>
-    /// The current health.
-    /// </summary>
-    public int CurrentHealth { get; set; }
-
     /// <summary>
     /// How often the boss spawns in enemies.
     /// </summary>
@@ -33,27 +13,24 @@ public class BossEnemy : MonoBehaviour, IHealth
     private float enemySpawnTime;
 
     /// <summary>
-    /// The enemy prefab.
-    /// </summary>
-    [SerializeField]
-    private GameObject enemyPrefab;
-
-    /// <summary>
     /// How far from start boss moves.
     /// </summary>
-    [SerializeField] 
     private float moveDistance = 5f;
 
     /// <summary>
-    /// How fast the boss is.
+    /// The movement speed of the enemy.
     /// </summary>
-    [SerializeField]
-    private float moveSpeed = 2f;
+    public float movementSpeed = 5f;
 
     /// <summary>
-    /// Where the boss starts at.
+    /// Fires event using the enemy.
     /// </summary>
-    private Vector3 startPosition;
+    public event Action<GameObject> OnSpawnEnemy;
+
+    /// <summary>
+    /// The enemy prefab.
+    /// </summary>
+    private GameObject enemyPrefab;
 
     /// <summary>
     /// The timer for spawning enemies.
@@ -69,24 +46,6 @@ public class BossEnemy : MonoBehaviour, IHealth
     /// If the boss can spawn enemies.
     /// </summary>
     private bool canSpawnEnemies;
-
-    /// <summary>
-    /// Take damage, and fire event.
-    /// </summary>
-    /// <param name="damage">The amount of damage.</param>
-    /// <returns>Returns true if damage killed boss.</returns>
-    public void TakeDamage(int damage)
-    {
-        // Check for death.
-        this.CurrentHealth -= damage;
-        if (this.CurrentHealth < 0)
-        {
-            this.CurrentHealth = 0;
-        }
-
-        // Fire event.
-        this.OnTakeDamage?.Invoke();
-    }
 
     /// <summary>
     /// Start spawning enemies.
@@ -115,7 +74,7 @@ public class BossEnemy : MonoBehaviour, IHealth
     /// <summary>
     /// Moves side to side and spawns enemies over time.
     /// </summary>
-    private void Update()
+    public override void FixedUpdate()
     {
         this.MoveSideToSide();
         this.HandleEnemySpawning();
@@ -142,7 +101,7 @@ public class BossEnemy : MonoBehaviour, IHealth
         float speedMultiplier = 1f + (1f - healthRatio) * 1f;
 
         // Increment timer.
-        this.moveTimer += Time.deltaTime * this.moveSpeed * speedMultiplier;
+        this.moveTimer += Time.deltaTime * this.movementSpeed * speedMultiplier;
 
         // Move back and forth.
         float offset = Mathf.PingPong(this.moveTimer, this.moveDistance * 2f) - this.moveDistance;
