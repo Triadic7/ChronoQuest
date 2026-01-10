@@ -23,21 +23,11 @@ public class Tower : MonoBehaviour
 
     public Collider2D hitbox;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     // Triggers when a player or object enters the range
     void OnTriggerEnter2D(Collider2D collider)
     {
+        Debug.Log($"Tower Collider Tag: {collider.gameObject.tag}");
+
         if (collider.gameObject.tag == "Enemy")
         {
             Debug.Log("Destroying Enemy");

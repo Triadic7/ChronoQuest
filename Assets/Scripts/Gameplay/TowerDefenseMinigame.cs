@@ -62,17 +62,4 @@ public class TowerDefenseMinigame : Game
             // spawnComponent.TakeDamage += this.RegisterSuccess;
         }
     }
-
-    /// <summary>
-    /// Remove all enemies.
-    /// </summary>
-    public override void CleanUp()
-    {
-
-    }
-
-    public override void GameEnded()
-    {
-
-    }
 }

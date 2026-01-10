@@ -18,7 +18,6 @@ public class AggroZone : MonoBehaviour
     // Triggers when a player or object enters the range
     void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log($"Collider Tag: {collider.gameObject.tag}");
         if (collider.gameObject.tag == tagTarget)
         {
             detectedObjects.Add(collider);

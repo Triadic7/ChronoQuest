@@ -56,8 +56,6 @@ public class Enemy : MonoBehaviour
     {
         if (aggroZone.detectedObjects.Count > 0)
         {
-            Debug.Log("Enemy moving towards target");
-
             Collider2D detectedObject = aggroZone.detectedObjects[0];
 
             if (detectedObject)

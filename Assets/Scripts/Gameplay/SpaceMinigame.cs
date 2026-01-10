@@ -42,11 +42,6 @@ public class SpaceMinigame : Game
     [SerializeField]
     private GameObject spaceStationPrefab;
 
-    /// <summary>
-    /// The list of objects to destroy at the end of the game.
-    /// </summary>
-    private List<GameObject> gameObjects;
-
     // Dealing damage to boss increases progress bar.
 
     // Spawn astroids players can fly into or shoot to fling or destroy.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -55,6 +56,16 @@ public abstract class Game : MonoBehaviour
     /// How many points the player has.
     /// </summary>
     private int currentSuccessCount;
+
+    /// <summary>
+    /// The list of objects to destroy at the end of the game.
+    /// </summary>
+    protected List<GameObject> gameObjects;
+
+    /// <summary>
+    /// The list of objects to destroy at the end of the game.
+    /// </summary>
+    protected List<GameObject> objectiveObjects;
 
     /// <summary>
     /// Sets the stage.
