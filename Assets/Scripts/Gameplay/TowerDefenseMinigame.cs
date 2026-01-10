@@ -66,7 +66,8 @@ public class TowerDefenseMinigame : Game
             GameObject spawn = Instantiate(this.enemyPrefab, g.position, Quaternion.identity, g);
             this.gameObjects.Add(spawn);
 
-            EnemyScript towerComponent = spawn.GetComponent<EnemyScript>();
+            EnemyScript spawnComponent = spawn.GetComponent<EnemyScript>();
+            // spawnComponent.TakeDamage += this.RegisterSuccess;
         }
     }
 

@@ -13,7 +13,7 @@ public class EnemyScript : MonoBehaviour
 
             if (_health <= 0)
             {
-                Defeated();
+                TakeDamage();
             }
         }
         get {
@@ -48,7 +48,7 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    public void Defeated()
+    public void TakeDamage()
     {
         Destroy(gameObject);
     }
