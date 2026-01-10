@@ -24,6 +24,16 @@ public class DialogueModel
     public string NPCName { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether this dialogue is an outro.
+    /// </summary>
+    public bool IsOutro { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this dialogue is for a winning outcome.
+    /// </summary>
+    public bool IsWin { get; set; }
+
+    /// <summary>
     /// Gets or sets all nodes for this dialogue.
     /// </summary>
     public List<DialogueNodeModel> Nodes { get; set; } = new List<DialogueNodeModel>();
@@ -40,6 +50,8 @@ public class DialogueModel
         this.NPCID = table.NPCID;
         this.NPCName = table.NPCName;
 
+        this.IsOutro = table.IsOutro;
+        this.IsWin = table.IsWin;
 
         // Build nodes.
         this.Nodes = nodes

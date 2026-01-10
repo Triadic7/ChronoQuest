@@ -32,6 +32,16 @@ public class DialogueManager : MonoBehaviour
     public event Action<NPCModel, StageModel> OnNPCUpdated;
 
     /// <summary>
+    /// The current dialogue.
+    /// </summary>
+    public DialogueModel CurrentDialogue => currentDialogue;
+
+    /// <summary>
+    /// The current node index.
+    /// </summary>
+    public int CurrentNodeIndex => this.currentNodeIndex;
+
+    /// <summary>
     /// The currently active dialogue.
     /// </summary>
     private DialogueModel currentDialogue;
@@ -40,6 +50,11 @@ public class DialogueManager : MonoBehaviour
     /// The index of the current node within the dialogue.
     /// </summary>
     private int currentNodeIndex;
+
+    /// <summary>
+    /// Has dialogue ended.
+    /// </summary>
+    private bool dialogueEnded = false;
 
     /// <summary>
     /// Starts a dialogue with the specified NPC.
@@ -54,10 +69,38 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
+        this.dialogueEnded = false;
+
         // Fire event.
         this.OnNPCUpdated?.Invoke(npc, stage);
 
-        this.currentDialogue = npc.Dialogues[0];
+        // Get intro dialogue.
+        DialogueModel introDialogue = npc.Dialogues.Find(d => !d.IsOutro);
+
+        if (introDialogue == null)
+        {
+            Debug.LogWarning($"No intro dialogue found for NPC {npc.Name}");
+            return;
+        }
+
+        this.StartDialogue(introDialogue);
+    }
+
+    /// <summary>
+    /// Starts a specific dialogue directly, such as an outro.
+    /// </summary>
+    /// <param name="dialogue">The dialogue to start.</param>
+    public void StartDialogue(DialogueModel dialogue)
+    {
+        if (dialogue == null || dialogue.Nodes.Count == 0)
+        {
+            Debug.LogWarning("Dialogue is null or empty.");
+            return;
+        }
+
+        // Display dialogue.
+        this.dialogueEnded = false;
+        this.currentDialogue = dialogue;
         this.currentNodeIndex = 0;
         this.ShowNode();
     }
@@ -68,6 +111,11 @@ public class DialogueManager : MonoBehaviour
     /// <param name="choiceIndex">The index of the chosen option.</param>
     public void SelectChoice(int choiceIndex)
     {
+        if (this.dialogueEnded)
+        {
+            return;
+        }
+
         // Get the currently active dialogue node using the index.
         var node = this.currentDialogue.Nodes[currentNodeIndex];
 
@@ -80,11 +128,8 @@ public class DialogueManager : MonoBehaviour
         // Retrieve the chosen dialogue option.
         var choice = node.Choices[choiceIndex];
 
-
         // Fire event to for selected text.
         this.OnPlayerChoiceSelected?.Invoke(choice.ChoiceText);
-
-        Debug.Log($"Selected choice {choice.ChoiceText}, NextNodeID={choice.NextNodeID}.");
 
         // If this choice has an associated action, trigger it.
         if (!string.IsNullOrEmpty(choice.ActionName))
@@ -96,6 +141,7 @@ public class DialogueManager : MonoBehaviour
         // A NextNodeID of -1 means this choice explicitly ends the dialogue.
         if (choice.NextNodeID == -1)
         {
+            this.dialogueEnded = true;
             this.OnDialogueEnded?.Invoke();
             return;
         }
@@ -107,7 +153,7 @@ public class DialogueManager : MonoBehaviour
         // If the next node could not be found, log a warning and safely end dialogue.
         if (nextNodeIndex == -1)
         {
-            Debug.LogWarning($"Next node not found: {choice.NextNodeID}");
+            this.dialogueEnded = true;
             this.OnDialogueEnded?.Invoke();
             return;
         }
@@ -125,7 +171,6 @@ public class DialogueManager : MonoBehaviour
     private void ShowNode()
     {
         DialogueNodeModel node = this.currentDialogue.Nodes[currentNodeIndex];
-
         this.OnNodeUpdated?.Invoke(node);
     }
 }

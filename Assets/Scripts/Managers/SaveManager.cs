@@ -19,7 +19,7 @@ public class SaveManager : MonoBehaviour
     /// </summary>
     public void SyncData()
     {
-        this.PlayerSaves = this.DataContext.GetAllSaves();
+        this.PlayerSaves = this.DataContext.GetSaves();
     }
 
     /// <summary>
@@ -31,9 +31,9 @@ public class SaveManager : MonoBehaviour
         // Store last played.
         save.LastPlayed = DateTime.UtcNow;
 
-        if (save.Id == 0)
+        if (save.SaveID == 0)
         {
-            save.Id = this.DataContext.InsertSave(save);
+            save.SaveID = this.DataContext.InsertSave(save);
             this.PlayerSaves.Add(save);
         }
         else
@@ -41,8 +41,21 @@ public class SaveManager : MonoBehaviour
             this.DataContext.UpdateSave(save);
         }
 
+        // Saves stage progress here by inserting or updating.
+        foreach (var progress in save.StageProgress.Values)
+        {
+            if (DataContext.StageProgressExists(save.SaveID, progress.StageID))
+            {
+                DataContext.UpdateStageProgress(save.SaveID, progress);
+            }
+            else
+            {
+                DataContext.InsertStageProgress(save.SaveID, progress);
+            }
+        }
+
         // Make sure the Stage object is set using StageId.
-        save.Stage = this.DataContext.GetStageById(save.StageId);
+        save.Stage = this.DataContext.GetStageById(save.CurrentStageId);
 
         return save;
     }
@@ -60,10 +73,10 @@ public class SaveManager : MonoBehaviour
         }
 
         // Delete from DB.
-        this.DataContext.DeleteSave(save.Id);
+        this.DataContext.DeleteSave(save.SaveID);
 
         // Refresh saves list from DB.
-        this.PlayerSaves = this.DataContext.GetAllSaves();
+        this.PlayerSaves = this.DataContext.GetSaves();
     }
 
     /// <summary>
@@ -73,7 +86,7 @@ public class SaveManager : MonoBehaviour
     {
         // Load save from sql handler.
         this.DataContext = new DataContext();
-        this.PlayerSaves = this.DataContext.GetAllSaves();
+        this.PlayerSaves = this.DataContext.GetSaves();
     }
 
 

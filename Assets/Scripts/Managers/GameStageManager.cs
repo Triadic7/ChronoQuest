@@ -14,6 +14,11 @@ public class GameStageManager : MonoBehaviour
     public event Action<bool> OnStageFinished;
 
     /// <summary>
+    /// Fires after objective is finished, win or lose.
+    /// </summary>
+    public event Action OnObjectiveStop;
+
+    /// <summary>
     /// Starts the stage.
     /// </summary>
     public event Action<StageModel> OnStageStarted;
@@ -70,7 +75,7 @@ public class GameStageManager : MonoBehaviour
     public void StartGame(StageModel stage)
     {
         // Map to minigame instance.
-        switch (stage.StageId)
+        switch (stage.StageID)
         {
             case 1:
                 this.currentGame = patternMinigame; 
@@ -85,7 +90,7 @@ public class GameStageManager : MonoBehaviour
                 this.currentGame = spaceMinigame; 
                 break;
             default:
-                Debug.LogError($"No minigame for stage {stage.StageId}");
+                Debug.LogError($"No minigame for stage {stage.StageID}");
                 return;
         }
 
@@ -111,11 +116,34 @@ public class GameStageManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Cleans up current game in case the user goes to main menu.
+    /// </summary>
+    public void CleanUpCurrentGame()
+    {
+        if (this.currentGame != null)
+        {
+            // Unsubscribe from events.
+            this.currentGame.OnGameEnd -= this.EndGame;
+            this.currentGame.OnGameProgress -= this.OnGameProgressMade;
+            this.currentGame.OnFailStrike -= this.OnGameFailStrike;
+
+            this.OnObjectiveStop?.Invoke();
+
+            // Call cleanup logic.
+            this.currentGame.CleanUp();
+
+            // Null out reference.
+            this.currentGame = null;
+        }
+    }
+
+
+    /// <summary>
     /// Debug to win the game.
     /// </summary>
     public void DebugWinGame()
     {
-        this.currentGame.EndGame();
+        this.currentGame.EndGame(true);
     }
 
     /// <summary>
@@ -123,10 +151,24 @@ public class GameStageManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        this.patternMinigame = GetComponentInChildren<PatternMinigame>();
-        this.timeMinigame = GetComponentInChildren<TimeMinigame>();
-        this.towerDefenseMinigame = GetComponentInChildren<TowerDefenseMinigame>();
-        this.spaceMinigame = GetComponentInChildren<SpaceMinigame>();
+        this.patternMinigame = GetComponentInChildren<PatternMinigame>(true);
+        this.timeMinigame = GetComponentInChildren<TimeMinigame>(true);
+        this.towerDefenseMinigame = GetComponentInChildren<TowerDefenseMinigame>(true);
+        this.spaceMinigame = GetComponentInChildren<SpaceMinigame>(true);
+    }
+
+    private void Start()
+    {
+        GameManager gm = GameManager.Instance;
+
+        // Clean up current game.
+        if (gm == null)
+        {
+            Debug.Log("GameManager not found.");
+            return;
+        }
+
+        gm.OnMainMenu += this.CleanUpCurrentGame;
     }
 
     /// <summary>
@@ -162,7 +204,10 @@ public class GameStageManager : MonoBehaviour
     private IEnumerator StageEndDelay(bool hasWon)
     {
         yield return new WaitForSeconds(stageDelay);
-        this.currentGame.CleanUp();
-        this.OnStageFinished?.Invoke(hasWon);
+        if(this.currentGame != null)
+        {
+            this.currentGame.CleanUp();
+            this.OnStageFinished?.Invoke(hasWon);
+        }
     }
 }

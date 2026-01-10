@@ -29,7 +29,6 @@ public class UIManager : MonoBehaviour
 
             // Hides menu right away.
             menu.Close();
-            Debug.Log($"UIManager: Menu added to dictionary: {key}");
         }
     }
 
@@ -39,27 +38,28 @@ public class UIManager : MonoBehaviour
     /// <param name="key">The menu key to open.</param>
     public void OpenMenu(string key)
     {
-        Debug.Log($"UIManager.OpenMenu called with key: {key}.");
-
         if (!menus.ContainsKey(key))
         {
             Debug.LogWarning($"Menu key not found: {key}.");
             return;
         }
 
+        Menu menu = menus[key];
+
+        // Don't reopen if already on top.
+        if (menuStack.Count > 0 && menuStack.Peek() == menu)
+        {
+            return;
+        }
+
         // Hide current menu if any.
         if (menuStack.Count > 0)
         {
-            Debug.Log($"Hiding menu: {menuStack.Peek().name}.");
             menuStack.Peek().Close();
         }
 
-        // Opens menu based on key.
-        Menu menu = menus[key];
         menu.Open();
         menuStack.Push(menu);
-
-        Debug.Log($"Opened menu: {menu.name}, stack count: {menuStack.Count}.");
     }
 
     /// <summary>
@@ -116,7 +116,24 @@ public class UIManager : MonoBehaviour
 
         // Close the menu.
         menuToClose.Close();
-        Debug.Log($"UIManager: Closed menu: {key}.");
+    }
+
+    /// <summary>
+    /// Get all menus and register them.
+    /// </summary>
+    private void Awake()
+    {
+        // Find all MenuRegister components in children, even if inactive.
+        MenuRegister[] allRegisters = FindObjectsByType<MenuRegister>(FindObjectsSortMode.None);
+        foreach (var reg in allRegisters)
+        {
+            Menu menu = reg.GetComponent<Menu>();
+            if (menu != null && !menus.ContainsKey(reg.MenuKey))
+            {
+                menus.Add(reg.MenuKey, menu);
+                menu.Close();
+            }
+        }
     }
 
 }

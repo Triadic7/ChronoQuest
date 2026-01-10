@@ -70,6 +70,7 @@ public class MainMenu : Menu
     /// </summary>
     private void RefreshResumeButton()
     {
+
         // Get last save.
         SaveModel lastSave = GameManager.Instance.SaveManager.DataContext.GetLastPlayedSave();
 

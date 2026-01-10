@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
 /// The class for managing the game for things like settings and game events.
@@ -57,6 +58,11 @@ public class GameManager : MonoBehaviour
     public event Action OnStageStart;
 
     /// <summary>
+    /// On game stage location selected.
+    /// </summary>
+    public event Action<LocationModel> OnLocationSelected;
+
+    /// <summary>
     /// On game start, event that's fired for coop.
     /// </summary>
     public event Action<bool> OnGameStartMultiplayer;
@@ -67,9 +73,19 @@ public class GameManager : MonoBehaviour
     public event Action OnStageEnd;
 
     /// <summary>
+    /// On game stage start.
+    /// </summary>
+    public event Action OnMainMenu;
+
+    /// <summary>
     /// On dialogue start.
     /// </summary>
     public event Action<NPCModel, string> OnDialogueStart;
+
+    /// <summary>
+    /// The current save.
+    /// </summary>
+    public SaveModel CurrentSave { get; private set; }
 
     /// <summary>
     /// The game state.
@@ -79,6 +95,7 @@ public class GameManager : MonoBehaviour
         MainMenu,
         Dialogue,
         Gameplay,
+        OutroDialogue,
         Ending
     }
 
@@ -86,11 +103,6 @@ public class GameManager : MonoBehaviour
     /// Gets or sets the game state.
     /// </summary>
     private GameState State { get; set; }
-
-    /// <summary>
-    /// The current save.
-    /// </summary>
-    private SaveModel CurrentSave { get; set; }
 
     /// <summary>
     /// The load menu.
@@ -131,6 +143,9 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
         }
 
+        // Fire main menu event.
+        this.OnMainMenu?.Invoke();
+
         // Opens main menu.
         this.UIManager.OpenMenu("MainMenu");
     }
@@ -141,7 +156,7 @@ public class GameManager : MonoBehaviour
     /// <param name="save"></param>
     public void StartGame(SaveModel save)
     {
-        Debug.Log($"StartGame called for save: {save.Id}");
+        Debug.Log($"StartGame called for save: {save.SaveID}");
         this.CurrentSave = save;
         this.ChangeState(GameState.Dialogue);
     }
@@ -176,6 +191,7 @@ public class GameManager : MonoBehaviour
 
         // Get dialogue manager.
         this.DialogueManager = GetComponent<DialogueManager>();
+        this.DialogueManager.OnDialogueEnded += OnDialogueFinished;
 
         // Checks if settings are null.
         if (this.Settings == null)
@@ -217,7 +233,7 @@ public class GameManager : MonoBehaviour
 
         this.CurrentSave.PlayTime += time;
         this.SaveManager.SaveProgress(CurrentSave);
-        Debug.Log($"Added {time} seconds to save {CurrentSave.Id}, total: {CurrentSave.PlayTime}");
+        Debug.Log($"Added {time} seconds to save {CurrentSave.SaveID}, total: {CurrentSave.PlayTime}");
     }
 
     /// <summary>
@@ -258,6 +274,17 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void OnDialogueFinished()
     {
+        // Get the current dialogue.
+        DialogueModel dialogue = this.DialogueManager.CurrentDialogue;
+
+        // If it's an outro, finish as usual.
+        if (dialogue != null && dialogue.IsOutro)
+        {
+            OnOutroDialogueFinished();
+            return;
+        }
+
+        // Otherwise start gameplay if this is an intro dialogue.
         if (this.State == GameState.Dialogue)
         {
             this.ChangeState(GameState.Gameplay);
@@ -270,19 +297,23 @@ public class GameManager : MonoBehaviour
     /// <param name="hasWon">If the player has won.</param>
     private void OnStageFinished(bool hasWon)
     {
-        this.OnStageEnd?.Invoke();
-        this.AdvanceStageOrEnd(hasWon);
+        // Record stage result.
+        CurrentSave.AddStageResult(CurrentSave.CurrentStageId, hasWon);
+        SaveManager.SaveProgress(CurrentSave);
+
+        // Show outro for the stage we just finished.
+        ChangeState(GameState.OutroDialogue, hasWon);
     }
 
     /// <summary>
     ///  Changes the game state.
     /// </summary>
     /// <param name="newState">The new state.</param>
-    private void ChangeState(GameState newState)
+    /// <param name="stageWon">If the stage has been won.</param>
+    private void ChangeState(GameState newState, bool stageWon = true)
     {
-        Debug.Log($"Changing state from {State} to {newState}");
         this.State = newState;
-
+        Debug.Log($"[GameManager] Changing to {newState}.");
         switch (this.State)
         {
             case GameState.MainMenu:
@@ -290,25 +321,55 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Dialogue:
-                // Subscribe to dialogue finished.
-                this.DialogueManager.OnDialogueEnded -= OnDialogueFinished;
-                this.DialogueManager.OnDialogueEnded += OnDialogueFinished;
-
                 // Open talk menu.
                 this.UIManager.OpenMenu("TalkMenu");
 
                 // Gets the current npc from the stage the player is on.
-                NPCModel currentNpc = this.SaveManager.DataContext.GetNPCFromStage(CurrentSave.StageId);
+                NPCModel currentNpc = this.SaveManager.DataContext.GetNPCFromStage(CurrentSave.CurrentStageId);
 
                 // Start dialogue through DialogueManager.
                 this.DialogueManager.StartDialogue(currentNpc, this.CurrentSave.Stage);
+
+                // Display location in background.
+                if (this.CurrentSave.Stage.Location == null)
+                {
+                    LocationTable table = this.SaveManager.DataContext.GetLocationByID(this.CurrentSave.Stage.LocationID);
+                    this.CurrentSave.Stage.Location = new LocationModel(table, AssetLoader.Resolver);
+                }
+
+                // Fire event for selecting the current stage.
+                this.OnLocationSelected?.Invoke(this.CurrentSave.Stage.Location);
                 break;
 
             case GameState.Gameplay:
+                Debug.Log($"Starting gameplay on stage {this.CurrentSave.Stage.StageID}");
                 this.UIManager.CloseMenu("TalkMenu");
                 this.OnStageStart?.Invoke();
+
+                // Spawn either single or coop players.
                 this.OnGameStartMultiplayer?.Invoke(this.CurrentSave.IsCoop);
+
+                // Start game.
                 this.GameStageManager.StartGame(this.CurrentSave.Stage);
+                break;
+
+            case GameState.OutroDialogue:
+                this.UIManager.OpenMenu("TalkMenu");
+
+                // Select dialogue based on win/loss.
+                DialogueModel outroDialogue = stageWon
+                    ? this.SaveManager.DataContext.GetOutroDialogueForStage(CurrentSave.CurrentStageId, true)
+                    : this.SaveManager.DataContext.GetOutroDialogueForStage(CurrentSave.CurrentStageId, false);
+
+                if (outroDialogue == null)
+                {
+                    Debug.LogWarning($"No outro found for stage {CurrentSave.CurrentStageId}. Skipping outro.");
+                    OnOutroDialogueFinished();
+                    return;
+                }
+
+                // Start the outro dialogue.
+                this.DialogueManager.StartDialogue(outroDialogue);
                 break;
 
             case GameState.Ending:
@@ -318,34 +379,29 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks for further stages, or ends the game.
+    /// On outro dialogue finished, load next dialogue.
     /// </summary>
-    /// <param name="hasWon">If the players have won.</param>
-    private void AdvanceStageOrEnd(bool hasWon)
+    private void OnOutroDialogueFinished()
     {
-        // Store to check if stage exists.
-        int nextStageId = this.CurrentSave.StageId + 1;
+        // Fire stage end event.
+        this.OnStageEnd?.Invoke();
 
-        // Add win to save.
-
-        // Check if the next stage exists.
+        int nextStageId = this.CurrentSave.CurrentStageId + 1;
         StageModel nextStage = this.SaveManager.DataContext.GetStageById(nextStageId);
 
-        // If no next stage, end game.
         if (nextStage == null)
         {
+            // No more stages, end game.
             this.ChangeState(GameState.Ending);
             return;
         }
 
-        // Otherwise advance normally.
-        this.CurrentSave.StageId = nextStageId;
+        // Update current save for next stage.
+        this.CurrentSave.CurrentStageId = nextStageId;
         this.CurrentSave.Stage = nextStage;
-
-        // Save progress.
         this.SaveManager.SaveProgress(CurrentSave);
 
-        // Go to next dialogue.
+        // Start next stage dialogue.
         this.ChangeState(GameState.Dialogue);
     }
 
