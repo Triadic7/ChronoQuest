@@ -84,7 +84,7 @@ public class DataContext
             this.db.Insert(new NPCTable { NPCId = 1, Name = "Pharoh" });
             this.db.Insert(new NPCTable { NPCId = 2, Name = "King Arthur" });
             this.db.Insert(new NPCTable { NPCId = 3, Name = "Superior" });
-            this.db.Insert(new NPCTable { NPCId = 4, Name = "Super Advanced AI" });
+            this.db.Insert(new NPCTable { NPCId = 4, Name = "S.I." });
         }
 
         // Create tables for dialogue if not present.
@@ -574,7 +574,7 @@ public class DataContext
             DialogueTable aiDialogue = new DialogueTable
             {
                 NPCID = 4,
-                NPCName = "Super Intelligent AI"
+                NPCName = "S.I."
             };
             db.Insert(aiDialogue);
             int aiDialogueId = aiDialogue.DialogueID;
@@ -988,6 +988,34 @@ public class DataContext
     }
 
     /// <summary>
+    /// Gets all stage progress for a specific save.
+    /// </summary>
+    /// <param name="saveId">The save ID.</param>
+    /// <returns>List of stage progress models.</returns>
+    public List<StageProgressModel> GetAllStageProgress(int saveId)
+    {
+        // Query all rows for the saveId.
+        var tableRows = db.Table<StageProgressTable>()
+                          .Where(x => x.SaveId == saveId)
+                          .ToList();
+
+        // Map database rows to StageProgressModel.
+        var progressList = new List<StageProgressModel>();
+        foreach (var row in tableRows)
+        {
+            var progress = new StageProgressModel
+            {
+                StageID = row.StageId,
+                //Parse enum.
+                Result = (StageResult)row.Result
+            };
+            progressList.Add(progress);
+        }
+
+        return progressList;
+    }
+
+    /// <summary>
     /// Gets all dialogue from npc by id.
     /// </summary>
     /// <param name="npcId">The id of the npc.</param>
@@ -1084,7 +1112,7 @@ public class DataContext
     {
         return new SaveTable
         {
-            Id = data.Id,
+            Id = data.SaveID,
             StageId = data.CurrentStageId,
             PlayTime = data.PlayTime,
             IsCoop = data.IsCoop,

@@ -178,7 +178,7 @@ public class LoadMenu : Menu
             saveSlotPrefab.DisplaySave(save);
 
             // Add on click event to it.
-            saveSlotPrefab.GetComponent<Button>().onClick.AddListener(() => DisplaySavePreview(save.Id));
+            saveSlotPrefab.GetComponent<Button>().onClick.AddListener(() => DisplaySavePreview(save.SaveID));
         }
     }
 }

@@ -12,7 +12,7 @@ public class SaveModel
     /// <summary>
     /// Save Id.
     /// </summary>
-    public int Id;
+    public int SaveID;
 
     /// <summary>
     /// Gets the stage id.
@@ -51,7 +51,7 @@ public class SaveModel
     /// <param name="stage">The stage.</param>
     public SaveModel(SaveTable table, StageModel stage)
     {
-        this.Id = table.Id;
+        this.SaveID = table.Id;
         this.CurrentStageId = table.StageId;
         this.PlayTime = table.PlayTime;
         this.IsCoop = table.IsCoop;

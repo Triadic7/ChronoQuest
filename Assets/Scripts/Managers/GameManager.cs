@@ -83,6 +83,11 @@ public class GameManager : MonoBehaviour
     public event Action<NPCModel, string> OnDialogueStart;
 
     /// <summary>
+    /// The current save.
+    /// </summary>
+    public SaveModel CurrentSave { get; private set; }
+
+    /// <summary>
     /// The game state.
     /// </summary>
     private enum GameState
@@ -98,11 +103,6 @@ public class GameManager : MonoBehaviour
     /// Gets or sets the game state.
     /// </summary>
     private GameState State { get; set; }
-
-    /// <summary>
-    /// The current save.
-    /// </summary>
-    private SaveModel CurrentSave { get; set; }
 
     /// <summary>
     /// The load menu.
@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
     /// <param name="save"></param>
     public void StartGame(SaveModel save)
     {
-        Debug.Log($"StartGame called for save: {save.Id}");
+        Debug.Log($"StartGame called for save: {save.SaveID}");
         this.CurrentSave = save;
         this.ChangeState(GameState.Dialogue);
     }
@@ -233,7 +233,7 @@ public class GameManager : MonoBehaviour
 
         this.CurrentSave.PlayTime += time;
         this.SaveManager.SaveProgress(CurrentSave);
-        Debug.Log($"Added {time} seconds to save {CurrentSave.Id}, total: {CurrentSave.PlayTime}");
+        Debug.Log($"Added {time} seconds to save {CurrentSave.SaveID}, total: {CurrentSave.PlayTime}");
     }
 
     /// <summary>
