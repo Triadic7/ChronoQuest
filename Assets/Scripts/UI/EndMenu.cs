@@ -267,8 +267,10 @@ public class EndMenu : Menu
     /// <summary>
     /// Add event listeners.
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         this.continueButton = GetComponentInChildren<Button>();
         if(this.continueButton == null)
         {

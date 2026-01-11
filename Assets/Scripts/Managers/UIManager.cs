@@ -1,5 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// UI manager for handling menus.
@@ -17,15 +20,21 @@ public class UIManager : MonoBehaviour
     private Stack<Menu> menuStack = new Stack<Menu>();
 
     /// <summary>
+    /// The transition between scenes.
+    /// </summary>
+    private FadeSlideTransition transition;
+
+    /// <summary>
     /// Registers a menu.
     /// </summary>
     /// <param name="key">The menu key.</param>
     /// <param name="menu">The menu.</param>
     public void RegisterMenu(string key, Menu menu)
     {
-        if (!menus.ContainsKey(key))
+        Debug.Log($"Added menu {key}");
+        if (!this.menus.ContainsKey(key))
         {
-            menus.Add(key, menu);
+            this.menus.Add(key, menu);
 
             // Hides menu right away.
             menu.Close();
@@ -38,28 +47,25 @@ public class UIManager : MonoBehaviour
     /// <param name="key">The menu key to open.</param>
     public void OpenMenu(string key)
     {
-        if (!menus.ContainsKey(key))
+        if (!this.menus.ContainsKey(key))
         {
             Debug.LogWarning($"Menu key not found: {key}.");
             return;
         }
 
+        // Get menu from key.
         Menu menu = menus[key];
 
-        // Don't reopen if already on top.
-        if (menuStack.Count > 0 && menuStack.Peek() == menu)
+        // Start transition.
+        if (this.transition != null)
         {
-            return;
+            // Wait for transition animation before opening menu.
+            this.StartCoroutine(OpenMenuWithTransition(menu));
         }
-
-        // Hide current menu if any.
-        if (menuStack.Count > 0)
+        else
         {
-            menuStack.Peek().Close();
+            this.OpenMenuImmediate(menu);
         }
-
-        menu.Open();
-        menuStack.Push(menu);
     }
 
     /// <summary>
@@ -67,21 +73,21 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void Back()
     {
-        if (menuStack.Count == 0)
+        if (this.menuStack.Count == 0)
         {
             return;
         }
 
         // Set current.
-        Menu current = menuStack.Pop();
+        Menu current = this.menuStack.Pop();
 
         // Closes menu.
         current.Close();
 
         // Opens next menu.
-        if (menuStack.Count > 0)
+        if (this.menuStack.Count > 0)
         {
-            menuStack.Peek().Open();
+            this.menuStack.Peek().Open();
         }
     }
 
@@ -91,19 +97,19 @@ public class UIManager : MonoBehaviour
     /// <param name="key">The menu key to close.</param>
     public void CloseMenu(string key)
     {
-        if (!menus.ContainsKey(key))
+        if (!this.menus.ContainsKey(key))
         {
             Debug.LogWarning($"Menu key not found: {key}.");
             return;
         }
 
-        Menu menuToClose = menus[key];
+        Menu menuToClose = this.menus[key];
 
         // Remove from stack if present.
         Stack<Menu> tempStack = new Stack<Menu>();
-        while (menuStack.Count > 0)
+        while (this.menuStack.Count > 0)
         {
-            Menu top = menuStack.Pop();
+            Menu top = this.menuStack.Pop();
             if (top != menuToClose)
             {
                 tempStack.Push(top);
@@ -111,7 +117,7 @@ public class UIManager : MonoBehaviour
         }
         while (tempStack.Count > 0)
         {
-            menuStack.Push(tempStack.Pop());
+            this.menuStack.Push(tempStack.Pop());
         }
 
         // Close the menu.
@@ -130,10 +136,58 @@ public class UIManager : MonoBehaviour
             Menu menu = reg.GetComponent<Menu>();
             if (menu != null && !menus.ContainsKey(reg.MenuKey))
             {
-                menus.Add(reg.MenuKey, menu);
+                Debug.Log($"Added menu {reg.MenuKey}");
+                this.menus.Add(reg.MenuKey, menu);
                 menu.Close();
             }
         }
+
+        this.transition = FindFirstObjectByType<FadeSlideTransition>();
+        if(this.transition == null)
+        {
+            Debug.LogError("No fade transition found.");
+            return;
+        }
+    }
+
+    /// <summary>
+    /// Opens a menu after transition plays.
+    /// </summary>
+    /// <param name="menu">The menu to open.</param>
+    /// <returns>Returns nothing.</returns>
+    private IEnumerator OpenMenuWithTransition(Menu menu)
+    {
+        // Play fade + slide.
+        transition.PlayTopToBottomTransition();
+
+        // Wait for the transition duration.
+        yield return new WaitForSeconds(transition.Duration);
+
+        // Then open the menu.
+        OpenMenuImmediate(menu);
+    }
+
+    /// <summary>
+    /// Opens menu right away
+    /// </summary>
+    /// <param name="menu">The menu to open.</param>
+    private void OpenMenuImmediate(Menu menu)
+    {
+        // Dont open same menu.
+        if (this.menuStack.Count > 0 && this.menuStack.Peek() == menu)
+        {
+            return;
+        }
+
+        // If stack is greater than 0, close top menu.
+        if (this.menuStack.Count > 0)
+        {
+            this.menuStack.Peek().Close();
+        }
+
+        // Open menu and push to stack.
+        menu.Open();
+        this.menuStack.Push(menu);
     }
 
 }

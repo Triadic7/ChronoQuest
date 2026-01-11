@@ -1,10 +1,17 @@
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
 /// Parent class for menus.
 /// </summary>
 public abstract class Menu : MonoBehaviour
 {
+    /// <summary>
+    /// The panel to close.
+    /// </summary>
+    [SerializeField]
+    private GameObject panel;
+
     /// <summary>
     /// If the menu is open.
     /// </summary>
@@ -20,7 +27,7 @@ public abstract class Menu : MonoBehaviour
             return;
         }
         this.isOpen = true;
-        this.gameObject.SetActive(true);
+        this.panel.SetActive(true);
     }
 
     /// <summary>
@@ -33,6 +40,21 @@ public abstract class Menu : MonoBehaviour
             return;
         }
         this.isOpen = false;
-        this.gameObject.SetActive(false);
+        this.panel.SetActive(false);
+    }
+
+    /// <summary>
+    /// Assign panel if null and initialize menu state.
+    /// </summary>
+    protected virtual void Awake()
+    {
+        // If no panel is assigned, default to this GameObject.
+        if (this.panel == null)
+        {
+            this.panel = this.gameObject;
+        }
+
+        // Ensure panel matches current isOpen state.
+        this.panel.SetActive(isOpen);
     }
 }

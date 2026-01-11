@@ -77,8 +77,9 @@ public class LoadMenu : Menu
     /// <summary>
     /// Subscribe to preview save event.
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         this.previewPanel.OnPlayButtonHit += LoadSave;
         this.previewPanel.OnDeleteSave += DeleteSaveFromDb;
 
