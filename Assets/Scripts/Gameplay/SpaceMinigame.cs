@@ -225,6 +225,7 @@ public class SpaceMinigame : Game
     public override void GameEnded()
     {
         this.CleanupEnemiesAndBoss();
+        this.StopSpawningAsteroids();
     }
 
     /// <summary>
