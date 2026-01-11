@@ -17,6 +17,11 @@ public class NPCModel
     public string Name { get; set; }
 
     /// <summary>
+    /// Gets or sets the npc image.
+    /// </summary>
+    public string ImagePath { get; set; }
+
+    /// <summary>
     /// Gets or sets the npc dialogues.
     /// </summary>
     public List<DialogueModel> Dialogues { get; set; }
@@ -31,5 +36,6 @@ public class NPCModel
         this.NPCId = table.NPCId;
         this.Name = table.Name;
         this.Dialogues = dialogues;
+        this.ImagePath = table.ImagePath;
     }
 }

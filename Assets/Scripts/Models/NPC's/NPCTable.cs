@@ -17,4 +17,9 @@ public class NPCTable
     /// Gets or sets the npc name.
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Gets or sets the npc image.
+    /// </summary>
+    public string ImagePath { get; set; }
 }
