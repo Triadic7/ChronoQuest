@@ -136,7 +136,6 @@ public class UIManager : MonoBehaviour
             Menu menu = reg.GetComponent<Menu>();
             if (menu != null && !menus.ContainsKey(reg.MenuKey))
             {
-                Debug.Log($"Added menu {reg.MenuKey}");
                 this.menus.Add(reg.MenuKey, menu);
                 menu.Close();
             }
@@ -161,7 +160,7 @@ public class UIManager : MonoBehaviour
         transition.PlayTopToBottomTransition();
 
         // Wait for the transition duration.
-        yield return new WaitForSeconds(transition.Duration);
+        yield return new WaitForSecondsRealtime(transition.Duration);
 
         // Then open the menu.
         OpenMenuImmediate(menu);

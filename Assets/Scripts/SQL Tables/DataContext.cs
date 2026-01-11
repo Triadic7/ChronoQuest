@@ -877,10 +877,6 @@ public class DataContext
         {
             Debug.LogWarning($"Stage not found for StageId: {id}");
         }
-        else
-        {
-            Debug.Log($"Loaded Stage: {tableRow.StageName} for StageId: {id}");
-        }
 
         // If table isn't null, return new stage model.
         return tableRow != null ? new StageModel(tableRow) : null;

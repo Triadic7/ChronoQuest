@@ -1,46 +1,49 @@
 using UnityEngine;
 
 /// <summary>
-/// Shoots up while able to fire.
+/// Shoots upwards while the player is allowed to fire.
+/// Handles firing rate, bullet speed, and automatically enables/disables shooting based on stage.
 /// </summary>
 public class PlayerShootController : MonoBehaviour
 {
     /// <summary>
-    /// Bullet prefab.
+    /// Bullet prefab to instantiate when shooting.
     /// </summary>
-    [SerializeField] 
+    [SerializeField]
     private GameObject bulletPrefab;
 
     /// <summary>
-    /// How fast the player shoots.
+    /// How fast the player can shoot (seconds per shot).
     /// </summary>
-    [SerializeField] 
+    [SerializeField]
     private float shootRate = 0.2f;
 
     /// <summary>
-    /// How fast the bullets are.
+    /// Speed of the bullets when fired.
     /// </summary>
-    [SerializeField] 
+    [SerializeField]
     private float bulletSpeed = 10f;
 
     /// <summary>
-    /// Timer for shooting.
+    /// Timer to track shooting cooldown.
     /// </summary>
     private float shootTimer;
 
     /// <summary>
-    /// If the player can fire.
+    /// If the player is allowed to fire.
     /// </summary>
     private bool canFire;
 
     /// <summary>
-    /// Cache event to enable firing.
+    /// Reference to the stage manager to subscribe to game events.
     /// </summary>
-    private void Start()
-    {
-        this.canFire = false;
+    private GameStageManager stageManager;
 
-        // Get game manager.
+    /// <summary>
+    /// Subscribe to stage events as early as possible in Awake.
+    /// </summary>
+    private void Awake()
+    {
         GameManager gm = GameManager.Instance;
         if (gm == null)
         {
@@ -48,57 +51,61 @@ public class PlayerShootController : MonoBehaviour
             return;
         }
 
-        // Get game stage manager.
-        GameStageManager stageManager = gm.GameStageManager;
-        if (stageManager == null)
+        this.stageManager = gm.GameStageManager;
+        if (this.stageManager == null)
         {
             Debug.LogError("No StageManager found.");
             return;
         }
 
-        // Allow firing on the final stage.
-        stageManager.OnGameSet += (game) =>
-        {
-            if (game.CurrentStage.IsFinalStage)
-            {
-                game.OnObjectiveStart += () =>
-                {
-                    this.canFire = true;
-                };
-            }
-            else
-            {
-                this.canFire = false;
-            }
-        };
+        // Subscribe to OnGameStarted to enable firing for final stage.
+        this.stageManager.OnGameStarted += OnGameStartedHandler;
 
-        // Prevent firing.
-        stageManager.OnObjectiveStop += () => this.canFire = false;
-
-        // Stop shooting on going to main menu.
-        gm.OnMainMenu += () => this.canFire = false;
+        // Subscribe to objective stop to disable firing immediately.
+        this.stageManager.OnObjectiveStop += () => { this.canFire = false; };
     }
 
     /// <summary>
-    /// Shoots bullets over time.
+    /// Check current game state when enabled to avoid missing events.
+    /// Ensures canFire is correct if game already started.
     /// </summary>
-    private void Update()
+    private void OnEnable()
     {
-        if (this.canFire)
+        if (this.stageManager != null && this.stageManager.CurrentGame != null)
         {
-            // Increment timer.
-            this.shootTimer += Time.deltaTime;
-
-            // Check if it's time to shoot.
-            if (this.shootTimer >= this.shootRate)
+            Game currentGame = this.stageManager.CurrentGame;
+            if (currentGame.CurrentStage != null)
             {
-                this.Shoot();
-                this.shootTimer = 0f;
+                // Player can fire only if it's the final stage and objective has started.
+                this.canFire = currentGame.CurrentStage.IsFinalStage && currentGame.IsObjectiveActive;
             }
         }
     }
 
-    // Shoot a bullet.
+    /// <summary>
+    /// Handles shooting input over time.
+    /// </summary>
+    private void Update()
+    {
+        if (this.canFire == false)
+        {
+            return;
+        }
+
+        // Increment timer for shooting cooldown.
+        this.shootTimer += Time.deltaTime;
+
+        // Fire bullet if timer exceeds shoot rate.
+        if (this.shootTimer >= this.shootRate)
+        {
+            this.Shoot();
+            this.shootTimer = 0f;
+        }
+    }
+
+    /// <summary>
+    /// Fires a bullet from the player's current position.
+    /// </summary>
     private void Shoot()
     {
         if (this.bulletPrefab == null)
@@ -106,14 +113,34 @@ public class PlayerShootController : MonoBehaviour
             return;
         }
 
-        // Spawn bullet at player's position.
+        // Instantiate bullet at player position with no rotation.
         GameObject bullet = Instantiate(this.bulletPrefab, this.transform.position, Quaternion.identity);
 
-        // Give it upward velocity.
+        // Assign upward velocity if Rigidbody2D exists.
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
             rb.linearVelocity = Vector2.up * this.bulletSpeed;
+        }
+    }
+
+    /// <summary>
+    /// Called when the game starts.
+    /// Subscribes to objective start to allow firing if final stage.
+    /// </summary>
+    /// <param name="game">The current game instance.</param>
+    private void OnGameStartedHandler(Game game)
+    {
+        if (game.CurrentStage.IsFinalStage)
+        {
+            game.OnObjectiveStart += () => 
+            { 
+                this.canFire = true; 
+            };
+        }
+        else
+        {
+            this.canFire = false;
         }
     }
 }

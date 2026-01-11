@@ -33,10 +33,18 @@ public class SpaceEnemy : MonoBehaviour
     {
         Debug.Log($"Collision name: {collision.gameObject.name}");
 
+        // Try to damage space station.
         SpaceStation spaceStation = collision.GetComponent<SpaceStation>();
         if (spaceStation)
         {
             spaceStation.TakeDamage();
+        }
+
+        // Try to damage player.
+        Player player = collision.GetComponent<Player>();
+        if (player) 
+        {
+            player.TakeDamage(10);
         }
 
         Destroy(this.gameObject);

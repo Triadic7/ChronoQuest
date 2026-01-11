@@ -15,12 +15,8 @@ public class BossEnemy : Enemy, IHealth
     /// <summary>
     /// How far from start boss moves.
     /// </summary>
+    [SerializeField]
     private float moveDistance = 5f;
-
-    /// <summary>
-    /// The movement speed of the enemy.
-    /// </summary>
-    public float movementSpeed = 5f;
 
     /// <summary>
     /// Fires event using the enemy.
@@ -48,6 +44,11 @@ public class BossEnemy : Enemy, IHealth
     private bool canSpawnEnemies;
 
     /// <summary>
+    /// The orginal scale.
+    /// </summary>
+    private Vector3 originalScale;
+
+    /// <summary>
     /// Start spawning enemies.
     /// </summary>
     public void StartSpawningEnemies()
@@ -69,6 +70,7 @@ public class BossEnemy : Enemy, IHealth
     private void Start()
     {
         this.startPosition = this.transform.position;
+        this.originalScale = this.transform.localScale;
     }
 
     /// <summary>
@@ -85,13 +87,7 @@ public class BossEnemy : Enemy, IHealth
     /// </summary>
     private void MoveSideToSide()
     {
-        if (this.moveDistance <= 0)
-        {
-            return;
-        }
-
-        // Prevent divide by 0.
-        if(this.CurrentHealth <= 0)
+        if (this.moveDistance <= 0 || this.CurrentHealth <= 0)
         {
             return;
         }
@@ -101,11 +97,23 @@ public class BossEnemy : Enemy, IHealth
         float speedMultiplier = 1f + (1f - healthRatio) * 1f;
 
         // Increment timer.
-        this.moveTimer += Time.deltaTime * this.movementSpeed * speedMultiplier;
+        this.moveTimer += Time.deltaTime * this.MovementSpeed * speedMultiplier;
 
         // Move back and forth.
-        float offset = Mathf.PingPong(this.moveTimer, this.moveDistance * 2f) - this.moveDistance;
-        this.transform.position = this.startPosition + new Vector3(offset, 0f, 0f);
+        float xOffset = Mathf.Sin(this.moveTimer) * this.moveDistance;
+        Vector3 newPos = this.startPosition + new Vector3(xOffset, 0f, 0f);
+
+        // Determine direction.
+        float direction = newPos.x - this.transform.position.x;
+
+        // Flips sprite.
+        if (direction != 0f)
+        {
+            float sign = Mathf.Sign(direction);
+            this.transform.localScale = new Vector3(Mathf.Abs(this.originalScale.x) * sign, this.originalScale.y, this.originalScale.z);
+        }
+
+        this.transform.position = newPos;
     }
 
     /// <summary>

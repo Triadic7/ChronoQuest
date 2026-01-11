@@ -9,6 +9,11 @@ using UnityEngine;
 public class GameStageManager : MonoBehaviour
 {
     /// <summary>
+    /// The current game.
+    /// </summary>
+    public Game CurrentGame { get; private set; }
+
+    /// <summary>
     /// Fires after stage is finished.
     /// </summary>
     public event Action<bool> OnStageFinished;
@@ -19,14 +24,29 @@ public class GameStageManager : MonoBehaviour
     public event Action OnObjectiveStop;
 
     /// <summary>
-    /// Starts the stage.
+    /// Starts the stage, but doesnt call the objective started.
     /// </summary>
     public event Action<StageModel> OnStageStarted;
 
     /// <summary>
-    /// On stage set.
+    /// On game set.
     /// </summary>
     public event Action<Game> OnGameSet;
+
+    /// <summary>
+    /// Called when the objective is over.
+    /// </summary>
+    public event Action<Game> OnObjectiveEnd;
+
+    /// <summary>
+    /// On game started, so before objective has been called.
+    /// </summary>
+    public event Action<Game> OnGameStarted;
+
+    /// <summary>
+    /// On game started, so the objective has been called.
+    /// </summary>
+    public event Action<Game> OnGameObjectiveStarted;
 
     /// <summary>
     /// Fired when game progress made.
@@ -59,11 +79,6 @@ public class GameStageManager : MonoBehaviour
     private SpaceMinigame spaceMinigame;
 
     /// <summary>
-    /// The current game.
-    /// </summary>
-    private Game currentGame;
-
-    /// <summary>
     /// Delay for stage.
     /// </summary>
     [SerializeField]
@@ -78,16 +93,16 @@ public class GameStageManager : MonoBehaviour
         switch (stage.StageID)
         {
             case 1:
-                this.currentGame = patternMinigame; 
+                this.CurrentGame = patternMinigame; 
                 break;
             case 2:
-                this.currentGame = towerDefenseMinigame; 
+                this.CurrentGame = towerDefenseMinigame; 
                 break;
             case 3:
-                this.currentGame = timeMinigame; 
+                this.CurrentGame = timeMinigame; 
                 break;
             case 4:
-                this.currentGame = spaceMinigame; 
+                this.CurrentGame = spaceMinigame; 
                 break;
             default:
                 Debug.LogError($"No minigame for stage {stage.StageID}");
@@ -95,45 +110,42 @@ public class GameStageManager : MonoBehaviour
         }
 
         // Assign the stage data.
-        this.currentGame.SetStage(stage);
+        this.CurrentGame.SetStage(stage);
 
         // Fire event.
-        this.OnGameSet?.Invoke(this.currentGame);
+        this.OnGameSet?.Invoke(this.CurrentGame);
 
         // Subscribe to game end.
-        this.currentGame.OnGameEnd += this.EndGame;
-        this.currentGame.OnGameProgress += this.OnGameProgressMade;
-        this.currentGame.OnFailStrike += this.OnGameFailStrike;
+        this.CurrentGame.OnGameEnd += this.EndGame;
+        this.CurrentGame.OnGameProgress += this.OnGameProgressMade;
+        this.CurrentGame.OnFailStrike += this.OnGameFailStrike;
 
         // Initialize the game by starting it.
-        this.currentGame.StartGame();
+        this.CurrentGame.StartGame();
 
         this.OnStageStarted?.Invoke(stage);
+        this.OnGameStarted?.Invoke(this.CurrentGame);
 
         // Start coroutine then start game.
-        StartCoroutine(this.StageDelay(this.currentGame.StartGameObjective));
+        StartCoroutine(this.StageDelay(this.CurrentGame.StartGameObjective));
 
     }
 
     /// <summary>
     /// Cleans up current game in case the user goes to main menu.
     /// </summary>
-    public void CleanUpCurrentGame()
+    private void CleanUpCurrentGame()
     {
-        if (this.currentGame != null)
+        if (this.CurrentGame != null)
         {
             // Unsubscribe from events.
-            this.currentGame.OnGameEnd -= this.EndGame;
-            this.currentGame.OnGameProgress -= this.OnGameProgressMade;
-            this.currentGame.OnFailStrike -= this.OnGameFailStrike;
-
-            this.OnObjectiveStop?.Invoke();
+            this.UnsubscribeFromGame();
 
             // Call cleanup logic.
-            this.currentGame.CleanUp();
+            this.CurrentGame.CleanUp();
 
             // Null out reference.
-            this.currentGame = null;
+            this.CurrentGame = null;
         }
     }
 
@@ -143,7 +155,7 @@ public class GameStageManager : MonoBehaviour
     /// </summary>
     public void DebugWinGame()
     {
-        this.currentGame.EndGame(true);
+        this.CurrentGame.EndGame(true);
     }
 
     /// <summary>
@@ -157,6 +169,9 @@ public class GameStageManager : MonoBehaviour
         this.spaceMinigame = GetComponentInChildren<SpaceMinigame>(true);
     }
 
+    /// <summary>
+    /// Cache and add event listeners.
+    /// </summary>
     private void Start()
     {
         GameManager gm = GameManager.Instance;
@@ -172,27 +187,41 @@ public class GameStageManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Unsubscribes from the current game if present.
+    /// </summary>
+    private void UnsubscribeFromGame()
+    {
+        this.OnObjectiveStop?.Invoke();
+        if (this.CurrentGame != null)
+        {
+            // Unsubscribe from game.
+            this.CurrentGame.OnGameEnd -= this.EndGame;
+            this.CurrentGame.OnGameProgress -= this.OnGameProgressMade;
+            this.CurrentGame.OnFailStrike -= this.OnGameFailStrike;
+        }
+    }
+
+    /// <summary>
     /// Ends a game.
     /// </summary>
     /// <param name="hasWon">If the player has won.</param>
     private void EndGame(bool hasWon)
     {
-        // Unsubscribe from game.
-        this.currentGame.OnGameEnd -= this.EndGame;
-        this.currentGame.OnGameProgress -= this.OnGameProgressMade;
-        this.currentGame.OnFailStrike -= this.OnGameFailStrike;
+        this.OnObjectiveEnd?.Invoke(this.CurrentGame);
+        this.UnsubscribeFromGame();
 
         // Start coroutine then cleanup game.
         StartCoroutine(this.StageEndDelay(hasWon));
     }
 
     /// <summary>
-    /// Coroutine to delay the stage.
+    /// Coroutine to delay the stage start. Then start the game.
     /// </summary>
     /// <returns></returns>
     private IEnumerator StageDelay(Action function)
     {
         yield return new WaitForSeconds(this.stageDelay);
+        this.OnGameObjectiveStarted?.Invoke(this.CurrentGame);
         function?.Invoke();
     }
 
@@ -204,9 +233,9 @@ public class GameStageManager : MonoBehaviour
     private IEnumerator StageEndDelay(bool hasWon)
     {
         yield return new WaitForSeconds(stageDelay);
-        if(this.currentGame != null)
+        if(this.CurrentGame != null)
         {
-            this.currentGame.CleanUp();
+            this.CurrentGame.CleanUp();
             this.OnStageFinished?.Invoke(hasWon);
         }
     }

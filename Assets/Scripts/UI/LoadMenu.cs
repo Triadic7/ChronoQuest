@@ -85,15 +85,6 @@ public class LoadMenu : Menu
 
         // Cache save manager.
         this.saveManager = GameManager.Instance.SaveManager;
-
-        if (this.saveManager != null)
-        {
-            Debug.Log("Loaded save manager");
-        }
-        else
-        {
-            Debug.LogError("Save manager not loaded");
-        }
     }
 
     /// <summary>

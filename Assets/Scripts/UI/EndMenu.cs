@@ -24,11 +24,6 @@ public class EndMenu : Menu
     private TMP_Text summaryText;
 
     /// <summary>
-    /// Fired after the final continue is clicked.
-    /// </summary>
-    public event Action OnEndingDone;
-
-    /// <summary>
     /// The button to end the game.
     /// </summary>
     private Button continueButton;

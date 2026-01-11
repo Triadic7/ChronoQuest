@@ -69,7 +69,7 @@ public class FadeSlideTransition : MonoBehaviour
         // Animate over duration.
         while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
 
             // Normalized time.
             float t = elapsed / duration;
@@ -86,7 +86,7 @@ public class FadeSlideTransition : MonoBehaviour
 
 
         // Small pause before fading out.
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSecondsRealtime(0.1f);
 
         // Fade out.
         elapsed = 0f;
@@ -95,7 +95,7 @@ public class FadeSlideTransition : MonoBehaviour
 
         while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
 
             canvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, t);
