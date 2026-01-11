@@ -34,7 +34,7 @@ public class DataContext
         // Create stage table.
         this.db.CreateTable<StageTable>();
 
-        // Seed stages. [Populate this with a JSON file?]
+        // Seed stages.
         this.db.InsertOrReplace(new StageTable 
         { 
             StageId = 1, 
@@ -78,13 +78,16 @@ public class DataContext
         // Create npc table.
         this.db.CreateTable<NPCTable>();
 
-        // Seed NPCs. [Populate this with a JSON file?]
+        // Allow recache.
+        this.db.DeleteAll<NPCTable>();
+
+        // Seed NPCs.
         if (!this.db.Table<NPCTable>().Any())
         {
-            this.db.Insert(new NPCTable { NPCId = 1, Name = "Pharoh" });
-            this.db.Insert(new NPCTable { NPCId = 2, Name = "King Arthur" });
-            this.db.Insert(new NPCTable { NPCId = 3, Name = "Superior" });
-            this.db.Insert(new NPCTable { NPCId = 4, Name = "S.I." });
+            this.db.Insert(new NPCTable { NPCId = 1, Name = "Pharaoh", ImagePath = "Pharaoh" });
+            this.db.Insert(new NPCTable { NPCId = 2, Name = "King Arthur", ImagePath = "KingArthur" });
+            this.db.Insert(new NPCTable { NPCId = 3, Name = "Supervisor", ImagePath = "Supervisor" });
+            this.db.Insert(new NPCTable { NPCId = 4, Name = "S.I.", ImagePath = "SI" });
         }
 
         // Create tables for dialogue if not present.

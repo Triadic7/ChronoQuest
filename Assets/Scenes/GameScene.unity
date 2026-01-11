@@ -13345,6 +13345,7 @@ MonoBehaviour:
   npcNameText: {fileID: 2097601880}
   playerResponseText: {fileID: 763273113}
   npcText: {fileID: 257756486}
+  npcImage: {fileID: 327964056}
   choicesContainer: {fileID: 392196444}
   choiceButtonPrefab: {fileID: 1219537592138434175, guid: 312141febc7736b439008e6a225bb0de, type: 3}
   playerResponsePanel: {fileID: 600655058}

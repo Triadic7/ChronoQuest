@@ -137,7 +137,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CharactersAndLocations_0
+      name: Pharaoh
       rect:
         serializedVersion: 2
         x: 0
@@ -159,7 +159,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CharactersAndLocations_1
+      name: KingArthur
       rect:
         serializedVersion: 2
         x: 32
@@ -181,7 +181,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CharactersAndLocations_2
+      name: Supervisor
       rect:
         serializedVersion: 2
         x: 64
@@ -203,7 +203,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CharactersAndLocations_3
+      name: SI
       rect:
         serializedVersion: 2
         x: 96
@@ -350,19 +350,19 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      CharactersAndLocations_0: -8646309681778204702
-      CharactersAndLocations_1: 7172223786171601169
       CharactersAndLocations_10: 1408270446
       CharactersAndLocations_11: -530207624
       CharactersAndLocations_12: -953430017
-      CharactersAndLocations_2: -7968016207902881433
-      CharactersAndLocations_3: 3175419999268973204
       CharactersAndLocations_4: 1977280254937550958
       CharactersAndLocations_5: -4869180369470813860
       CharactersAndLocations_6: -2831482709295002887
       CharactersAndLocations_7: -1515970301865802949
       CharactersAndLocations_8: -1924564545125621877
       CharactersAndLocations_9: -848349671
+      KingArthur: 7172223786171601169
+      Pharaoh: -8646309681778204702
+      SI: 3175419999268973204
+      Supervisor: -7968016207902881433
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

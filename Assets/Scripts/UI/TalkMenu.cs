@@ -32,6 +32,12 @@ public class TalkMenu : Menu
     private TMP_Text npcText;
 
     /// <summary>
+    /// The npcs image.
+    /// </summary>
+    [SerializeField]
+    private Image npcImage;
+
+    /// <summary>
     /// The parent transform that holds the choice buttons.
     /// </summary>
     [SerializeField] 
@@ -53,6 +59,19 @@ public class TalkMenu : Menu
     /// Reference to the DialogueManager in the scene.
     /// </summary>
     private DialogueManager dialogueManager;
+
+    /// <summary>
+    /// The sprite provider to display stuff to UI.
+    /// </summary>
+    private NpcSpriteProvider npcSpriteProvider;
+
+    /// <summary>
+    /// Instance new sprite provider.
+    /// </summary>
+    private void Start()
+    {
+        this.npcSpriteProvider = new NpcSpriteProvider();
+    }
 
     /// <summary>
     /// Displays the current dialogue node on the UI, including dynamic choice buttons.
@@ -135,6 +154,12 @@ public class TalkMenu : Menu
     {
         this.npcNameText.text = npc.Name;
         this.locationText.text = stage.StageName;
+
+        // Loads the npcs image using addressables. Passing in the sprite sheet location.
+        this.npcSpriteProvider.Load(npc.ImagePath, "Assets/Art/Characters/CharactersAndLocations.png", sprite =>
+        {
+            this.npcImage.sprite = sprite != null ? sprite : null;
+        });
     }
 
     /// <summary>
