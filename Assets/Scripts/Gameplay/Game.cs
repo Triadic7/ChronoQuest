@@ -13,11 +13,6 @@ public abstract class Game : MonoBehaviour
     public event Action<bool> OnGameEnd;
 
     /// <summary>
-    /// Fired after OnGameEnd, to cleanup game.
-    /// </summary>
-    public event Action OnGameCleanup;
-
-    /// <summary>
     /// When the games objective starts.
     /// </summary>
     public event Action OnObjectiveStart;
@@ -26,6 +21,11 @@ public abstract class Game : MonoBehaviour
     /// When progress has been made.
     /// </summary>
     public event Action<int, int> OnGameProgress;
+
+    /// <summary>
+    /// Gets whether the objective is started.
+    /// </summary>
+    public bool IsObjectiveActive {  get; private set; }
 
     /// <summary>
     /// When fail strike recieved.
@@ -46,6 +46,11 @@ public abstract class Game : MonoBehaviour
     /// The current stage data.
     /// </summary>
     public StageModel CurrentStage { get; private set; }
+
+    /// <summary>
+    /// The spawn point for players.
+    /// </summary>
+    public Transform PlayerSpawnPoint;
 
     /// <summary>
     /// How many fails the player currently has.
@@ -90,6 +95,7 @@ public abstract class Game : MonoBehaviour
     public virtual void StartGameObjective()
     {
         this.OnObjectiveStart?.Invoke();
+        this.IsObjectiveActive = true;
     }
 
     /// <summary>
@@ -108,6 +114,7 @@ public abstract class Game : MonoBehaviour
     /// <param name="won">If the game was won.</param>
     public void EndGame(bool won)
     {
+        this.IsObjectiveActive = false;
         this.GameEnded();
         this.OnGameEnd?.Invoke(won);
     }

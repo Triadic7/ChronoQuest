@@ -8,29 +8,15 @@ public class PressurePlate : MonoBehaviour
     /// </summary>
     public event Action<PressurePlate> OnPressed;
 
-    [SerializeField]
-    /// <summary>
-    /// The renderer for the plate to change color.
-    /// </summary>
-    private Renderer plateRenderer;
+    private SpriteRenderer spriteRenderer;
 
-    /// <summary>
-    /// The color to show when highlighted.
-    /// </summary>
-    [SerializeField]
-    private Color highlightColor = Color.red;
+    private Sprite sprite;
 
-    /// <summary>
-    /// The original color of the plate.
-    /// </summary>
-    private Color originalColor;
+    private Sprite activatedSprite;
 
     private void Awake()
     {
-        if (this.plateRenderer != null)
-        {
-            this.originalColor = this.plateRenderer.material.color;
-        }
+        this.spriteRenderer = this.GetComponent<SpriteRenderer>();
     }
 
     /// <summary>
@@ -40,13 +26,13 @@ public class PressurePlate : MonoBehaviour
     /// than zero.</param>
     public void Highlight(float duration)
     {
-        this.plateRenderer.material.color = this.highlightColor;
+        this.spriteRenderer.sprite = this.activatedSprite;
         Invoke(nameof(ResetColor), duration);
     }
 
     private void ResetColor()
     {
-        this.plateRenderer.material.color = this.originalColor;
+        this.spriteRenderer.sprite = this.sprite;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -55,5 +41,14 @@ public class PressurePlate : MonoBehaviour
         {
             OnPressed?.Invoke(this);
         }
+    }
+
+    public void SetSprites(Sprite sprite, Sprite activatedSprite)
+    {
+        this.sprite = sprite;
+        this.activatedSprite = activatedSprite;
+        // Set the sprite of the plate to the activated sprite.
+        SpriteRenderer renderer = this.GetComponent<SpriteRenderer>();
+        renderer.sprite = sprite;
     }
 }

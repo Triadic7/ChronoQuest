@@ -78,11 +78,6 @@ public class GameManager : MonoBehaviour
     public event Action OnMainMenu;
 
     /// <summary>
-    /// On dialogue start.
-    /// </summary>
-    public event Action<NPCModel, string> OnDialogueStart;
-
-    /// <summary>
     /// The current save.
     /// </summary>
     public SaveModel CurrentSave { get; private set; }
@@ -263,10 +258,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void DoPause()
     {
+        this.UIManager.OpenMenu("PauseMenu");
         this.IsPaused = true;
         Time.timeScale = 0f;
         this.OnGamePaused?.Invoke();
-        this.UIManager.OpenMenu("PauseMenu");
     }
 
     /// <summary>

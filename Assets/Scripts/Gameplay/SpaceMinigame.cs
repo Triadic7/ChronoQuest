@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 /// <summary>
@@ -19,6 +20,18 @@ public class SpaceMinigame : Game
     private Transform stationSpawnPoint;
 
     /// <summary>
+    /// Where the astroids spawns.
+    /// </summary>
+    [SerializeField]
+    private Transform asteroidSpawnPointA;
+
+    /// <summary>
+    /// Where the astroids spawns.
+    /// </summary>
+    [SerializeField]
+    private Transform asteroidSpawnPointB;
+
+    /// <summary>
     /// The boss prefab.
     /// </summary>
     [SerializeField]
@@ -28,7 +41,7 @@ public class SpaceMinigame : Game
     /// Astroid prefab.
     /// </summary>
     [SerializeField]
-    private GameObject astroidPrefab;
+    private GameObject asteroidPrefab;
 
     /// <summary>
     /// Enemy prefab.
@@ -43,8 +56,26 @@ public class SpaceMinigame : Game
     private GameObject spaceStationPrefab;
 
     // Dealing damage to boss increases progress bar.
+    /// <summary>
+    /// The list of objects to destroy at the end of the game.
+    /// </summary>
+    private List<GameObject> gameObjects;
 
-    // Spawn astroids players can fly into or shoot to fling or destroy.
+    /// <summary>
+    /// Time between asteroid spawns.
+    /// </summary>
+    [SerializeField]
+    private float asteroidSpawnInterval = 2f;
+
+    /// <summary>
+    /// Timer for spawning asteroids.
+    /// </summary>
+    private float asteroidSpawnTimer;
+
+    /// <summary>
+    /// Whether asteroids are currently spawning.
+    /// </summary>
+    private bool spawnAsteroids;
 
     /// <summary>
     /// Starts game by spawning in boss and other game objects.
@@ -92,6 +123,28 @@ public class SpaceMinigame : Game
     {
         this.CleanupStation();
         this.CleanupEnemiesAndBoss();
+        this.StopSpawningAsteroids();
+    }
+
+    /// <summary>
+    /// Spawns astroids over time.
+    /// </summary>
+    private void Update()
+    {
+        if (!this.spawnAsteroids)
+        {
+            return;
+        }
+
+        // Increase timer.
+        this.asteroidSpawnTimer += Time.deltaTime;
+
+        // Spawn astroid if timer hit.
+        if (this.asteroidSpawnTimer >= this.asteroidSpawnInterval)
+        {
+            this.SpawnAstroid();
+            this.asteroidSpawnTimer = 0f;
+        }
     }
 
     /// <summary>
@@ -119,10 +172,41 @@ public class SpaceMinigame : Game
     }
 
     /// <summary>
+    /// Spawns astroid and adds it to the list of gameobjects.
+    /// </summary>
+    private void SpawnAstroid()
+    {
+        // Spawns astroids on a random point between the spawn points.
+        float t = Random.value;
+        Vector3 spawnPos = Vector3.Lerp(this.asteroidSpawnPointA.position, this.asteroidSpawnPointB.position, t);
+
+        GameObject astroid = Instantiate(this.asteroidPrefab, spawnPos, Quaternion.identity);
+        this.gameObjects.Add(astroid);
+    }
+
+    /// <summary>
+    /// Starts spawning astroids.
+    /// </summary>
+    private void StartSpawningAsteroids()
+    {
+        this.spawnAsteroids = true;
+        this.asteroidSpawnTimer = 0f;
+    }
+
+    /// <summary>
+    /// Stops spawning astroids.
+    /// </summary>
+    private void StopSpawningAsteroids()
+    {
+        this.spawnAsteroids = false;
+    }
+
+    /// <summary>
     /// Destroys station.
     /// </summary>
     private void CleanupStation()
     {
+        // Destroy only the space station.
         foreach (GameObject go in gameObjects)
         {
             if (go == null)
@@ -143,5 +227,15 @@ public class SpaceMinigame : Game
     public override void GameEnded()
     {
         this.CleanupEnemiesAndBoss();
+        this.StopSpawningAsteroids();
+    }
+
+    /// <summary>
+    /// Starts spawning asteroids.
+    /// </summary>
+    public override void StartGameObjective()
+    {
+        base.StartGameObjective();
+        this.StartSpawningAsteroids();
     }
 }

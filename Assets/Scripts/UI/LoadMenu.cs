@@ -77,22 +77,14 @@ public class LoadMenu : Menu
     /// <summary>
     /// Subscribe to preview save event.
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         this.previewPanel.OnPlayButtonHit += LoadSave;
         this.previewPanel.OnDeleteSave += DeleteSaveFromDb;
 
         // Cache save manager.
         this.saveManager = GameManager.Instance.SaveManager;
-
-        if (this.saveManager != null)
-        {
-            Debug.Log("Loaded save manager");
-        }
-        else
-        {
-            Debug.LogError("Save manager not loaded");
-        }
     }
 
     /// <summary>
