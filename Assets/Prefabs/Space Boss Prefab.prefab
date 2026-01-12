@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5797995666964113242}
   - component: {fileID: 4534856314357661822}
   - component: {fileID: 8882870009448092759}
+  - component: {fileID: 2896159263418663693}
   m_Layer: 10
   m_Name: Space Boss Prefab
   m_TagString: Untagged
@@ -109,8 +110,8 @@ MonoBehaviour:
   movementSpeed: 0.5
   startPosition: {x: 0, y: 0, z: 0}
   aggroZone: {fileID: 0}
-  enemySpawnTime: 0.75
   moveDistance: 8
+  enemySpawner: {fileID: 2896159263418663693}
 --- !u!61 &8882870009448092759
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -157,6 +158,23 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2095819, y: 0.83632874}
   m_EdgeRadius: 0
+--- !u!114 &2896159263418663693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2660562687310019050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b53a74dfdf5637c42ab40d4b7ebb9c8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Spawner
+  prefab: {fileID: 4044836765836752430, guid: ae9c2491d5e2a814eab9f99b98575034, type: 3}
+  interval: 0.9
+  spawnPoints: []
+  loop: 1
+  maxSpawns: -1
 --- !u!1 &4384505149814256667
 GameObject:
   m_ObjectHideFlags: 0

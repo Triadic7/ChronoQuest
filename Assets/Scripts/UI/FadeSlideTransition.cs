@@ -39,16 +39,13 @@ public class FadeSlideTransition : MonoBehaviour
     /// </summary>
     public void PlayTopToBottomTransition()
     {
-        panel.gameObject.SetActive(true);
+        this.panel.gameObject.SetActive(true);
 
-        // Start panel offscreen at the top.
-        panel.anchoredPosition = new Vector2(0, slideDistance);
+        // Start fully covering the screen
+        this.panel.anchoredPosition = Vector2.zero;
+        this.canvasGroup.alpha = 1f;
 
-        // Start fully transparent.
-        canvasGroup.alpha = 0f;
-
-        // Begin animation coroutine.
-        StartCoroutine(AnimatePanel());
+        this.StartCoroutine(AnimatePanel());
     }
 
     /// <summary>
@@ -58,53 +55,20 @@ public class FadeSlideTransition : MonoBehaviour
     {
         float elapsed = 0f;
 
-        // Store start and end positions.
-        Vector2 startPos = panel.anchoredPosition;
-        Vector2 endPos = Vector2.zero;
+        // Get start position.
+        Vector2 startPos = Vector2.zero;
+        Vector2 endPos = new Vector2(0, -this.slideDistance);
 
-        // Store start and end alpha values.
-        float startAlpha = 0f;
-        float endAlpha = 1f;
-
-        // Animate over duration.
-        while (elapsed < duration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-
-            // Normalized time.
-            float t = elapsed / duration;
-
-            // Smooth.
-            t = Mathf.SmoothStep(0f, 1f, t);
-
-            // Lerp position and alpha.
-            panel.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
-            canvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, t);
-
-            yield return null;
-        }
-
-
-        // Small pause before fading out.
-        yield return new WaitForSecondsRealtime(0.1f);
-
-        // Fade out.
-        elapsed = 0f;
-        startAlpha = 1f;
-        endAlpha = 0f;
-
+        // Slide panel for duration.
         while (elapsed < duration)
         {
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
 
-            canvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, t);
-
+            this.panel.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
             yield return null;
         }
 
-        // Ensure final alpha is 0 and hide panel.
-        canvasGroup.alpha = 0f;
-        panel.gameObject.SetActive(false);
+        this.panel.gameObject.SetActive(false);
     }
 }

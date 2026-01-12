@@ -189,8 +189,8 @@ MonoBehaviour:
   m_text: This is a choice that can a lot of text on it. Like hey?! How much text
     can we fit on here? Am I right?
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c36e353ecc6cbd24d89b872d0f2b5c85, type: 2}
+  m_sharedMaterial: {fileID: 7608085312805857925, guid: c36e353ecc6cbd24d89b872d0f2b5c85, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -214,7 +214,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18.35
+  m_fontSize: 15.7
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

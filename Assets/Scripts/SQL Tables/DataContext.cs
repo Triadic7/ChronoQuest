@@ -60,7 +60,7 @@ public class DataContext
             StageName = "Modern Day", 
             StageDescription = "Hurry up and remove the Disturbances before they fully materialize in this time period.",
             ObjectiveText = "Grab the Disturbances before they fully appear",
-            ObjectiveProgress = 15,
+            ObjectiveProgress = 30,
             LocationID = 3,
             NPCId = 3,
         });
@@ -70,7 +70,7 @@ public class DataContext
             StageName = "Space Age", 
             StageDescription = "Final boss time. Protect the space station and destroy the Interloper to hold back the Anomalies!",
             ObjectiveText = "Defeat the boss and protect the station",
-            ObjectiveProgress = 20,
+            ObjectiveProgress = 50,
             LocationID = 4,
             NPCId = 4,
             IsFinalStage = true 

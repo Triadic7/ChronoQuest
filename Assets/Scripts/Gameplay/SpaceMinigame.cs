@@ -20,34 +20,10 @@ public class SpaceMinigame : Game
     private Transform stationSpawnPoint;
 
     /// <summary>
-    /// Where the astroids spawns.
-    /// </summary>
-    [SerializeField]
-    private Transform asteroidSpawnPointA;
-
-    /// <summary>
-    /// Where the astroids spawns.
-    /// </summary>
-    [SerializeField]
-    private Transform asteroidSpawnPointB;
-
-    /// <summary>
     /// The boss prefab.
     /// </summary>
     [SerializeField]
     private GameObject bossPrefab;
-
-    /// <summary>
-    /// Astroid prefab.
-    /// </summary>
-    [SerializeField]
-    private GameObject asteroidPrefab;
-
-    /// <summary>
-    /// Enemy prefab.
-    /// </summary>
-    [SerializeField]
-    private GameObject enemyPrefab;
 
     /// <summary>
     /// Space station prefab.
@@ -56,25 +32,20 @@ public class SpaceMinigame : Game
     private GameObject spaceStationPrefab;
 
     /// <summary>
-    /// The list of objects to destroy at the end of the game.
+    /// The boss go when it gets instanced.
     /// </summary>
-    private List<GameObject> gameObjects;
+    private GameObject bossInstance;
 
     /// <summary>
-    /// Time between asteroid spawns.
+    /// The station go when it gets instanced.
+    /// </summary>
+    private GameObject stationInstance;
+
+    /// <summary>
+    /// Spawner for asteroids.
     /// </summary>
     [SerializeField]
-    private float asteroidSpawnInterval = 2f;
-
-    /// <summary>
-    /// Timer for spawning asteroids.
-    /// </summary>
-    private float asteroidSpawnTimer;
-
-    /// <summary>
-    /// Whether asteroids are currently spawning.
-    /// </summary>
-    private bool spawnAsteroids;
+    private Spawner asteroidSpawner;
 
     /// <summary>
     /// Starts game by spawning in boss and other game objects.
@@ -83,22 +54,13 @@ public class SpaceMinigame : Game
     {
         base.StartGame();
 
-        this.gameObjects = new List<GameObject>();
-
         // Spawn in boss.
         GameObject boss = Instantiate(this.bossPrefab, this.bossSpawnPoint.position, Quaternion.identity, this.bossSpawnPoint);
-        this.gameObjects.Add(boss);
+        this.bossInstance = boss;
 
         // Get component and initialize the boss.
         BossEnemy bossEnemy = boss.GetComponent<BossEnemy>();
-        bossEnemy.Initialize(this.CurrentStage.ObjectiveProgress, enemyPrefab);
-
-        // Add event listeners to boss.
-        bossEnemy.OnSpawnEnemy += (enemy) =>
-        {
-            // Adds enemy spawned to list of objects to clean up.
-            this.gameObjects.Add(enemy);
-        };
+        bossEnemy.Initialize(this.CurrentStage.ObjectiveProgress);
 
         // Spawn enemies on objective start.
         this.OnObjectiveStart += bossEnemy.StartSpawningEnemies;
@@ -108,125 +70,11 @@ public class SpaceMinigame : Game
 
         // Spawn in space station.
         GameObject station = Instantiate(this.spaceStationPrefab, this.stationSpawnPoint.position, Quaternion.identity, this.stationSpawnPoint);
-        this.gameObjects.Add(station);
+        this.stationInstance = station;
 
         // Register events with station.
         SpaceStation spaceStation = station.GetComponent<SpaceStation>();
         spaceStation.OnDamageTaken += this.ReceiveFailStrike;
-    }
-
-    /// <summary>
-    /// Remove any gameObjects from the list and destroy them.
-    /// </summary>
-    public override void CleanUp()
-    {
-        this.CleanupStation();
-        this.CleanupEnemiesAndBoss();
-        this.StopSpawningAsteroids();
-    }
-
-    /// <summary>
-    /// Spawns astroids over time.
-    /// </summary>
-    private void Update()
-    {
-        if (!this.spawnAsteroids)
-        {
-            return;
-        }
-
-        // Increase timer.
-        this.asteroidSpawnTimer += Time.deltaTime;
-
-        // Spawn astroid if timer hit.
-        if (this.asteroidSpawnTimer >= this.asteroidSpawnInterval)
-        {
-            this.SpawnAstroid();
-            this.asteroidSpawnTimer = 0f;
-        }
-    }
-
-    /// <summary>
-    /// Cleans up enemies and boss by destroying.
-    /// </summary>
-    private void CleanupEnemiesAndBoss()
-    {
-        if(this.gameObjects.Count > 0)
-        {
-            foreach (GameObject go in this.gameObjects)
-            {
-                if (go != null)
-                {
-                    BossEnemy bossEnemy = go.GetComponent<BossEnemy>();
-                    if (bossEnemy)
-                    {
-                        // Spawn enemies on objective start.
-                        this.OnObjectiveStart -= bossEnemy.StartSpawningEnemies;
-                        bossEnemy.StopSpawningEnemies();
-                    }
-                    Destroy(go);
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Spawns astroid and adds it to the list of gameobjects.
-    /// </summary>
-    private void SpawnAstroid()
-    {
-        // Spawns astroids on a random point between the spawn points.
-        float t = Random.value;
-        Vector3 spawnPos = Vector3.Lerp(this.asteroidSpawnPointA.position, this.asteroidSpawnPointB.position, t);
-
-        GameObject astroid = Instantiate(this.asteroidPrefab, spawnPos, Quaternion.identity);
-        this.gameObjects.Add(astroid);
-    }
-
-    /// <summary>
-    /// Starts spawning astroids.
-    /// </summary>
-    private void StartSpawningAsteroids()
-    {
-        this.spawnAsteroids = true;
-        this.asteroidSpawnTimer = 0f;
-    }
-
-    /// <summary>
-    /// Stops spawning astroids.
-    /// </summary>
-    private void StopSpawningAsteroids()
-    {
-        this.spawnAsteroids = false;
-    }
-
-    /// <summary>
-    /// Destroys station.
-    /// </summary>
-    private void CleanupStation()
-    {
-        // Destroy only the space station.
-        foreach (GameObject go in gameObjects)
-        {
-            if (go == null)
-            {
-                continue;
-            }
-
-            if (go.GetComponent<SpaceStation>())
-            {
-                Destroy(go);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Clean up boss and enemies.
-    /// </summary>
-    public override void GameEnded()
-    {
-        this.CleanupEnemiesAndBoss();
-        this.StopSpawningAsteroids();
     }
 
     /// <summary>
@@ -235,6 +83,48 @@ public class SpaceMinigame : Game
     public override void StartGameObjective()
     {
         base.StartGameObjective();
-        this.StartSpawningAsteroids();
+        this.asteroidSpawner.StartSpawning();
+    }
+
+    /// <summary>
+    /// Remove any gameObjects from the list and destroy them.
+    /// </summary>
+    public override void CleanUp()
+    {
+        this.asteroidSpawner.StopSpawning();
+        this.CleanupStation();
+    }
+
+    /// <summary>
+    /// Destroys station instance.
+    /// </summary>
+    private void CleanupStation()
+    {
+        Destroy(this.stationInstance);
+    }
+
+    /// <summary>
+    /// Clean up boss and enemies.
+    /// </summary>
+    public override void GameEnded()
+    {
+        this.asteroidSpawner.StopSpawning();
+        this.CleanUpBoss();
+    }
+
+    /// <summary>
+    /// Unsubscribes from boss and destroys it.
+    /// </summary>
+    private void CleanUpBoss()
+    {
+        // If player died, unsubscribe from events and destroy boss.
+        if (this.bossInstance != null)
+        {
+            BossEnemy bossEnemy = this.bossInstance.GetComponent<BossEnemy>();
+            this.OnObjectiveStart -= bossEnemy.StartSpawningEnemies;
+            bossEnemy.OnTakeDamage -= this.RegisterSuccess;
+
+            Destroy(this.bossInstance);
+        }
     }
 }
