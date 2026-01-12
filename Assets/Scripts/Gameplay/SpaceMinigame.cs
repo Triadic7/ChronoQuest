@@ -91,8 +91,9 @@ public class SpaceMinigame : Game
     /// </summary>
     public override void CleanUp()
     {
-        this.asteroidSpawner.StopSpawning();
+        this.asteroidSpawner.StopSpawningAndDestroyAll();
         this.CleanupStation();
+        this.CleanUpBoss();
     }
 
     /// <summary>
@@ -108,7 +109,7 @@ public class SpaceMinigame : Game
     /// </summary>
     public override void GameEnded()
     {
-        this.asteroidSpawner.StopSpawning();
+        this.asteroidSpawner.StopSpawningAndDestroyAll();
         this.CleanUpBoss();
     }
 
