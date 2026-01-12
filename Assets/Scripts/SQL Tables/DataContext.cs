@@ -49,7 +49,7 @@ public class DataContext
         { 
             StageId = 2, 
             StageName = "Medieval Europe", 
-            StageDescription = "Protect the base at all costs! You're given a new suit that wards away evil forces. Simply coming into contact with anomalies will remove them from the timeline.",
+            StageDescription = "Protect the base at all costs! You're given a new suit that wards away evil forces. Simply coming into contact with Anomalies will remove them from the timeline.",
             ObjectiveText = "Touch the anomalies to banish them",
             LocationID = 2,
             NPCId = 2,
@@ -58,8 +58,9 @@ public class DataContext
         { 
             StageId = 3, 
             StageName = "Modern Day", 
-            StageDescription = "Hurry up and grab the fresh moments in time before they disappear and summon anomalies.",
-            ObjectiveText = "Grab the disturbances before they fully appear",
+            StageDescription = "Hurry up and remove the Disturbances before they fully materialize in this time period.",
+            ObjectiveText = "Grab the Disturbances before they fully appear",
+            ObjectiveProgress = 15,
             LocationID = 3,
             NPCId = 3,
         });
@@ -67,7 +68,7 @@ public class DataContext
         { 
             StageId = 4, 
             StageName = "Space Age", 
-            StageDescription = "Final boss time. Protect the space station and destroy the interlopers once and for all!",
+            StageDescription = "Final boss time. Protect the space station and destroy the Interloper to hold back the Anomalies!",
             ObjectiveText = "Defeat the boss and protect the station",
             ObjectiveProgress = 20,
             LocationID = 4,
