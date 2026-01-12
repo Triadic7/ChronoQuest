@@ -205,6 +205,7 @@ public class SpaceMinigame : Game
     /// </summary>
     private void CleanupStation()
     {
+        // Destroy only the space station.
         foreach (GameObject go in gameObjects)
         {
             if (go == null)
@@ -234,7 +235,6 @@ public class SpaceMinigame : Game
     public override void StartGameObjective()
     {
         base.StartGameObjective();
-
         this.StartSpawningAsteroids();
     }
 }

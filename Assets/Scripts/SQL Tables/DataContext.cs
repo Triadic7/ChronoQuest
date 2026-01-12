@@ -103,12 +103,12 @@ public class DataContext
         // Inserts dialogue into the dialogue table for npcs to use.
         if (!this.db.Table<DialogueTable>().Any())
         {
-            #region Pharoh Intro Dialogue
-            // Pharoh's dialogue.
+            #region Pharaoh Intro Dialogue
+            // PPharaoh's dialogue.
             DialogueTable dialogue = new DialogueTable
             {
                 NPCID = 1,
-                NPCName = "Pharoh"
+                NPCName = "Pharaoh"
             };
             db.Insert(dialogue);
             int dialogueId = dialogue.DialogueID;
@@ -118,7 +118,7 @@ public class DataContext
             {
                 DialogueID = dialogueId,
                 Order = 0,
-                DialogueText = "Well? Are you gonna do it?",
+                DialogueText = "Are you ready? I'm waiting on you before I start.",
                 IsEndNode = false
             };
             this.db.Insert(mainNode);
@@ -128,7 +128,7 @@ public class DataContext
             {
                 DialogueID = dialogueId,
                 Order = 1,
-                DialogueText = "You're here to save my people and I, are you not?",
+                DialogueText = "You're here to save my people and I, are you not? Egypt itself is relying on you. I expect you to bring order.",
                 IsEndNode = false
             };
             this.db.Insert(savePeopleNode);
@@ -138,7 +138,7 @@ public class DataContext
             {
                 DialogueID = dialogueId,
                 Order = 2,
-                DialogueText = "I know not the year from which you come from, but I know of your purpose. You are the only ones who can stop them. I will start a ritual using a series of colors. Match the colors in the order I summon them, to activate the <link=pyramid><color=#00BFFF>Pyramid's</color></link> secret weapon and stop the <link=anomalies><color=#00BFFF>Anomalies</color></link>.",
+                DialogueText = "I know not the year from which you come from, but I know of your purpose. You will help me complete a ritual summons. I will start the ritual using a series of glyphs. Match the glyphs in the order I summon them. Doing so will activate the <link=pyramid><color=#00BFFF>Pyramid's</color></link> secret weapon and stop the <link=anomalies><color=#00BFFF>Anomalies</color></link>.",
                 IsEndNode = false
             };
             this.db.Insert(ritualNode);
@@ -148,7 +148,7 @@ public class DataContext
             this.db.Insert(new DialogueChoiceTable
             {
                 NodeID = mainNodeId,
-                ChoiceText = "<color=#FFA500>Let's do it.</color>",
+                ChoiceText = "<color=#FFA500>I'm ready to help you. I'll remember the pattern.</color>",
                 // Triggers game action.
                 NextNodeID = -1
             });
@@ -156,21 +156,21 @@ public class DataContext
             this.db.Insert(new DialogueChoiceTable
             {
                 NodeID = mainNodeId,
-                ChoiceText = "Do what again?",
+                ChoiceText = "Do what again? Can you fill me in on some details?",
                 NextNodeID = savePeopleNodeId
             });
 
             this.db.Insert(new DialogueChoiceTable
             {
                 NodeID = savePeopleNodeId,
-                ChoiceText = "I don't know what I'm doing here",
+                ChoiceText = "I've just arrived.",
                 NextNodeID = ritualNodeId
             });
 
             this.db.Insert(new DialogueChoiceTable
             {
                 NodeID = savePeopleNodeId,
-                ChoiceText = "Yes, I'm here to stop the <link=anomalies><color=#00BFFF>Anomalies</color></link>. They're breaching the timeline more than ever before.",
+                ChoiceText = "Yes, I'm on a mission here to stop the <link=anomalies><color=#00BFFF>Anomalies</color></link>. I'm told Egypts <link=pyramid><color=#00BFFF>Pyramids</color></link> will help us.",
                 NextNodeID = mainNodeId
             });
 
@@ -184,13 +184,13 @@ public class DataContext
 
             #endregion
 
-            #region Pharoh Outro Dialogue
+            #region Pharaoh Outro Dialogue
 
             // Success outro.
             DialogueTable outroWinDialogue = new DialogueTable
             {
                 NPCID = 1,
-                NPCName = "Pharoh",
+                NPCName = "Pharaoh",
                 IsOutro = true,
                 IsWin = true
             };
@@ -201,7 +201,7 @@ public class DataContext
             {
                 DialogueID = outroWinDialogueId,
                 Order = 0,
-                DialogueText = "Pass",
+                DialogueText = "Yes! You saved me and the people of this land. With this sequence of events we have unlocked a powerful weapon in the coming fight. Although I know I wont be there with you, I wish you luck on your journey ahead.",
                 IsEndNode = false
             };
             db.Insert(outroWinNode);
@@ -218,7 +218,7 @@ public class DataContext
             DialogueTable outroLoseDialogue = new DialogueTable
             {
                 NPCID = 1,
-                NPCName = "Pharoh",
+                NPCName = "Pharaoh",
                 IsOutro = true,
                 IsWin = false
             };
@@ -229,7 +229,7 @@ public class DataContext
             {
                 DialogueID = outroLoseDialogueId,
                 Order = 0,
-                DialogueText = "Fail",
+                DialogueText = "*The Pharaoh looks in horror* We needed this to work! Without this the future will be uncertain. Mine and yours! My people's! Go! Go back to your time. You have done enough.",
                 IsEndNode = false
             };
             db.Insert(outroLoseNode);
@@ -268,7 +268,7 @@ public class DataContext
             {
                 DialogueID = arthurDialogueId,
                 Order = 1,
-                DialogueText = "You must defend the <link=castle><color=#00BFFF>Castle</color></link> walls. Hold out long enough for me to decipher the ancient code beneath the castle. We can use it to close the <link=void><color=#00BFFF>Void</color></link>. Fail, and we will never be able to close the rift.",
+                DialogueText = "You must defend the <link=castle><color=#00BFFF>Castle</color></link> walls. Hold out while I try to decipher the ancient code beneath the castle.",
                 IsEndNode = false
             };
             db.Insert(explainNodeArthur);
@@ -288,7 +288,7 @@ public class DataContext
             {
                 DialogueID = arthurDialogueId,
                 Order = 3,
-                DialogueText = "These anomalies are fragments of corrupted timelines. Failed experiments by powerful time mages. They seek to unravel catastrophe unless stopped.",
+                DialogueText = "I know as much as you I'm afraid. Someone similar to you arrived here and said you would arrive to help. That's all I know.",
                 IsEndNode = false
             };
             db.Insert(loreNodeArthur);
@@ -313,7 +313,7 @@ public class DataContext
             db.Insert(new DialogueChoiceTable
             {
                 NodeID = explainNodeArthurId,
-                ChoiceText = "Understood, I will hold the walls!",
+                ChoiceText = "I will prevent the enemy from getting in here. You focus on your mission.",
                 // Loops back to main node for start action.
                 NextNodeID = mainNodeArthurId
             });
@@ -328,7 +328,7 @@ public class DataContext
             db.Insert(new DialogueChoiceTable
             {
                 NodeID = strategyNodeArthurId,
-                ChoiceText = "I understand. Let's defend!",
+                ChoiceText = "So I just touch them, and they disappear? Seems like something I can do.",
                 // Loops back to main node for start action.
                 NextNodeID = mainNodeArthurId
             });
@@ -336,7 +336,7 @@ public class DataContext
             db.Insert(new DialogueChoiceTable
             {
                 NodeID = strategyNodeArthurId,
-                ChoiceText = "Tell me more about these anomalies and why they exist.",
+                ChoiceText = "Tell me more about these <link=anomalies><color=#00BFFF>Anomalies</color></link> and why they exist.",
                 NextNodeID = loreNodeArthurId
             });
 
@@ -344,7 +344,7 @@ public class DataContext
             db.Insert(new DialogueChoiceTable
             {
                 NodeID = loreNodeArthurId,
-                ChoiceText = "I see. Let's defend the castle!",
+                ChoiceText = "That must have been my peer. I'm here to provide aid to you.",
                 NextNodeID = mainNodeArthurId
             });
             #endregion
@@ -366,7 +366,7 @@ public class DataContext
             {
                 DialogueID = arthurWinDialogueId,
                 Order = 0,
-                DialogueText = "Pass",
+                DialogueText = "You have acted as bravely as any knight I've ever had the honor of knowing. I have decoded the strange langauge In the ruins under my castle. I'm told this will be able to help you in the future. Good luck to you",
                 IsEndNode = false
             };
             db.Insert(arthurWinNode);
@@ -394,7 +394,7 @@ public class DataContext
             {
                 DialogueID = arthurLoseDialogueId,
                 Order = 0,
-                DialogueText = "Fail",
+                DialogueText = "My knights have left me for this. The castle is destroyed. Any secrets we could have discovered are lost. I suggest you go help mess something else up for someone else. I have no desire to have you in my presense.",
                 IsEndNode = false
             };
             db.Insert(arthurLoseNode);
@@ -434,7 +434,7 @@ public class DataContext
             {
                 DialogueID = supervisorDialogueId,
                 Order = 1,
-                DialogueText = "These <link=anomalies><color=#00BFFF>Anomalies</color></link> spawn over time and can overwhelm you if ignored. Remove disturbances before they fully appear, society isn't ready for such technology.",
+                DialogueText = "There's a high chance that might happen. Remove <link=disturbance><color=#00BFFF>Disturbances</color></link> before they fully appear, society isn't ready for such technology.",
                 IsEndNode = false
             };
             db.Insert(explainNodeSupervisor);
@@ -486,14 +486,14 @@ public class DataContext
             db.Insert(new DialogueChoiceTable
             {
                 NodeID = explainNodeSupervisorId,
-                ChoiceText = "Wait, how do these anomalies spawn?",
+                ChoiceText = "Wait, will I be attacked here?",
                 NextNodeID = strategyNodeSupervisorId
             });
 
             db.Insert(new DialogueChoiceTable
             {
                 NodeID = strategyNodeSupervisorId,
-                ChoiceText = "Got it.",
+                ChoiceText = "Got it I guess.",
                 NextNodeID = mainNodeSupervisorId
             });
 
@@ -507,7 +507,7 @@ public class DataContext
             db.Insert(new DialogueChoiceTable
             {
                 NodeID = loreNodeSupervisorId,
-                ChoiceText = "Understood.",
+                ChoiceText = "Understood Sir.",
                 NextNodeID = mainNodeSupervisorId
             });
             #endregion
@@ -529,7 +529,7 @@ public class DataContext
             {
                 DialogueID = supervisorWinDialogueId,
                 Order = 0,
-                DialogueText = "Pass",
+                DialogueText = "Excellent work. I was told to observe you and make sure you didn't make any mistakes. I'll have to put a recommendation in for you. This timeline is saved. Off to the next!",
                 IsEndNode = false
             };
             db.Insert(supervisorWinNode);
@@ -557,7 +557,7 @@ public class DataContext
             {
                 DialogueID = supervisorLoseDialogueId,
                 Order = 0,
-                DialogueText = "Fail",
+                DialogueText = "Tsk. This was a catastrophe and we can't afford to go back and change things. This will go on your record of course. Don't expect any sort of holiday bonus this year.",
                 IsEndNode = false
             };
             db.Insert(supervisorLoseNode);
@@ -607,7 +607,7 @@ public class DataContext
             {
                 DialogueID = aiDialogueId,
                 Order = 2,
-                DialogueText = "Directive: prioritize engagement with the <link=interloper><color=#00BFFF>Interloper</color></link> using all available projectile and energy arrays until destabilization metrics reach threshold.",
+                DialogueText = "Directive: prioritize engagement with the <link=interloper><color=#00BFFF>Interloper</color></link> using all available projectiles until destabilization metrics reach threshold.",
                 IsEndNode = false
             };
             db.Insert(strategyNodeAI);
@@ -662,7 +662,7 @@ public class DataContext
             db.Insert(new DialogueChoiceTable
             {
                 NodeID = strategyNodeAIId,
-                ChoiceText = "Wait… what’s the history of this thing?",
+                ChoiceText = "There's history of this thing? I've never seen one before.",
                 NextNodeID = loreNodeAIId
             });
 
@@ -688,7 +688,7 @@ public class DataContext
             DialogueTable aiWinDialogue = new DialogueTable
             {
                 NPCID = 4,
-                NPCName = "Super Intelligent AI",
+                NPCName = "S.I.",
                 IsOutro = true,
                 IsWin = true
             };
@@ -699,7 +699,7 @@ public class DataContext
             {
                 DialogueID = aiWinDialogueId,
                 Order = 0,
-                DialogueText = "Pass",
+                DialogueText = "I'm registering the mission as a success. The station has been defending and the Interloper is defeated. Scans indicate the other Anomalies fading away after the destruction of the Interloper.",
                 IsEndNode = false
             };
             db.Insert(aiWinNode);
@@ -716,7 +716,7 @@ public class DataContext
             DialogueTable aiLoseDialogue = new DialogueTable
             {
                 NPCID = 4,
-                NPCName = "Super Intelligent AI",
+                NPCName = "S.I.",
                 IsOutro = true,
                 IsWin = false
             };
@@ -727,7 +727,7 @@ public class DataContext
             {
                 DialogueID = aiLoseDialogueId,
                 Order = 0,
-                DialogueText = "Fail",
+                DialogueText = "*The audio from S.I. is hard to make out* Station hull integrity is failing quickly. Recommended course of action is to leave the area immediately. I will self destruct the station to buy you some time. Goodbye. *The comms go silent.*",
                 IsEndNode = false
             };
             db.Insert(aiLoseNode);
@@ -784,7 +784,7 @@ public class DataContext
     }
 
     /// <summary>
-    /// Gets all locations
+    /// Gets all locations,
     /// </summary>
     /// <returns>Returns a list of all locations.</returns>
     public List<LocationTable> GetLocations()
