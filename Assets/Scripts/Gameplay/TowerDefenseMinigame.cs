@@ -27,6 +27,22 @@ public class TowerDefenseMinigame : Game
     [SerializeField]
     private GameObject enemyPrefab;
 
+    /// <summary>
+    /// Time between enemy spawns.
+    /// </summary>
+    [SerializeField]
+    private float enemySpawnInterval = 1f;
+
+    /// <summary>
+    /// Timer for spawning enemies.
+    /// </summary>
+    private float enemySpawnTimer;
+
+    /// <summary>
+    /// Whether the game is currently in progress or not.
+    /// </summary>
+    private bool gameInProgress { get; set; } = false;
+
     public override void StartGame()
     {
         base.StartGame();
@@ -40,10 +56,17 @@ public class TowerDefenseMinigame : Game
         Tower towerComponent = tower.GetComponent<Tower>();
         towerComponent.OnDamageTaken += this.ReceiveFailStrike;
 
-        SpawnTestEnemies();
+        this.OnObjectiveStart += this.BeginGame;
     }
 
-    private void SpawnTestEnemies()
+    private void BeginGame()
+    {
+        SpawnWaveOfEnemies();
+
+        this.gameInProgress = true;
+    }
+
+    private void SpawnWaveOfEnemies()
     {
         foreach (Transform g in this.enemySpawnPoints)
         {
@@ -58,7 +81,48 @@ public class TowerDefenseMinigame : Game
         }
     }
 
-    // Spawn wave of enemies
+    /// <summary>
+    /// Spawns enemies over time.
+    /// </summary>
+    private void Update()
+    {
+        if (!this.gameInProgress)
+        {
+            return;
+        }
+
+        // Increase timer.
+        this.enemySpawnTimer += Time.deltaTime;
+
+        // Spawn enemy if timer hit.
+        if (this.enemySpawnTimer >= this.enemySpawnInterval)
+        {
+            this.SpawnEnemy();
+            this.enemySpawnTimer = 0f;
+        }
+    }
+
+    private void SpawnEnemy()
+    {
+        // Choose random spawn point.
+        int index = Random.Range(0, this.enemySpawnPoints.Count);
+        Transform spawnPoint = this.enemySpawnPoints[index];
+
+        if (index == this.enemySpawnPoints.Count - 1)
+        {
+            Debug.Log("Spawning wave of enemies");
+            SpawnWaveOfEnemies();
+        }
+        else
+        {
+            // Spawn in enemy at spawn point.
+            GameObject spawn = Instantiate(this.enemyPrefab, spawnPoint.position, Quaternion.identity, spawnPoint);
+            this.gameObjects.Add(spawn);
+
+            Debug.Log($"Spawned enemy at position: {spawnPoint.position}");
+            Enemy spawnComponent = spawn.GetComponent<Enemy>();
+        }
+    }
 
     public override void CleanUp()
     {
