@@ -55,12 +55,6 @@ public class SpaceMinigame : Game
     [SerializeField]
     private GameObject spaceStationPrefab;
 
-    // Dealing damage to boss increases progress bar.
-    /// <summary>
-    /// The list of objects to destroy at the end of the game.
-    /// </summary>
-    private List<GameObject> gameObjects;
-
     /// <summary>
     /// Time between asteroid spawns.
     /// </summary>

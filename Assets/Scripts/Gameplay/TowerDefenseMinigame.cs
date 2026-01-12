@@ -4,11 +4,6 @@ using UnityEngine;
 public class TowerDefenseMinigame : Game
 {
     /// <summary>
-    /// The list of objects to destroy at the end of the game.
-    /// </summary>
-    private List<GameObject> gameObjects;
-
-    /// <summary>
     /// Where the tower spawns
     /// </summary>
     [SerializeField]
