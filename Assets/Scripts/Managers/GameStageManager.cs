@@ -85,6 +85,11 @@ public class GameStageManager : MonoBehaviour
     private float stageDelay = 5f;
 
     /// <summary>
+    /// Stage delay coroutine.
+    /// </summary>
+    private Coroutine stageDelayRoutine;
+
+    /// <summary>
     /// Starts a game.
     /// </summary>
     public void StartGame(StageModel stage)
@@ -127,7 +132,7 @@ public class GameStageManager : MonoBehaviour
         this.OnGameStarted?.Invoke(this.CurrentGame);
 
         // Start coroutine then start game.
-        StartCoroutine(this.StageDelay(this.CurrentGame.StartGameObjective));
+        this.stageDelayRoutine = StartCoroutine(this.StageDelay(this.CurrentGame.StartGameObjective));
 
     }
 
@@ -136,6 +141,12 @@ public class GameStageManager : MonoBehaviour
     /// </summary>
     private void CleanUpCurrentGame()
     {
+        if (this.stageDelayRoutine != null)
+        {
+            StopCoroutine(this.stageDelayRoutine);
+            this.stageDelayRoutine = null;
+        }
+
         if (this.CurrentGame != null)
         {
             // Unsubscribe from events.

@@ -13,12 +13,6 @@ public class SaveSlotPrefab : MonoBehaviour
     private TMP_Text locationText;
 
     /// <summary>
-    /// The stage id text.
-    /// </summary>
-    [SerializeField]
-    private TMP_Text stageIdText;
-
-    /// <summary>
     /// The time text.
     /// </summary>
     [SerializeField]
@@ -33,13 +27,11 @@ public class SaveSlotPrefab : MonoBehaviour
         if(save != null)
         {
             this.locationText.text = save.Stage.StageName;
-            this.stageIdText.text = $"Level: {save.Stage.StageID}";
             this.timeText.text = $"Time: {this.FormatTime(save.PlayTime)}";
         }
         else
         {
             this.locationText.text = "New Save";
-            this.stageIdText.text = string.Empty;
             this.timeText.text = string.Empty;
         }
     }
