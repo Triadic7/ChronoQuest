@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
@@ -79,6 +80,7 @@ public class PlayerVisuals : MonoBehaviour
     /// <summary>
     /// Called from InputManager when player moves.
     /// </summary>
+    /// <param name="walking">If the player is walking.</param>
     public void SetWalking(bool walking)
     {
         this.isWalking = walking;
@@ -86,8 +88,18 @@ public class PlayerVisuals : MonoBehaviour
         if (this.animator != null)
         {
             // Only play walking animation if player, not ship.
-            this.animator.enabled = !this.isFinalStage;
-            this.animator.SetBool("isWalking", walking && !this.isFinalStage);
+            if (walking)
+            {
+                // Enable animator to play walking animation.
+                this.animator.enabled = true;
+                this.animator.SetBool("isWalking", true);
+            }
+            else
+            {
+                // Disable animator so it doesn't override sprite.
+                this.animator.enabled = false;
+                this.spriteRenderer.sprite = this.isFinalStage ? this.finalStageSprite : this.normalSprite;
+            }
         }
     }
 
@@ -200,28 +212,22 @@ public class PlayerVisuals : MonoBehaviour
             this.thrusters.SetActive(this.isFinalStage);
         }
 
-        // Sprite changes depending on stage.
-        if (this.spriteRenderer != null)
+        // Sprite for final stage or normal stage.
+        if (this.isFinalStage)
         {
-            this.spriteRenderer.sprite = this.isFinalStage ? this.finalStageSprite : this.normalSprite;
+            this.spriteRenderer.sprite = this.finalStageSprite;
+        }
+        else
+        {
+            this.spriteRenderer.sprite = this.normalSprite;
         }
 
         // Disable animator if final stage.
         if (this.animator != null)
         {
             this.animator.enabled = !isFinalStage;
-
-            // Update walking state.
-            this.animator.SetBool("isWalking", this.isWalking && !this.isFinalStage);
+            this.animator.SetBool("isWalking", this.isWalking);
         }
-    }
-
-    /// <summary>
-    /// Sets own appearance on enable.
-    /// </summary>
-    private void OnEnable()
-    {
-        this.ApplyStageAppearance();
     }
 
     /// <summary>

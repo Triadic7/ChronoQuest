@@ -59,19 +59,30 @@ public class TimeMinigame : Game
     /// </summary>
     public override void CleanUp()
     {
-
-    }
-
-    /// <summary>
-    /// Stop spawner and clear disturbance list.
-    /// </summary>
-    public override void GameEnded()
-    {
         // Stop spawner.
         this.disturbanceSpawner.StopSpawningAndDestroyAll();
 
-        this.disturbanceInstances.Clear();
+        // Destroy all disturbances in the scene.
+        if (this.disturbanceInstances != null)
+        {
+            for (int i = this.disturbanceInstances.Count - 1; i >= 0; i--)
+            {
+                if (this.disturbanceInstances[i] != null)
+                {
+                    Destroy(this.disturbanceInstances[i].gameObject);
+                }
+            }
 
+            // Clear list.
+            this.disturbanceInstances.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Stop spawner.
+    /// </summary>
+    public override void GameEnded()
+    {
         // Stop enemy spawner.
         this.enemySpawner.StopSpawningAndDestroyAll();
     }
