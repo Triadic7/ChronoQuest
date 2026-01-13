@@ -157,13 +157,14 @@ public class UIManager : MonoBehaviour
     private IEnumerator OpenMenuWithTransition(Menu menu)
     {
         // Play fade + slide.
-        transition.PlayTopToBottomTransition();
+        this.transition.PlayTopToBottomTransition();
 
         // Wait for the transition duration.
-        yield return new WaitForSecondsRealtime(transition.Duration);
+        yield return null;
 
-        // Then open the menu.
+        // Open the menu.
         OpenMenuImmediate(menu);
+
     }
 
     /// <summary>

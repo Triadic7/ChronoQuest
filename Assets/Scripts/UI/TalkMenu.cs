@@ -20,12 +20,6 @@ public class TalkMenu : Menu
     private TMP_Text npcNameText;
 
     /// <summary>
-    /// Displays the players response.
-    /// </summary>
-    [SerializeField]
-    private TMP_Text playerResponseText;
-
-    /// <summary>
     /// Displays the dialogue text of the NPC.
     /// </summary>
     [SerializeField] 
@@ -48,12 +42,6 @@ public class TalkMenu : Menu
     /// </summary>
     [SerializeField] 
     private GameObject choiceButtonPrefab;
-
-    /// <summary>
-    /// This is the panel the player response will get displayed on.
-    /// </summary>
-    [SerializeField]
-    private GameObject playerResponsePanel;
 
     /// <summary>
     /// Reference to the DialogueManager in the scene.
@@ -130,9 +118,6 @@ public class TalkMenu : Menu
 
         this.dialogueManager.OnNPCUpdated += this.UpdateNPCInfo;
         this.dialogueManager.OnNodeUpdated += this.DisplayNode;
-        this.dialogueManager.OnPlayerChoiceSelected += this.DisplayPlayerResponse;
-
-        this.DisplayPlayerResponse();
     }
 
     /// <summary>
@@ -142,7 +127,6 @@ public class TalkMenu : Menu
     {
         this.dialogueManager.OnNPCUpdated -= this.UpdateNPCInfo;
         this.dialogueManager.OnNodeUpdated -= this.DisplayNode;
-        this.dialogueManager.OnPlayerChoiceSelected -= this.DisplayPlayerResponse;
     }
 
     /// <summary>
@@ -160,24 +144,5 @@ public class TalkMenu : Menu
         {
             this.npcImage.sprite = sprite != null ? sprite : null;
         });
-    }
-
-    /// <summary>
-    /// Displays a player response
-    /// </summary>
-    /// <param name="response">The player response in dialogue.</param>
-    private void DisplayPlayerResponse(string response = "")
-    {
-        // If no string is passed or continue, hide the panel.
-        if (response == string.Empty || response == "Continue") 
-        {
-            this.playerResponsePanel.SetActive(false);
-        }
-        else
-        {
-            // Display text on panel if present.
-            this.playerResponsePanel.SetActive(true);
-            this.playerResponseText.text = "<b>You:</b> " + response;
-        }
     }
 }

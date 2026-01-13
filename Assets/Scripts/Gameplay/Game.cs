@@ -129,6 +129,15 @@ public abstract class Game : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns the current success count.
+    /// </summary>
+    /// <returns></returns>
+    protected int GetCurrentProgress()
+    {
+        return this.currentSuccessCount;
+    }
+
+    /// <summary>
     /// Receive a failure strike.
     /// </summary>
     protected void ReceiveFailStrike()
