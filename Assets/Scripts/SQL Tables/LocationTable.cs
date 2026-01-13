@@ -22,4 +22,9 @@ public class LocationTable
     /// Gets or sets foreground tiles.
     /// </summary>
     public string ForegroundTileNames { get; set; }
+
+    /// <summary>
+    /// A curated tilemap.
+    /// </summary>
+    public string CuratedBackgroundTilemap { get; set; }
 }

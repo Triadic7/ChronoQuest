@@ -37,18 +37,37 @@ public class LocationModel
     /// </summary>
     public List<TileBase> ForegroundTiles { get; set; } = new List<TileBase>();
 
+    /// <summary>
+    /// A curated tilemap.
+    /// </summary>
+    public string CuratedBackgroundTilemap { get; set; }
+
+    /// <summary>
+    /// Checks if location uses curated tilemap.
+    /// </summary>
+    public bool UsesCuratedTilemap => !string.IsNullOrEmpty(this.CuratedBackgroundTilemap);
+
     public LocationModel(LocationTable table, TileRegistryResolver resolver)
     {
-        LocationID = table.LocationID;
-        LocationName = table.LocationName;
+        this.LocationID = table.LocationID;
+        this.LocationName = table.LocationName;
+        this.CuratedBackgroundTilemap = table.CuratedBackgroundTilemap;
+
+        // If curated tilemap not found, use background tiles.
+        if (string.IsNullOrEmpty(this.CuratedBackgroundTilemap))
+        {
+            // Turns tile names from string into a collection of strings, seperated by comma.
+            IEnumerable<string> backgroundNames = string.IsNullOrEmpty(table.BackgroundTileNames) ? new string[0] : table.BackgroundTileNames.Split(',');
+
+            // Tries to parse into tilebase from the collection of strings.
+            AddTiles(backgroundNames, this.BackgroundTiles, resolver);
+        }
 
         // Turns tile names from string into a collection of strings, seperated by comma.
-        IEnumerable<string> backgroundNames = string.IsNullOrEmpty(table.BackgroundTileNames) ? new string[0] : table.BackgroundTileNames.Split(',');
         IEnumerable<string> foregroundNames = string.IsNullOrEmpty(table.ForegroundTileNames) ? new string[0] : table.ForegroundTileNames.Split(',');
 
         // Tries to parse into tilebase from the collection of strings.
-        AddTiles(backgroundNames, BackgroundTiles, resolver);
-        AddTiles(foregroundNames, ForegroundTiles, resolver);
+        AddTiles(foregroundNames, this.ForegroundTiles, resolver);
     }
 
     /// <summary>

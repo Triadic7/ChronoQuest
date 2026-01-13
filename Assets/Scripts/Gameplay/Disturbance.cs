@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -36,6 +37,12 @@ public class Disturbance : MonoBehaviour
     private float endAlpha = 1f;
 
     /// <summary>
+    /// The sprites for the disturbance.
+    /// </summary>
+    [SerializeField]
+    private List<Sprite> sprites;
+
+    /// <summary>
     /// Sprite renderer.
     /// </summary>
     private SpriteRenderer spriteRenderer;
@@ -51,6 +58,15 @@ public class Disturbance : MonoBehaviour
     private void Awake()
     {
         this.spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if(this.spriteRenderer == null)
+        {
+            Debug.Log("No sprite renderer");
+            return;
+        }
+
+        // Assign random sprite.
+        this.spriteRenderer.sprite = this.sprites[UnityEngine.Random.Range(0, this.sprites.Count)];
     }
 
     /// <summary>
