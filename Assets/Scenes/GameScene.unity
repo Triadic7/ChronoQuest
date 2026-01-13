@@ -10419,6 +10419,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1168954646}
   m_CullTransparentMesh: 1
+--- !u!1 &1241733459
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1241733461}
+  - component: {fileID: 1241733460}
+  m_Layer: 11
+  m_Name: PlayerHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!58 &1241733460
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241733459}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
+--- !u!4 &1241733461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241733459}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1294009567}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1246795228
 GameObject:
   m_ObjectHideFlags: 0
@@ -10931,6 +10999,7 @@ GameObject:
   - component: {fileID: 1294009571}
   - component: {fileID: 1294009572}
   - component: {fileID: 1294009573}
+  - component: {fileID: 1294009574}
   m_Layer: 11
   m_Name: Player Two
   m_TagString: Player
@@ -10953,6 +11022,7 @@ Transform:
   m_Children:
   - {fileID: 775297738}
   - {fileID: 848716772}
+  - {fileID: 1241733461}
   m_Father: {fileID: 755002735}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1294009568
@@ -11123,6 +11193,19 @@ MonoBehaviour:
   maxHealth: 100
   healthbar: {fileID: 940810210}
   healthForeground: {fileID: 1296478704}
+--- !u!114 &1294009574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294009566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a67b73cf996f1e646aecf36bbe23c299, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
+  hitbox: {fileID: 1241733460}
 --- !u!1 &1294033236
 GameObject:
   m_ObjectHideFlags: 0
@@ -12552,6 +12635,8 @@ MonoBehaviour:
   towerPrefab: {fileID: 4606103622154915736, guid: dc614ed831b75384d83c365922eb63ec, type: 3}
   enemyPrefab: {fileID: 3012710661098915956, guid: 2d7e87888873b3e4b98952fa174e16d4, type: 3}
   enemySpawnInterval: 1
+  playerOneCombat: {fileID: 249228783}
+  playerTwoCombat: {fileID: 1294009574}
 --- !u!114 &1516380758
 MonoBehaviour:
   m_ObjectHideFlags: 0

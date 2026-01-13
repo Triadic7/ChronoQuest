@@ -33,6 +33,12 @@ public class TowerDefenseMinigame : Game
     [SerializeField]
     private float enemySpawnInterval = 1f;
 
+    [SerializeField]
+    public PlayerCombat playerOneCombat;
+
+    [SerializeField]
+    public PlayerCombat playerTwoCombat;
+
     /// <summary>
     /// Timer for spawning enemies.
     /// </summary>
@@ -45,6 +51,8 @@ public class TowerDefenseMinigame : Game
 
     public override void StartGame()
     {
+        this.CurrentStage.ObjectiveProgress = 50;
+
         base.StartGame();
 
         this.gameObjects = new List<GameObject>();
@@ -55,6 +63,9 @@ public class TowerDefenseMinigame : Game
 
         Tower towerComponent = tower.GetComponent<Tower>();
         towerComponent.OnDamageTaken += this.ReceiveFailStrike;
+
+        this.playerOneCombat.OnDestroyEnemy += this.RegisterSuccess;
+        this.playerTwoCombat.OnDestroyEnemy += this.RegisterSuccess;
 
         this.OnObjectiveStart += this.BeginGame;
     }
@@ -77,7 +88,6 @@ public class TowerDefenseMinigame : Game
             Debug.Log($"Spawned enemy at position: {g.position}");
 
             Enemy spawnComponent = spawn.GetComponent<Enemy>();
-            // spawnComponent.TakeDamage += this.RegisterSuccess;
         }
     }
 
@@ -126,11 +136,21 @@ public class TowerDefenseMinigame : Game
 
     public override void CleanUp()
     {
-
+        foreach (GameObject obj in this.gameObjects)
+        {
+            if (obj)
+            {
+                if (obj.tag != "Tower" && obj != null)
+                {
+                    Destroy(obj);
+                }
+            }
+        }
     }
 
     public override void GameEnded()
     {
-
+        this.gameInProgress = false;
+        this.CleanUp();
     }
 }
