@@ -56,8 +56,16 @@ public class TilemapManager : MonoBehaviour
         // On stage selected, display the tilemap to go with it.
         gm.OnLocationSelected += (location) =>
         {
-            // Pass in tilemaps.
-            this.DisplayTilemap(location.BackgroundTiles, location.ForegroundTiles);
+            this.ClearTilemap();
+
+            if (location.UsesCuratedTilemap && AssetLoader.CuratedResolver.TryGet(location.CuratedBackgroundTilemap, out Tilemap curated))
+            {
+                this.CopyTilemap(curated, backgroundTilemap);
+            }
+            else
+            {
+                DisplayTilemap(location.BackgroundTiles, location.ForegroundTiles);
+            }
         };
 
         // On game end, clear tilemaps.
@@ -67,6 +75,32 @@ public class TilemapManager : MonoBehaviour
         gm.OnMainMenu += () => this.ClearTilemap();
 
     }
+
+    /// <summary>
+    /// Copies tilemap and displays it.
+    /// </summary>
+    /// <param name="tilemap">The tilemap that will be copied.</param>
+    /// <param name="target">The tilemap that will be set.</param>
+    private void CopyTilemap(Tilemap tilemap, Tilemap target)
+    {
+        BoundsInt bounds = tilemap.cellBounds;
+
+        // Find bottom left occupied tile.
+        Vector3Int min = bounds.min;
+
+        // Set all tiles in tilemap on the targer tilemap.
+        foreach (Vector3Int pos in bounds.allPositionsWithin)
+        {
+            TileBase tile = tilemap.GetTile(pos);
+            if (tile != null)
+            {
+                // Shift so bottom left starts at 0,0. This is done because otherwise the tilemap goes bottom left.
+                Vector3Int targetPos = pos - min;
+                target.SetTile(targetPos, tile);
+            }
+        }
+    }
+
 
     /// <summary>
     /// Displays the tilemap with the given arguements.

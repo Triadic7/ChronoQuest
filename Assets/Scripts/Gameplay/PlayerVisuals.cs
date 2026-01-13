@@ -31,11 +31,32 @@ public class PlayerVisuals : MonoBehaviour
     private GameObject thrusters;
 
     /// <summary>
+    /// Animator for player walking.
+    /// </summary>
+    private Animator animator;
+
+    /// <summary>
+    /// For the animator.
+    /// </summary>
+    private bool isWalking = false;
+
+    /// <summary>
+    /// Tracks if final stage.
+    /// </summary>
+    private bool isFinalStage = false;
+
+    /// <summary>
     /// Fades out the players sprite then disables it.
     /// </summary>
     /// <param name="duration">How long to shut off.</param>
     public void FadeOutAndDisable(float duration = 1f)
     {
+        // Stop walking animation.
+        if (this.animator != null)
+        {
+            this.animator.speed = 0f;
+        }
+
         StartCoroutine(this.FadeOutRoutine(duration));
     }
 
@@ -45,8 +66,29 @@ public class PlayerVisuals : MonoBehaviour
     /// <param name="duration">How long the fade in should take.</param>
     public void FadeIn(float duration = 1f)
     {
+        // Resume walking animation.
+        if (this.animator != null)
+        {
+            this.animator.speed = 1f;
+        }
+
         // Start the coroutine to fade in.
         StartCoroutine(this.FadeInRoutine(duration));
+    }
+
+    /// <summary>
+    /// Called from InputManager when player moves.
+    /// </summary>
+    public void SetWalking(bool walking)
+    {
+        this.isWalking = walking;
+
+        if (this.animator != null)
+        {
+            // Only play walking animation if player, not ship.
+            this.animator.enabled = !this.isFinalStage;
+            this.animator.SetBool("isWalking", walking && !this.isFinalStage);
+        }
     }
 
     /// <summary>
@@ -124,6 +166,7 @@ public class PlayerVisuals : MonoBehaviour
     private void Awake()
     {
         this.spriteRenderer = GetComponent<SpriteRenderer>();
+        this.animator = GetComponent<Animator>();
     }
 
     /// <summary>
@@ -148,33 +191,29 @@ public class PlayerVisuals : MonoBehaviour
     /// <param name="stage">The stage.</param>
     private void ApplyStageAppearance(StageModel stage = null)
     {
-        StageModel currentStage;
+        StageModel currentStage = stage ?? GameManager.Instance.CurrentSave?.Stage;
+        this.isFinalStage = currentStage != null && currentStage.IsFinalStage;
 
-        if (stage == null) 
+        // Thrusters only active if ship.
+        if (this.thrusters != null)
         {
-            currentStage = GameManager.Instance.CurrentSave?.Stage;
-        }
-        else
-        {
-            currentStage = stage;
+            this.thrusters.SetActive(this.isFinalStage);
         }
 
-        bool finalStage;
-
-        // If stage is null, use normal sprite.
-        if (currentStage == null)
+        // Sprite changes depending on stage.
+        if (this.spriteRenderer != null)
         {
-            finalStage = false;
-        }
-        else
-        {
-            // Check if stage is final stage.
-            finalStage = currentStage.IsFinalStage;
+            this.spriteRenderer.sprite = this.isFinalStage ? this.finalStageSprite : this.normalSprite;
         }
 
-        // Changes sprite to final sprite if the stage is the final one.
-        this.thrusters.SetActive(finalStage);
-        this.spriteRenderer.sprite = finalStage ? this.finalStageSprite : this.normalSprite;
+        // Disable animator if final stage.
+        if (this.animator != null)
+        {
+            this.animator.enabled = !isFinalStage;
+
+            // Update walking state.
+            this.animator.SetBool("isWalking", this.isWalking && !this.isFinalStage);
+        }
     }
 
     /// <summary>
@@ -184,4 +223,23 @@ public class PlayerVisuals : MonoBehaviour
     {
         this.ApplyStageAppearance();
     }
+
+    /// <summary>
+    /// Flips the sprite direction.
+    /// </summary>
+    /// <param name="horizontal">The x.</param>
+    public void SetDirection(float horizontal)
+    {
+        // Facing right.
+        if (horizontal > 0f)
+        {
+            this.spriteRenderer.flipX = true;
+        }
+        // Facing left.
+        else if (horizontal < 0f)
+        {
+            this.spriteRenderer.flipX = false;
+        }
+    }
+
 }

@@ -47,6 +47,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   lifetime: 5
+  startAlpha: 0.1
+  endAlpha: 1
+  sprites:
+  - {fileID: -1560952176213467532, guid: f7fd412e30e7442459725f90026bb962, type: 3}
+  - {fileID: -5019008058487578944, guid: f7fd412e30e7442459725f90026bb962, type: 3}
+  - {fileID: 8203896216070340595, guid: f7fd412e30e7442459725f90026bb962, type: 3}
+  - {fileID: 5061359668157681237, guid: f7fd412e30e7442459725f90026bb962, type: 3}
+  - {fileID: 372220896212570175, guid: f7fd412e30e7442459725f90026bb962, type: 3}
 --- !u!61 &2323927269859732963
 BoxCollider2D:
   m_ObjectHideFlags: 0

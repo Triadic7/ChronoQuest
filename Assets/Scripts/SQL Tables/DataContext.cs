@@ -747,6 +747,9 @@ public class DataContext
         // Create location table.
         db.CreateTable<LocationTable>();
 
+        // Clear old db location data.
+        db.DeleteAll<LocationTable>();
+
         // Seed locations.
         if (!db.Table<LocationTable>().Any())
         {
@@ -770,15 +773,16 @@ public class DataContext
             {
                 LocationID = 3,
                 LocationName = "Modern Day",
-                BackgroundTileNames = "grass1,grass2",
-                ForegroundTileNames = ""
+                BackgroundTileNames = "",
+                ForegroundTileNames = "",
+                CuratedBackgroundTilemap = "modernday"
             });
 
             db.Insert(new LocationTable
             {
                 LocationID = 4,
                 LocationName = "Space",
-                BackgroundTileNames = "space1,space2",
+                BackgroundTileNames = "Space_0,Space_1,Space_2,Space_3",
                 ForegroundTileNames = ""
             });
         }

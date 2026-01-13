@@ -47,6 +47,8 @@ MonoBehaviour:
   playerOne: {fileID: 5961086099678380959}
   playerTwo: {fileID: 3491782446323722105}
   playerSpeed: 10
+  playerOneVisuals: {fileID: 8832422176255720517}
+  playerTwoVisuals: {fileID: 3265898491923484525}
 --- !u!1 &553294871953491569
 GameObject:
   m_ObjectHideFlags: 0
@@ -5220,6 +5222,7 @@ GameObject:
   - component: {fileID: 3265898491923484525}
   - component: {fileID: 3502839284870320579}
   - component: {fileID: 8428932374825685635}
+  - component: {fileID: 8312022800826990460}
   m_Layer: 11
   m_Name: Player Two
   m_TagString: Player
@@ -5237,7 +5240,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5954956177642210186}
@@ -5293,7 +5296,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 477337769530470427, guid: a688d61db4430434dbb1841d9f9c8ac9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5379,7 +5382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67c3a31fd16efe439df8022cb288f78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerVisuals
-  normalSprite: {fileID: 7255854300219104043, guid: 5b32d3291766e114485f574927e6d285, type: 3}
+  normalSprite: {fileID: 477337769530470427, guid: a688d61db4430434dbb1841d9f9c8ac9, type: 3}
   finalStageSprite: {fileID: 802807131, guid: 5b32d3291766e114485f574927e6d285, type: 3}
   thrusters: {fileID: 6622701829211598907}
 --- !u!114 &3502839284870320579
@@ -5412,6 +5415,28 @@ MonoBehaviour:
   maxHealth: 100
   healthbar: {fileID: 4478685605120684897}
   healthForeground: {fileID: 5502412436049232031}
+--- !u!95 &8312022800826990460
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3491782446323722105}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8f65b5b1356ca3947a2ee371c03571de, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3674075502717516308
 GameObject:
   m_ObjectHideFlags: 0
@@ -5708,6 +5733,7 @@ GameObject:
   - component: {fileID: 8832422176255720517}
   - component: {fileID: 1947494152807310903}
   - component: {fileID: 9134020145595442788}
+  - component: {fileID: 7363573197943303248}
   m_Layer: 11
   m_Name: Player One
   m_TagString: Player
@@ -5725,7 +5751,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2941831629727622783}
@@ -5781,7 +5807,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -6127215198058392024, guid: 5b32d3291766e114485f574927e6d285, type: 3}
+  m_Sprite: {fileID: -5175885994819672835, guid: a688d61db4430434dbb1841d9f9c8ac9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5867,7 +5893,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67c3a31fd16efe439df8022cb288f78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerVisuals
-  normalSprite: {fileID: 1757168063971477599, guid: 5b32d3291766e114485f574927e6d285, type: 3}
+  normalSprite: {fileID: -5175885994819672835, guid: a688d61db4430434dbb1841d9f9c8ac9, type: 3}
   finalStageSprite: {fileID: -6127215198058392024, guid: 5b32d3291766e114485f574927e6d285, type: 3}
   thrusters: {fileID: 553294871953491569}
 --- !u!114 &1947494152807310903
@@ -5900,6 +5926,28 @@ MonoBehaviour:
   maxHealth: 100
   healthbar: {fileID: 670019696770950941}
   healthForeground: {fileID: 754618100080894157}
+--- !u!95 &7363573197943303248
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5961086099678380959}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d182b254ddc220848827f8a77d1f96a5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6622701829211598907
 GameObject:
   m_ObjectHideFlags: 0

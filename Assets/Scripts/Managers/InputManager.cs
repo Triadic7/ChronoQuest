@@ -31,6 +31,18 @@ public class InputManager : MonoBehaviour
     private float playerSpeed;
 
     /// <summary>
+    /// Visuals for player one.
+    /// </summary>
+    [SerializeField] 
+    private PlayerVisuals playerOneVisuals;
+
+    /// <summary>
+    /// Visuals for player two.
+    /// </summary>
+    [SerializeField] 
+    private PlayerVisuals playerTwoVisuals;
+
+    /// <summary>
     /// Player one's keybinds.
     /// </summary>
     private PlayerKeybinds playerOneKeybinds;
@@ -169,6 +181,19 @@ public class InputManager : MonoBehaviour
 
         // Move rigidbody based on movement.
         rb.linearVelocity = movement;
+
+        // Update PlayerVisuals whether we are walking.
+        bool isMoving = movement.sqrMagnitude > 0.001f;
+        if (rb.gameObject == playerOne)
+        {
+            this.playerOneVisuals?.SetWalking(isMoving);
+            this.playerOneVisuals?.SetDirection(movement.x);
+        }
+        else if (rb.gameObject == playerTwo)
+        {
+            this.playerTwoVisuals?.SetWalking(isMoving);
+            this.playerTwoVisuals?.SetDirection(movement.x);
+        }
     }
 
     /// <summary>
