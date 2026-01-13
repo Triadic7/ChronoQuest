@@ -36,6 +36,10 @@ public class SettingsMenu : Menu
     private TMP_Text playerTwoRightText;
     #endregion
 
+    [Header("Audio")]
+    [SerializeField]
+    private Slider musicVolumeSlider;
+
     #region Keybind Buttons
     [SerializeField]
     private Button playerOneUpButton;
@@ -91,6 +95,34 @@ public class SettingsMenu : Menu
     /// Original colors of the texts before rebinding.
     /// </summary>
     private Dictionary<TMP_Text, Color> originalColors = new Dictionary<TMP_Text, Color>();
+
+    /// <summary>
+    /// Helps prevent recursive updates when changing the music slider.
+    /// </summary>
+    private bool updatingMusicSlider;
+
+    public override void Open()
+    {
+        base.Open();
+
+        // Initialize music volume slider.
+        if (musicVolumeSlider != null)
+        {
+            updatingMusicSlider = true;
+            musicVolumeSlider.value = MusicManager.Instance != null ? MusicManager.Instance.Volume : musicVolumeSlider.value;
+            updatingMusicSlider = false;
+
+            musicVolumeSlider.onValueChanged.RemoveListener(OnMusicVolumeSliderChanged);
+            musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeSliderChanged);
+        }
+
+        // Subscribe to music track changes.
+        if (MusicManager.Instance != null)
+        {
+            MusicManager.Instance.OnTrackChanged -= OnMusicTrackChanged;
+            MusicManager.Instance.OnTrackChanged += OnMusicTrackChanged;
+        }
+    }
 
     /// <summary>
     /// Resets keybinds to default.
@@ -252,6 +284,62 @@ public class SettingsMenu : Menu
         playerTwoDownButton.onClick.AddListener(() => StartRebindKey("PlayerTwo", "down", playerTwoDownText));
         playerTwoLeftButton.onClick.AddListener(() => StartRebindKey("PlayerTwo", "left", playerTwoLeftText));
         playerTwoRightButton.onClick.AddListener(() => StartRebindKey("PlayerTwo", "right", playerTwoRightText));
+    }
+
+    /// <summary>
+    /// Performs cleanup by detaching event listeners associated with the music volume slider and the music manager.
+    /// </summary>
+    private void OnDestroy()
+    {
+        if (musicVolumeSlider != null)
+        {
+            musicVolumeSlider.onValueChanged.RemoveListener(OnMusicVolumeSliderChanged);
+        }
+
+        if (MusicManager.Instance != null)
+        {
+            MusicManager.Instance.OnTrackChanged -= OnMusicTrackChanged;
+        }
+    }
+
+    /// <summary>
+    /// Handles changes to the music volume slider by updating the music playback volume.
+    /// </summary>
+    /// <param name="value">The volume level to set for music playback.</param>
+    private void OnMusicVolumeSliderChanged(float value)
+    {
+        if (updatingMusicSlider)
+        {
+            return;
+        }
+
+        if (MusicManager.Instance == null)
+        {
+            return;
+        }
+
+        MusicManager.Instance.SetVolume(value);
+    }
+
+    /// <summary>
+    /// Handles changes to the music track by updating the music volume slider to reflect the current volume.
+    /// </summary>
+    /// <param name="_">The audio clip.</param>
+    private void OnMusicTrackChanged(AudioClip clip)
+    {
+        if (musicVolumeSlider == null)
+        {
+            return;
+        }
+
+        if (MusicManager.Instance == null)
+        {
+            return;
+        }
+
+        updatingMusicSlider = true;
+        musicVolumeSlider.value = MusicManager.Instance.Volume;
+        updatingMusicSlider = false;
     }
 
     /// <summary>
