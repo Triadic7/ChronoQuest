@@ -13,6 +13,10 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public event Action OnTakeDamage;
 
+    [Header("SFX")]
+    [SerializeField]
+    private AudioClip defeatedSfx;
+
     /// <summary>
     /// The current health.
     /// </summary>
@@ -43,6 +47,12 @@ public class Enemy : MonoBehaviour
     public void Defeated()
     {
         Debug.Log("Enemy defeated.");
+
+        if (this.defeatedSfx != null)
+        {
+            SoundManager.Instance?.Play(this.defeatedSfx);
+        }
+
         Destroy(gameObject);
     }
 }

@@ -11,6 +11,10 @@ public class SpaceEnemy : MonoBehaviour
     [SerializeField] 
     private float moveSpeed = 5f;
 
+    [Header("SFX")]
+    [SerializeField]
+    private AudioClip hitSfx;
+
     /// <summary>
     /// The rigidbody.
     /// </summary>
@@ -32,6 +36,11 @@ public class SpaceEnemy : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log($"Collision name: {collision.gameObject.name}");
+
+        if (this.hitSfx != null)
+        {
+            SoundManager.Instance?.Play(this.hitSfx);
+        }
 
         // Try to damage space station.
         SpaceStation spaceStation = collision.GetComponent<SpaceStation>();
