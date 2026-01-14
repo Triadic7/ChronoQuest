@@ -87,14 +87,6 @@ public class Player : MonoBehaviour, IHealth
     /// <summary>
     /// Sets player health to max.
     /// </summary>
-    private void Start()
-    {
-        this.RespawnPlayer();
-    }
-
-    /// <summary>
-    /// Sets player health to max.
-    /// </summary>
     private void RespawnPlayer()
     {
         this.CurrentHealth = this.Health;

@@ -106,7 +106,7 @@ public class TowerDefenseMinigame : Game
     {
         if (this.towerHitSfx != null)
         {
-            SoundManager.Instance?.Play(this.towerHitSfx);
+            GameManager.Instance.SFXManager.PlaySound(this.towerHitSfx);
         }
 
         this.ReceiveFailStrike();

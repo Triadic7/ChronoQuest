@@ -73,18 +73,6 @@ public class PatternMinigame : Game
     [SerializeField]
     private List<Sprite> activatedHeiroglyphs;
 
-    // On game start, display pressure plates players can walk on.
-
-    // Store x count of plates for pattern.
-
-    // Play pattern.
-
-    // On correct pattern played => fill progress bar.
-
-    // On incorrect pattern played, give one strike.
-
-    // Win or lose => EndGame();
-
     /// <summary>
     /// Initializes and begins the pattern game, enabling player interaction with pressure plates and starting the game
     /// sequence.
@@ -209,7 +197,7 @@ public class PatternMinigame : Game
                 plate.Highlight(this.patternDisplaySpeed);
                 if (this.pressurePlateHighlightSfx != null)
                 {
-                    SoundManager.Instance?.Play(this.pressurePlateHighlightSfx);
+                    GameManager.Instance.SFXManager.PlaySound(this.pressurePlateHighlightSfx);
                 }
                 yield return new WaitForSeconds(this.patternDisplaySpeed + this.patternDisplayDelay);
             }
@@ -231,7 +219,7 @@ public class PatternMinigame : Game
         plate.Highlight(0.5f);
         if (this.pressurePlateHighlightSfx != null)
         {
-            SoundManager.Instance?.Play(this.pressurePlateHighlightSfx);
+            GameManager.Instance.SFXManager.PlaySound(this.pressurePlateHighlightSfx);
         }
 
         if (this.currentPattern[this.currentPatternIndex] == plate)
@@ -252,7 +240,7 @@ public class PatternMinigame : Game
         {
             if (this.pressurePlateWrongSfx != null)
             {
-                SoundManager.Instance?.Play(this.pressurePlateWrongSfx);
+                GameManager.Instance.SFXManager.PlaySound(this.pressurePlateWrongSfx);
             }
 
             this.ReceiveFailStrike();

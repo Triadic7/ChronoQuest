@@ -159,6 +159,9 @@ public class PlayerVisuals : MonoBehaviour
             return;
         }
 
+        // Apply stage immediately if already loaded.
+        this.ApplyStageAppearance(gm.CurrentSave?.Stage);
+
         gm.GameStageManager.OnStageStarted += this.ApplyStageAppearance;
     }
 
