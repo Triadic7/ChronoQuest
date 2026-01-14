@@ -158,7 +158,6 @@ public class MusicManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         EnsureAudioSources();
 

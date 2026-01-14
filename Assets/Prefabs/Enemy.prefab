@@ -13,7 +13,10 @@ GameObject:
   - component: {fileID: 2790438551646210662}
   - component: {fileID: 7220519750348159771}
   - component: {fileID: 7335089191722130112}
-  m_Layer: 0
+  - component: {fileID: -1739736715834987262}
+  - component: {fileID: -7524270623654651128}
+  - component: {fileID: -4430584506925624306}
+  m_Layer: 10
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -33,7 +36,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4503067785551018983}
+  - {fileID: 3031853625465080029}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6925574858990286651
@@ -83,7 +86,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1515970301865802949, guid: dc60e477ead3906478f9bc1497f85b80, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -107,9 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2d2cbbf65a81d34c9018556ab317e45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  movementSpeed: 100
-  startPosition: {x: 0, y: 0, z: 0}
-  aggroZone: {fileID: 8709046172825939071}
 --- !u!50 &7220519750348159771
 Rigidbody2D:
   serializedVersion: 5
@@ -136,7 +136,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &7335089191722130112
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -171,9 +171,49 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.38
---- !u!1 &3191237164235366653
+  m_Offset: {x: 0.032616973, y: 0}
+  m_Radius: 0.38171685
+--- !u!114 &-1739736715834987262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3012710661098915956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5919aacde708a474f9c8b3d00469ec12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteFlipByMovement
+  invert: 1
+--- !u!114 &-7524270623654651128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3012710661098915956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f77987b90215f343bb8f4d5fec0cfc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageOnHit
+  damage: 10
+  destroySelf: 0
+--- !u!114 &-4430584506925624306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3012710661098915956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b2f0b5de7ec2f4aa5be10d4c66aacc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChaseMovement
+  speed: 4
+--- !u!1 &6366069338166733234
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -181,23 +221,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4503067785551018983}
-  - component: {fileID: 6117087075891174162}
-  - component: {fileID: 8709046172825939071}
-  m_Layer: 0
-  m_Name: AggroZone
+  - component: {fileID: 3031853625465080029}
+  - component: {fileID: 5614251379754104538}
+  m_Layer: 10
+  m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4503067785551018983
+--- !u!4 &3031853625465080029
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3191237164235366653}
+  m_GameObject: {fileID: 6366069338166733234}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -206,13 +245,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6933900625652708326}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &6117087075891174162
-CircleCollider2D:
+--- !u!61 &5614251379754104538
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3191237164235366653}
+  m_GameObject: {fileID: 6366069338166733234}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -236,24 +275,19 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 15
---- !u!114 &8709046172825939071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3191237164235366653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ac05a1aed1f85a4a989c340af40b9d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AggroZone
-  tagTarget: Tower
-  detectedObjects: []
-  col: {fileID: 6117087075891174162}
+  m_Offset: {x: 0.040342093, y: 0.02317524}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.17083883, y: 0.43349218}
+  m_EdgeRadius: 0

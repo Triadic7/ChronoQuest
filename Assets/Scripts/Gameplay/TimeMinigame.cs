@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,23 +36,44 @@ public class TimeMinigame : Game
     /// </summary>
     private int lastEnemySpawnProgress;
 
-
-    // Objects start clear => change to solid over time.
-
-    // If players dont grab objects in time => strike.
-
-    // Spawn enemy every x progress amount.
-
-    // Grabbing objects fills progress bar.
-
-    // Enemies touching players will lose health.
+    /// <summary>
+    /// Event for subscribing and unsubscribing to spawn.
+    /// </summary>
+    private Action<GameObject> onEnemySpawned;
 
     /// <summary>
-    /// Start game .
+    /// Start game by finding all players.
+    /// Enables ability for players to get hurt.
+    /// On enemy spawn, add events for chasing one of the players.
     /// </summary>
     public override void StartGame()
     {
         base.StartGame();
+
+        // Find all players and make them get hurt.
+        Player[] players = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        foreach (Player player in players) 
+        {
+            player.EnableCanBeHurt();
+        }
+
+        // Set on enemy spawned to chase player.
+        this.onEnemySpawned = (go) =>
+        {
+            ChaseMovement chase = go.GetComponent<ChaseMovement>();
+
+            // Find random player.
+            Player[] players = FindObjectsByType<Player>(FindObjectsSortMode.None);
+
+            // Pick a random player.
+            Player targetPlayer = players[UnityEngine.Random.Range(0, players.Length)];
+
+            // Make this target the player.
+            chase.SetTargetFunction(() => targetPlayer.transform);
+        };
+
+        // Add event to enemy spawner.
+        this.enemySpawner.OnObjectInstanced += this.onEnemySpawned;
     }
 
     /// <summary>
@@ -85,6 +107,13 @@ public class TimeMinigame : Game
     {
         // Stop enemy spawner.
         this.enemySpawner.StopSpawningAndDestroyAll();
+
+        // Clear events.
+        if (this.onEnemySpawned != null)
+        {
+            this.enemySpawner.OnObjectInstanced -= this.onEnemySpawned;
+            this.onEnemySpawned = null;
+        }
     }
 
     /// <summary>
@@ -166,17 +195,27 @@ public class TimeMinigame : Game
 
         int currentProgress = this.GetCurrentProgress();
 
-        // Avoid spawning at 0
+        // Avoid spawning at 0.
         if (currentProgress <= 0)
         {
             return;
         }
 
-        // Spawn enemy every X progress based on field for spawning enemies at percentage.
-        if (currentProgress % this.spawnEnemyAtProgressPercentage == 0 && currentProgress != this.lastEnemySpawnProgress)
+
+        // Convert the percentage to actual progress units.
+        int unitsPerEnemy = Mathf.CeilToInt(this.PointsToWin * (this.spawnEnemyAtProgressPercentage / 100f));
+
+        // No 0 division.
+        if (unitsPerEnemy <= 0)
+        {
+            unitsPerEnemy = 1;
+        }
+
+        // Spawn enemy if enough units of progress have passed.
+        if (currentProgress >= this.lastEnemySpawnProgress + unitsPerEnemy)
         {
             this.enemySpawner.SpawnOnce();
-            this.lastEnemySpawnProgress = currentProgress;
+            this.lastEnemySpawnProgress += unitsPerEnemy;
         }
     }
 

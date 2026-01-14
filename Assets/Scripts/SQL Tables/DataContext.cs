@@ -51,6 +51,7 @@ public class DataContext
             StageName = "Medieval Europe", 
             StageDescription = "Protect the base at all costs! You're given a new suit that wards away evil forces. Simply coming into contact with Anomalies will remove them from the timeline.",
             ObjectiveText = "Touch the anomalies to banish them",
+            ObjectiveProgress = 50,
             LocationID = 2,
             NPCId = 2,
         });

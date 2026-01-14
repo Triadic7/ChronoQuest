@@ -2,46 +2,61 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tower : MonoBehaviour
+/// <summary>
+/// Tower for the europe stage. 
+/// If enemy gets close, take damage.
+/// </summary>
+public class Tower : MonoBehaviour, IHealth
 {
     /// <summary>
-    /// Event thats fired whenever the tower takes damage.
+    /// The max health.
+    /// </summary>
+    [SerializeField]
+    private int maxHealth;
+
+    /// <summary>
+    /// The max health.
+    /// </summary>
+    public int Health { get => this.maxHealth; set => this.maxHealth = value; }
+
+    /// <summary>
+    /// The current health.
+    /// </summary>
+    public int CurrentHealth { get; set; }
+
+    /// <summary>
+    /// Called when an enemy gets through the health.
+    /// </summary>
+    public event Action OnDamageTaken;
+
+    /// <summary>
+    /// Event that gets fired on any damage taken.
     /// </summary>
     public event Action OnTakeDamage;
 
     /// <summary>
-    /// Where the tower starts at.
+    /// Takes damage and invokes on damage taken when health is 0..
     /// </summary>
-    private Vector3 startPosition;
-
-    /// <summary>
-    /// Called when an enemy impacts station.
-    /// </summary>
-    public event Action OnDamageTaken;
-
-    public List<GameObject> detectedObjects = new List<GameObject>();
-
-    public Collider2D hitbox;
-
-    // Triggers when a player or object enters the range
-    void OnTriggerEnter2D(Collider2D collider)
+    /// <param name="damage">The amount of damage.</param>
+    public void TakeDamage(int damage)
     {
-        Debug.Log($"Tower Collider Tag: {collider.gameObject.tag}");
+        this.CurrentHealth -= damage;
 
-        if (collider.gameObject.tag == "Enemy")
+        // If health is less than 0, take damage.
+        if (this.CurrentHealth <= 0) 
         {
-            Debug.Log("Destroying Enemy");
-            Destroy(collider.gameObject);
-            TakeDamage();
+            this.OnDamageTaken?.Invoke();
         }
+
+        this.OnTakeDamage?.Invoke();
     }
 
     /// <summary>
-    /// Take damage and fire event.
+    /// On enable, heal to full.
     /// </summary>
-    public void TakeDamage()
+    private void OnEnable()
     {
-        this.OnDamageTaken?.Invoke();
+        this.CurrentHealth = this.Health;
     }
 }
 

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8279925276417543345}
   - component: {fileID: 7239219312666820749}
   - component: {fileID: 3268881183646447552}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Space Enemy Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1515970301865802949, guid: dc60e477ead3906478f9bc1497f85b80, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.914676, g: 0.36320752, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

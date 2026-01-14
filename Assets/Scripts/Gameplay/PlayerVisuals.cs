@@ -14,18 +14,6 @@ public class PlayerVisuals : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     /// <summary>
-    /// The normal sprite.
-    /// </summary>
-    [SerializeField] 
-    private Sprite normalSprite;
-
-    /// <summary>
-    /// The final stage sprite.
-    /// </summary>
-    [SerializeField] 
-    private Sprite finalStageSprite;
-
-    /// <summary>
     /// The thrusters on player ship.
     /// </summary>
     [SerializeField]
@@ -52,12 +40,6 @@ public class PlayerVisuals : MonoBehaviour
     /// <param name="duration">How long to shut off.</param>
     public void FadeOutAndDisable(float duration = 1f)
     {
-        // Stop walking animation.
-        if (this.animator != null)
-        {
-            this.animator.speed = 0f;
-        }
-
         StartCoroutine(this.FadeOutRoutine(duration));
     }
 
@@ -67,12 +49,6 @@ public class PlayerVisuals : MonoBehaviour
     /// <param name="duration">How long the fade in should take.</param>
     public void FadeIn(float duration = 1f)
     {
-        // Resume walking animation.
-        if (this.animator != null)
-        {
-            this.animator.speed = 1f;
-        }
-
         // Start the coroutine to fade in.
         StartCoroutine(this.FadeInRoutine(duration));
     }
@@ -85,21 +61,10 @@ public class PlayerVisuals : MonoBehaviour
     {
         this.isWalking = walking;
 
+        // If animator isnt null, set walking.
         if (this.animator != null)
         {
-            // Only play walking animation if player, not ship.
-            if (walking)
-            {
-                // Enable animator to play walking animation.
-                this.animator.enabled = true;
-                this.animator.SetBool("isWalking", true);
-            }
-            else
-            {
-                // Disable animator so it doesn't override sprite.
-                this.animator.enabled = false;
-                this.spriteRenderer.sprite = this.isFinalStage ? this.finalStageSprite : this.normalSprite;
-            }
+            this.animator.SetBool("isWalking", walking);
         }
     }
 
@@ -212,40 +177,17 @@ public class PlayerVisuals : MonoBehaviour
             this.thrusters.SetActive(this.isFinalStage);
         }
 
-        // Sprite for final stage or normal stage.
-        if (this.isFinalStage)
-        {
-            this.spriteRenderer.sprite = this.finalStageSprite;
-        }
-        else
-        {
-            this.spriteRenderer.sprite = this.normalSprite;
-        }
-
-        // Disable animator if final stage.
+        // Change animator based on stage.
         if (this.animator != null)
         {
-            this.animator.enabled = !isFinalStage;
-            this.animator.SetBool("isWalking", this.isWalking);
+            // Whether we are in final stage, set animator.
+            this.animator.SetBool("isFinalStage", this.isFinalStage);
+
+            // Only set walking if not final stage.
+            if (!this.isFinalStage)
+            {
+                this.animator.SetBool("isWalking", this.isWalking);
+            }
         }
     }
-
-    /// <summary>
-    /// Flips the sprite direction.
-    /// </summary>
-    /// <param name="horizontal">The x.</param>
-    public void SetDirection(float horizontal)
-    {
-        // Facing right.
-        if (horizontal > 0f)
-        {
-            this.spriteRenderer.flipX = true;
-        }
-        // Facing left.
-        else if (horizontal < 0f)
-        {
-            this.spriteRenderer.flipX = false;
-        }
-    }
-
 }

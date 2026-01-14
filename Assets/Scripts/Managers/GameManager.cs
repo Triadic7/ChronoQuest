@@ -38,6 +38,11 @@ public class GameManager : MonoBehaviour
     public DialogueManager DialogueManager { get; private set; }
 
     /// <summary>
+    /// The sound effects manager.
+    /// </summary>
+    public SFXManager SFXManager { get; private set; }
+
+    /// <summary>
     /// On Game ready.
     /// </summary>
     public event Action OnGameInitialized;
@@ -187,6 +192,9 @@ public class GameManager : MonoBehaviour
         // Get dialogue manager.
         this.DialogueManager = GetComponent<DialogueManager>();
         this.DialogueManager.OnDialogueEnded += OnDialogueFinished;
+
+        // Get sfx manager.
+        this.SFXManager = GetComponent<SFXManager>();
 
         // Checks if settings are null.
         if (this.Settings == null)

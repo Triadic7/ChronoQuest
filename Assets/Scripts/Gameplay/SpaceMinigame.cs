@@ -54,6 +54,13 @@ public class SpaceMinigame : Game
     {
         base.StartGame();
 
+        // Find all players and make them get hurt.
+        Player[] players = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        foreach (Player player in players)
+        {
+            player.EnableCanBeHurt();
+        }
+
         // Spawn in boss.
         GameObject boss = Instantiate(this.bossPrefab, this.bossSpawnPoint.position, Quaternion.identity, this.bossSpawnPoint);
         this.bossInstance = boss;
