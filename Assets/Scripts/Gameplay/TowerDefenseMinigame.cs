@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class TowerDefenseMinigame : Game
 {
+    [Header("SFX")]
+    [SerializeField]
+    private AudioClip towerHitSfx;
+
     /// <summary>
     /// Where the tower spawns
     /// </summary>
@@ -62,12 +66,26 @@ public class TowerDefenseMinigame : Game
         this.gameObjects.Add(tower);
 
         Tower towerComponent = tower.GetComponent<Tower>();
-        towerComponent.OnDamageTaken += this.ReceiveFailStrike;
+        towerComponent.OnDamageTaken += this.OnTowerDamaged;
 
         this.playerOneCombat.OnDestroyEnemy += this.RegisterSuccess;
         this.playerTwoCombat.OnDestroyEnemy += this.RegisterSuccess;
 
         this.OnObjectiveStart += this.BeginGame;
+    }
+
+    /// <summary>
+    /// Handles logic to be executed when the tower takes damage, including playing a hit sound effect and registering a
+    /// failed strike.
+    /// </summary>
+    private void OnTowerDamaged()
+    {
+        if (this.towerHitSfx != null)
+        {
+            SoundManager.Instance?.Play(this.towerHitSfx);
+        }
+
+        this.ReceiveFailStrike();
     }
 
     private void BeginGame()

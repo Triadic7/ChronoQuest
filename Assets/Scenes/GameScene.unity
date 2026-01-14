@@ -1223,8 +1223,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UISoundManager
   click: {fileID: 8300000, guid: 4c4605923282db744ad35dde13fe5b06, type: 3}
-  hover: {fileID: 0}
-  back: {fileID: 0}
   autoHookSelectableEvents: 1
   includeInactive: 1
   volumeScale: 1
@@ -1883,6 +1881,10 @@ PrefabInstance:
       propertyPath: enemyPrefab
       value: 
       objectReference: {fileID: 3012710661098915956, guid: 2d7e87888873b3e4b98952fa174e16d4, type: 3}
+    - target: {fileID: 8161148405189369798, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
+      propertyPath: towerHitSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: b6831fd594d39c449bed6ef7f868f27c, type: 3}
     - target: {fileID: 8161148405189369798, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
       propertyPath: playerOneCombat
       value: 
