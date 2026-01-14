@@ -49,6 +49,13 @@ public class PatternMinigame : Game
     [SerializeField]
     private float patternDisplayDelay = 0.5f;
 
+    [Header("SFX")]
+    [SerializeField]
+    private AudioClip pressurePlateHighlightSfx;
+
+    [SerializeField]
+    private AudioClip pressurePlateWrongSfx;
+
     private List<PressurePlate> currentPattern = new List<PressurePlate>();
 
     /// <summary>
@@ -200,6 +207,10 @@ public class PatternMinigame : Game
             if(plate != null)
             {
                 plate.Highlight(this.patternDisplaySpeed);
+                if (this.pressurePlateHighlightSfx != null)
+                {
+                    SoundManager.Instance?.Play(this.pressurePlateHighlightSfx);
+                }
                 yield return new WaitForSeconds(this.patternDisplaySpeed + this.patternDisplayDelay);
             }
         }
@@ -218,6 +229,10 @@ public class PatternMinigame : Game
         }
 
         plate.Highlight(0.5f);
+        if (this.pressurePlateHighlightSfx != null)
+        {
+            SoundManager.Instance?.Play(this.pressurePlateHighlightSfx);
+        }
 
         if (this.currentPattern[this.currentPatternIndex] == plate)
         {
@@ -235,6 +250,11 @@ public class PatternMinigame : Game
         }
         else
         {
+            if (this.pressurePlateWrongSfx != null)
+            {
+                SoundManager.Instance?.Play(this.pressurePlateWrongSfx);
+            }
+
             this.ReceiveFailStrike();
 
             if (!this.IsGameFinished())

@@ -101,6 +101,7 @@ public class SettingsMenu : Menu
     /// </summary>
     private bool updatingMusicSlider;
 
+
     public override void Open()
     {
         base.Open();
@@ -122,6 +123,7 @@ public class SettingsMenu : Menu
             MusicManager.Instance.OnTrackChanged -= OnMusicTrackChanged;
             MusicManager.Instance.OnTrackChanged += OnMusicTrackChanged;
         }
+
     }
 
     /// <summary>

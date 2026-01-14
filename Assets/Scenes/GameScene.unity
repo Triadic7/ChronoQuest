@@ -961,6 +961,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 972585489}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &959853018
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 959853020}
+  - component: {fileID: 959853019}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &959853019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959853018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 096b28efa3a7cd44791c322474507af3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  defaultSfxVolume: 1
+  defaultMute: 0
+  initialPoolSize: 8
+--- !u!4 &959853020
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959853018}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.1078, y: -0.60073, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &972585489 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4248734657691424766, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
@@ -1146,6 +1193,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8213b4f829607594e9b6e29dd352f9e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!1 &1483965052
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1483965054}
+  - component: {fileID: 1483965053}
+  m_Layer: 0
+  m_Name: UISoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1483965053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483965052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63b254bf973be4348a67f05418349d47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UISoundManager
+  click: {fileID: 8300000, guid: 4c4605923282db744ad35dde13fe5b06, type: 3}
+  hover: {fileID: 0}
+  back: {fileID: 0}
+  autoHookSelectableEvents: 1
+  includeInactive: 1
+  volumeScale: 1
+--- !u!4 &1483965054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483965052}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1280, y: 720, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1541207614
 GameObject:
   m_ObjectHideFlags: 0
@@ -1561,6 +1658,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 249377378070488941, guid: cf791c2de2856174baa0360dcb943286, type: 3}
+      propertyPath: sfxVolumeSlider
+      value: 
+      objectReference: {fileID: 2121935031}
+    - target: {fileID: 249377378070488941, guid: cf791c2de2856174baa0360dcb943286, type: 3}
       propertyPath: musicVolumeSlider
       value: 
       objectReference: {fileID: 2121935031}
@@ -1770,6 +1871,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 6830624999773200293, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
+      propertyPath: pressurePlateWrongSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: 279a06afd0d64aa4b84c3c92af94c2b6, type: 3}
+    - target: {fileID: 6830624999773200293, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
+      propertyPath: pressurePlateHighlightSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: c71babe626c50124c9a1350d484d357a, type: 3}
     - target: {fileID: 8161148405189369798, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
       propertyPath: enemyPrefab
       value: 
@@ -1917,3 +2026,5 @@ SceneRoots:
   - {fileID: 343573425}
   - {fileID: 70131700}
   - {fileID: 428522565}
+  - {fileID: 959853020}
+  - {fileID: 1483965054}
