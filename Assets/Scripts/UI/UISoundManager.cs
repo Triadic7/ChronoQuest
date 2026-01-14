@@ -113,20 +113,6 @@ public class UISoundManager : MonoBehaviour
                 b.onClick.AddListener(PlayClick);
                 continue;
             }
-
-            Toggle t = s as Toggle;
-            if (t != null)
-            {
-                t.onValueChanged.AddListener(_ => PlayClick());
-                continue;
-            }
-
-            Dropdown dd = s as Dropdown;
-            if (dd != null)
-            {
-                dd.onValueChanged.AddListener(_ => PlayClick());
-                continue;
-            }
         }
     }
 
