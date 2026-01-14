@@ -88,6 +88,7 @@ public class Player : MonoBehaviour, IHealth
             // Call on player death if player is killed.
             if (this.CurrentHealth <= 0)
             {
+                this.CurrentHealth = 0;
                 if (this.deathSfx != null)
                 {
                     SoundManager.Instance?.Play(this.deathSfx);

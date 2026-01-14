@@ -45,6 +45,7 @@ public class Tower : MonoBehaviour, IHealth
         // If health is less than 0, take damage.
         if (this.CurrentHealth <= 0) 
         {
+            this.CurrentHealth = 0;
             this.OnDamageTaken?.Invoke();
         }
 
