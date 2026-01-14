@@ -12,6 +12,13 @@ public class Player : MonoBehaviour, IHealth
     [SerializeField]
     private int maxHealth;
 
+    [Header("SFX")]
+    [SerializeField]
+    private AudioClip takeDamageSfx;
+
+    [SerializeField]
+    private AudioClip deathSfx;
+
     /// <summary>
     /// If the player can be damaged.
     /// </summary>
@@ -72,9 +79,19 @@ public class Player : MonoBehaviour, IHealth
         {
             this.CurrentHealth -= damage;
             Debug.Log($"Player hit. Remaining health: {this.CurrentHealth}/{this.maxHealth}");
+
+            if (this.takeDamageSfx != null)
+            {
+                SoundManager.Instance?.Play(this.takeDamageSfx);
+            }
+
             // Call on player death if player is killed.
             if (this.CurrentHealth <= 0)
             {
+                if (this.deathSfx != null)
+                {
+                    SoundManager.Instance?.Play(this.deathSfx);
+                }
                 this.OnPlayerDeath?.Invoke();
                 this.gameObject.SetActive(false);
             }

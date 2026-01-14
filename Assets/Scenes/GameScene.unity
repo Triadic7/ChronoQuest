@@ -232,6 +232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   maxHealth: 100
+  takeDamageSfx: {fileID: 8300000, guid: b6831fd594d39c449bed6ef7f868f27c, type: 3}
+  deathSfx: {fileID: 8300000, guid: c2652bce9e343c64ebe71979cda303a4, type: 3}
 --- !u!114 &4700915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1229,10 +1231,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: a43ddd9a570cde2489c36b56d555925e, type: 3}
   - stageId: 2
     clip: {fileID: 8300000, guid: fcf01f5e78195af48b36ed4fffbe20a3, type: 3}
-  - stageId: 4
-    clip: {fileID: 8300000, guid: 251b4ba12b3342f4f92c18264aa7b2bd, type: 3}
   - stageId: 3
     clip: {fileID: 8300000, guid: 6bce35c95341cdc42b92702b6afc4132, type: 3}
+  - stageId: 4
+    clip: {fileID: 8300000, guid: 251b4ba12b3342f4f92c18264aa7b2bd, type: 3}
   defaultVolume: 0.97
   crossfadeSeconds: 1
 --- !u!4 &428522565
@@ -12965,6 +12967,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   maxHealth: 100
+  takeDamageSfx: {fileID: 8300000, guid: b6831fd594d39c449bed6ef7f868f27c, type: 3}
+  deathSfx: {fileID: 8300000, guid: c2652bce9e343c64ebe71979cda303a4, type: 3}
 --- !u!114 &1990177365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14105,6 +14109,26 @@ PrefabInstance:
       propertyPath: disturbanceSpawner
       value: 
       objectReference: {fileID: 168589693}
+    - target: {fileID: 4361578252996809948, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
+      propertyPath: stageMusic.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4361578252996809948, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
+      propertyPath: stageMusic.Array.data[2].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6bce35c95341cdc42b92702b6afc4132, type: 3}
+    - target: {fileID: 4361578252996809948, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
+      propertyPath: stageMusic.Array.data[3].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 251b4ba12b3342f4f92c18264aa7b2bd, type: 3}
+    - target: {fileID: 4361578252996809948, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
+      propertyPath: stageMusic.Array.data[2].stageId
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4361578252996809948, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
+      propertyPath: stageMusic.Array.data[3].stageId
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6830624999773200293, guid: ab867d96c9b99a647a030caff01a9af0, type: 3}
       propertyPath: pressurePlateWrongSfx
       value: 
