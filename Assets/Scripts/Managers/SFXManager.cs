@@ -38,11 +38,21 @@ public class SFXManager : MonoBehaviour
         this.Volume = Mathf.Clamp01(volume);
         PlayerPrefs.SetFloat(PlayerPrefsKey, this.Volume);
         PlayerPrefs.Save();
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.SetVolume(this.Volume, save: false);
+        }
     }
 
     private void Awake()
     {
         // Load saved volume or default to 1f.
         this.Volume = PlayerPrefs.GetFloat(PlayerPrefsKey, 1f);
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.SetVolume(this.Volume, save: false);
+        }
     }
 }

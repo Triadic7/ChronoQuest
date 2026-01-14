@@ -30,6 +30,10 @@ public class SoundManager : MonoBehaviour
     [Min(1)]
     private int initialPoolSize = 8;
 
+    [SerializeField]
+    [Min(1)]
+    private int maxPoolSize = 16;
+
     /// <summary>
     /// Represents the collection of available audio sources in the pool.
     /// </summary>
@@ -113,12 +117,15 @@ public class SoundManager : MonoBehaviour
         }
 
         AudioSource src = GetSource();
+        if (src == null)
+        {
+            return;
+        }
         src.transform.position = transform.position;
         src.spatialBlend = 0f;
-        src.clip = clip;
         src.loop = false;
-        src.volume = Mathf.Clamp01(volume * Mathf.Clamp01(volumeScale));
-        src.Play();
+        src.volume = Mathf.Clamp01(volume);
+        src.PlayOneShot(clip, Mathf.Clamp01(volumeScale));
     }
 
     /// <summary>
@@ -161,7 +168,8 @@ public class SoundManager : MonoBehaviour
 
     private AudioSource GetSource()
     {
-        while (pool.Count > 0)
+        int checkedCount = pool.Count;
+        while (checkedCount-- > 0)
         {
             AudioSource src = pool.Dequeue();
             if (src != null)
@@ -174,6 +182,11 @@ public class SoundManager : MonoBehaviour
 
                 pool.Enqueue(src);
             }
+        }
+
+        if (pool.Count >= maxPoolSize)
+        {
+            return null;
         }
 
         AudioSource created = CreatePooledSource();

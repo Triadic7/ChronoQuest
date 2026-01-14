@@ -24,6 +24,16 @@ public class PlayerShootController : MonoBehaviour
     [SerializeField]
     private float bulletSpeed = 10f;
 
+    [Header("SFX")]
+    [SerializeField]
+    private AudioClip shootSfx;
+
+    [SerializeField]
+    [Min(0f)]
+    private float shootSfxMinInterval = 0.05f;
+
+    private float lastShootSfxTime;
+
     /// <summary>
     /// Timer to track shooting cooldown.
     /// </summary>
@@ -111,6 +121,15 @@ public class PlayerShootController : MonoBehaviour
         if (this.bulletPrefab == null)
         {
             return;
+        }
+
+        if (this.shootSfx != null)
+        {
+            if (Time.time - this.lastShootSfxTime >= this.shootSfxMinInterval)
+            {
+                SoundManager.Instance?.Play(this.shootSfx);
+                this.lastShootSfxTime = Time.time;
+            }
         }
 
         // Instantiate bullet at player position with no rotation.

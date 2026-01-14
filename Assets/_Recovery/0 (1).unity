@@ -248,7 +248,7 @@ MonoBehaviour:
   shootRate: 0.15
   bulletSpeed: 10
   shootSfx: {fileID: 8300000, guid: 79b6bac12a34c8749a8a28d96b5e7971, type: 3}
-  shootSfxMinInterval: 0.2
+  shootSfxMinInterval: 0.05
 --- !u!114 &4700916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11643,7 +11643,6 @@ MonoBehaviour:
   defaultSfxVolume: 1
   defaultMute: 0
   initialPoolSize: 8
-  maxPoolSize: 16
 --- !u!4 &959853020
 Transform:
   m_ObjectHideFlags: 0
@@ -12981,7 +12980,7 @@ MonoBehaviour:
   shootRate: 0.15
   bulletSpeed: 10
   shootSfx: {fileID: 8300000, guid: 79b6bac12a34c8749a8a28d96b5e7971, type: 3}
-  shootSfxMinInterval: 0.2
+  shootSfxMinInterval: 0.05
 --- !u!114 &1990177366
 MonoBehaviour:
   m_ObjectHideFlags: 0
