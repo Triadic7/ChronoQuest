@@ -217,6 +217,16 @@ public class MusicManager : MonoBehaviour
         Play(mainMenuMusic, loop: true, fadeSeconds: immediate ? 0f : (float?)null);
     }
 
+    public void PlayDefaultMusic(bool immediate = false)
+    {
+        if (defaultMusic == null)
+        {
+            return;
+        }
+
+        Play(defaultMusic, loop: true, fadeSeconds: immediate ? 0f : (float?)null);
+    }
+
     /// <summary>
     /// Plays the background music associated with the specified stage.
     /// </summary>
@@ -544,6 +554,7 @@ public class MusicManager : MonoBehaviour
         gm.OnMainMenu += HandleMainMenu;
 
         gm.OnLocationSelected += HandleLocationSelected;
+
     }
 
     /// <summary>
@@ -560,6 +571,7 @@ public class MusicManager : MonoBehaviour
         gm.OnMainMenu -= HandleMainMenu;
 
         gm.OnLocationSelected -= HandleLocationSelected;
+
     }
 
     /// <summary>
@@ -584,6 +596,7 @@ public class MusicManager : MonoBehaviour
 
         PlayStageMusic(gm.CurrentSave.Stage.StageID);
     }
+
 
     /// <summary>
     /// Creates a new child GameObject with the specified name and attaches an AudioSource component to it.

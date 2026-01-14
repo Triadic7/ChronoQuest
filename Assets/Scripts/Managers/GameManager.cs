@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public event Action OnMainMenu;
 
+
     /// <summary>
     /// The current save.
     /// </summary>
@@ -350,6 +351,12 @@ public class GameManager : MonoBehaviour
 
             case GameState.OutroDialogue:
                 this.UIManager.OpenMenu("TalkMenu");
+
+                // Restore default music during outro dialogue.
+                if (MusicManager.Instance != null)
+                {
+                    MusicManager.Instance.PlayDefaultMusic();
+                }
 
                 // Select dialogue based on win/loss.
                 DialogueModel outroDialogue = stageWon
