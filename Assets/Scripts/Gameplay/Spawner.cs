@@ -52,6 +52,18 @@ public class Spawner : MonoBehaviour
     private int maxSpawns = -1;
 
     /// <summary>
+    /// Enables a chance to spawn prefabs at every spawn point.
+    /// </summary>
+    [SerializeField] 
+    private bool canSpawnAll = false;
+
+    /// <summary>
+    /// Chance to spawn all prefabs.
+    /// </summary>
+    [SerializeField, Range(0f, 1f)] 
+    private float spawnAllChance = 0.5f;
+
+    /// <summary>
     /// Is the spawner currently running.
     /// </summary>
     private bool isRunning;
@@ -179,24 +191,27 @@ public class Spawner : MonoBehaviour
 
         if (this.spawnBetweenPoints)
         {
-            SpawnBetweenPoints();
+            this.SpawnBetweenPoints();
             return;
         }
 
-        Transform spawnPoint = GetRandomSpawnPoint();
+        // Chance to spawn all if enabled.
+        if (this.canSpawnAll && this.spawnPoints.Count > 0)
+        {
+            // Spawn at all points with chance
+            foreach (Transform point in this.spawnPoints)
+            {
+                if (UnityEngine.Random.value <= this.spawnAllChance)
+                {
+                    this.SpawnAtPoint(point);
+                }
+            }
+            return;
+        }
 
-        // Set spawn position to either spawnpoint, or spawner location.
-        Vector3 position = spawnPoint != null ? spawnPoint.position : this.transform.position;
-
-        // Set rotation on the prefab.
-        Quaternion rotation = spawnPoint != null ? spawnPoint.rotation : Quaternion.identity;
-
-        // Instance prefab and add to the list.
-        GameObject instance = Instantiate(this.prefab, position, rotation);
-        this.spawnedObjects.Add(instance);
-
-        // Fire event.
-        this.OnObjectInstanced?.Invoke(instance);
+        // Otherwise spawn at one random point.
+        Transform spawnPoint = this.GetRandomSpawnPoint();
+        this.SpawnAtPoint(spawnPoint);
     }
 
     /// <summary>
@@ -240,6 +255,24 @@ public class Spawner : MonoBehaviour
         this.OnObjectInstanced?.Invoke(instance);
     }
 
+    /// <summary>
+    /// Instantiates prefab at a given point.
+    /// </summary>
+    private void SpawnAtPoint(Transform point)
+    {
+        // The spawn position.
+        Vector3 position = point != null ? point.position : this.transform.position;
+
+        // Object rotation.
+        Quaternion rotation = point != null ? point.rotation : Quaternion.identity;
+
+        // Instance prefab.
+        GameObject instance = Instantiate(prefab, position, rotation);
+
+        // Add to list.
+        this.spawnedObjects.Add(instance);
+        this.OnObjectInstanced?.Invoke(instance);
+    }
 
     /// <summary>
     /// Returns a random spawn point or null if none exist.

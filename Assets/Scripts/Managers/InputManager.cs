@@ -187,12 +187,10 @@ public class InputManager : MonoBehaviour
         if (rb.gameObject == playerOne)
         {
             this.playerOneVisuals?.SetWalking(isMoving);
-            this.playerOneVisuals?.SetDirection(movement.x);
         }
         else if (rb.gameObject == playerTwo)
         {
             this.playerTwoVisuals?.SetWalking(isMoving);
-            this.playerTwoVisuals?.SetDirection(movement.x);
         }
     }
 

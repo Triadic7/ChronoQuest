@@ -1,6 +1,9 @@
 using UnityEngine;
 using System;
 
+/// <summary>
+/// Allows the player to damage enemies if walking into them.
+/// </summary>
 public class PlayerCombat : MonoBehaviour
 {
     /// <summary>
@@ -8,20 +11,38 @@ public class PlayerCombat : MonoBehaviour
     /// </summary>
     public event Action OnDestroyEnemy;
 
-    public Collider2D hitbox;
+    /// <summary>
+    /// Allows player to harm enemies.
+    /// </summary>
+    private bool canHurtEnemies;
 
-    void OnTriggerEnter2D(Collider2D collider)
+    /// <summary>
+    /// Allows players to harm enemies.
+    /// </summary>
+    public void EnableHurtEnemies()
     {
-        if (collider.gameObject.tag == "Enemy")
-        {
-            DestroyEnemy(collider);
-        }
+        this.canHurtEnemies = true;
     }
 
-    public void DestroyEnemy(Collider2D enemyCollider)
+    /// <summary>
+    /// Removes players option to harm enemies.
+    /// </summary>
+    public void DisableHurtEnemies()
     {
-        Destroy(enemyCollider.gameObject);
+        this.canHurtEnemies = false;
+    }
 
-        this.OnDestroyEnemy?.Invoke();
+    /// <summary>
+    /// If player enters enemy collider, destroy it.
+    /// </summary>
+    /// <param name="collider"></param>
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        Enemy enemy = collider.gameObject.GetComponent<Enemy>();
+        if(enemy != null && this.canHurtEnemies)
+        {
+            enemy.TakeDamage(1000);
+            this.OnDestroyEnemy?.Invoke();
+        }
     }
 }

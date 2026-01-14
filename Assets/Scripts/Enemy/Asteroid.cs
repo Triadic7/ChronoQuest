@@ -6,12 +6,6 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     /// <summary>
-    /// Movement speed to the right.
-    /// </summary>
-    [SerializeField]
-    private float moveSpeed = 5f;
-
-    /// <summary>
     /// Minimum scale multiplier.
     /// </summary>
     [SerializeField]
@@ -51,42 +45,7 @@ public class Asteroid : MonoBehaviour
         float randomSize = Random.Range(this.minSize, this.maxSize);
         this.transform.localScale = Vector3.one * randomSize;
 
-        // Move immediately to the right.
-        this.rb.linearVelocity = Vector2.right * this.moveSpeed;
-
         // Destroy after lifetime.
         Destroy(this.gameObject, this.lifeTime);
-    }
-
-    /// <summary>
-    /// Destroy on collision.
-    /// </summary>
-    /// <param name="collision">The collision.</param>
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Try to damage player.
-        Player player = collision.gameObject.GetComponent<Player>();
-        if (player)
-        {
-            player.TakeDamage(10);
-        }
-
-        Destroy(this.gameObject);
-    }
-
-    /// <summary>
-    /// Destroy on collision.
-    /// </summary>
-    /// <param name="collision">The collision.</param>
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // Try to damage player.
-        Player player = collision.GetComponent<Player>();
-        if (player)
-        {
-            player.TakeDamage(10);
-        }
-
-        Destroy(this.gameObject);
     }
 }

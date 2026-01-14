@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,12 +7,6 @@ public class TowerDefenseMinigame : Game
     [Header("SFX")]
     [SerializeField]
     private AudioClip towerHitSfx;
-
-    /// <summary>
-    /// Where the tower spawns
-    /// </summary>
-    [SerializeField]
-    private List<Transform> enemySpawnPoints;
 
     /// <summary>
     /// Where the tower spawns
@@ -26,52 +21,81 @@ public class TowerDefenseMinigame : Game
     private GameObject towerPrefab;
 
     /// <summary>
-    /// The enemy prefab.
+    /// The player one combat componant.
     /// </summary>
     [SerializeField]
-    private GameObject enemyPrefab;
+    private PlayerCombat playerOneCombat;
 
     /// <summary>
-    /// Time between enemy spawns.
+    /// Player two combat componant.
     /// </summary>
     [SerializeField]
-    private float enemySpawnInterval = 1f;
-
-    [SerializeField]
-    public PlayerCombat playerOneCombat;
-
-    [SerializeField]
-    public PlayerCombat playerTwoCombat;
+    private PlayerCombat playerTwoCombat;
 
     /// <summary>
-    /// Timer for spawning enemies.
+    /// The enemy spawner.
     /// </summary>
-    private float enemySpawnTimer;
+    [SerializeField]
+    private Spawner enemySpawner;
 
     /// <summary>
-    /// Whether the game is currently in progress or not.
+    /// The tower instance.
     /// </summary>
-    private bool gameInProgress { get; set; } = false;
+    private GameObject towerInstance;
 
+    /// <summary>
+    /// Event for subscribing and unsubscribing to spawn.
+    /// </summary>
+    private Action<GameObject> onEnemySpawned;
+
+    /// <summary>
+    /// Starts game and instances tower and subscribes to events.
+    /// </summary>
     public override void StartGame()
     {
-        this.CurrentStage.ObjectiveProgress = 50;
-
         base.StartGame();
-
-        this.gameObjects = new List<GameObject>();
 
         // Spawn in tower in middle of screen.
         GameObject tower = Instantiate(this.towerPrefab, this.towerSpawnPoint.position, Quaternion.identity, this.towerSpawnPoint);
-        this.gameObjects.Add(tower);
+        this.towerInstance = tower;
 
+        // Add event to tower component.
         Tower towerComponent = tower.GetComponent<Tower>();
         towerComponent.OnDamageTaken += this.OnTowerDamaged;
 
+        // Register success when player destroys enemy.
         this.playerOneCombat.OnDestroyEnemy += this.RegisterSuccess;
         this.playerTwoCombat.OnDestroyEnemy += this.RegisterSuccess;
 
-        this.OnObjectiveStart += this.BeginGame;
+        // Allows players to harm enemies.
+        this.playerOneCombat.EnableHurtEnemies();
+        this.playerTwoCombat.EnableHurtEnemies();
+
+        // Disable player getting hurt.
+        this.playerOneCombat.GetComponent<Player>().DisableCanBeHurt();
+        this.playerTwoCombat.GetComponent<Player>().DisableCanBeHurt();
+
+        // Set on enemy spawned to chase tower.
+        this.onEnemySpawned = (go) =>
+        {
+            ChaseMovement chase = go.GetComponent<ChaseMovement>();
+
+            // Make this target the tower.
+            chase.SetTargetFunction(() => this.towerInstance.transform);
+        };
+
+        // Add event to enemy spawner.
+        this.enemySpawner.OnObjectInstanced += this.onEnemySpawned;
+    }
+
+    /// <summary>
+    /// Starts the game objective and spawns in enemies.
+    /// </summary>
+    public override void StartGameObjective()
+    {
+        base.StartGameObjective();
+
+        this.enemySpawner.StartSpawning();
     }
 
     /// <summary>
@@ -88,87 +112,41 @@ public class TowerDefenseMinigame : Game
         this.ReceiveFailStrike();
     }
 
-    private void BeginGame()
+    /// <summary>
+    /// Destroy tower instance.
+    /// </summary>
+    public override void CleanUp()
     {
-        SpawnWaveOfEnemies();
-
-        this.gameInProgress = true;
-    }
-
-    private void SpawnWaveOfEnemies()
-    {
-        foreach (Transform g in this.enemySpawnPoints)
-        {
-            // Spawn in tower in middle of screen.
-            GameObject spawn = Instantiate(this.enemyPrefab, g.position, Quaternion.identity, g);
-            this.gameObjects.Add(spawn);
-
-            Debug.Log($"Spawned enemy at position: {g.position}");
-
-            Enemy spawnComponent = spawn.GetComponent<Enemy>();
-        }
+        this.enemySpawner.StopSpawningAndDestroyAll();
     }
 
     /// <summary>
-    /// Spawns enemies over time.
+    /// On game ended.
     /// </summary>
-    private void Update()
-    {
-        if (!this.gameInProgress)
-        {
-            return;
-        }
-
-        // Increase timer.
-        this.enemySpawnTimer += Time.deltaTime;
-
-        // Spawn enemy if timer hit.
-        if (this.enemySpawnTimer >= this.enemySpawnInterval)
-        {
-            this.SpawnEnemy();
-            this.enemySpawnTimer = 0f;
-        }
-    }
-
-    private void SpawnEnemy()
-    {
-        // Choose random spawn point.
-        int index = Random.Range(0, this.enemySpawnPoints.Count);
-        Transform spawnPoint = this.enemySpawnPoints[index];
-
-        if (index == this.enemySpawnPoints.Count - 1)
-        {
-            Debug.Log("Spawning wave of enemies");
-            SpawnWaveOfEnemies();
-        }
-        else
-        {
-            // Spawn in enemy at spawn point.
-            GameObject spawn = Instantiate(this.enemyPrefab, spawnPoint.position, Quaternion.identity, spawnPoint);
-            this.gameObjects.Add(spawn);
-
-            Debug.Log($"Spawned enemy at position: {spawnPoint.position}");
-            Enemy spawnComponent = spawn.GetComponent<Enemy>();
-        }
-    }
-
-    public override void CleanUp()
-    {
-        foreach (GameObject obj in this.gameObjects)
-        {
-            if (obj)
-            {
-                if (obj.tag != "Tower" && obj != null)
-                {
-                    Destroy(obj);
-                }
-            }
-        }
-    }
-
     public override void GameEnded()
     {
-        this.gameInProgress = false;
+        // Unsubscribe from event.
+        this.playerOneCombat.OnDestroyEnemy -= this.RegisterSuccess;
+        this.playerTwoCombat.OnDestroyEnemy -= this.RegisterSuccess;
+
+        // Removes players option to harm enemies.
+        this.playerOneCombat.DisableHurtEnemies();
+        this.playerTwoCombat.DisableHurtEnemies();
+
+        // Unsubscribe from events and destroy tower instance.
+        Tower towerComponent = towerInstance.GetComponent<Tower>();
+        towerComponent.OnDamageTaken -= this.OnTowerDamaged;
+
+        // Destroy tower instance.
+        Destroy(towerInstance);
+
+        // Clear events.
+        if (this.onEnemySpawned != null)
+        {
+            this.enemySpawner.OnObjectInstanced -= this.onEnemySpawned;
+            this.onEnemySpawned = null;
+        }
+
         this.CleanUp();
     }
 }

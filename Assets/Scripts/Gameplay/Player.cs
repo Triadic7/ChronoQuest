@@ -13,16 +13,9 @@ public class Player : MonoBehaviour, IHealth
     private int maxHealth;
 
     /// <summary>
-    /// The health bar game object.
+    /// If the player can be damaged.
     /// </summary>
-    [SerializeField]
-    private GameObject healthbar;
-
-    /// <summary>
-    /// The health bar rect transform.
-    /// </summary>
-    [SerializeField] 
-    private RectTransform healthForeground;
+    private bool canBeDamaged;
 
     /// <summary>
     /// Get or set the health.
@@ -40,41 +33,54 @@ public class Player : MonoBehaviour, IHealth
     public event Action OnPlayerDeath;
 
     /// <summary>
+    /// On player takes damage.
+    /// </summary>
+    public event Action OnTakeDamage;
+
+    /// <summary>
+    /// Sets if the player will be hurt.
+    /// </summary>
+    /// <param name="willHurt">Will allow things to hurt player.</param>
+    public void SetHurt(bool willHurt)
+    {
+        this.canBeDamaged = willHurt;
+    }
+
+    /// <summary>
+    /// Enables can be hurt.
+    /// </summary>
+    public void EnableCanBeHurt()
+    {
+        this.canBeDamaged = true;
+    }
+
+    /// <summary>
+    /// Disables can be hurt.
+    /// </summary>
+    public void DisableCanBeHurt()
+    {
+        this.canBeDamaged = false;
+    }
+
+    /// <summary>
     /// Takes damage to player.
     /// </summary>
     /// <param name="damage">The amount of damage.</param>
     public void TakeDamage(int damage)
     {
-        this.CurrentHealth -= damage;
-        Debug.Log($"Player hit. Remaining health: {this.CurrentHealth}/{this.maxHealth}");
-        this.UpdateHealthBar();
-        // Call on player death if player is killed.
-        if (this.CurrentHealth <= 0)
+        if (this.canBeDamaged)
         {
-            this.OnPlayerDeath?.Invoke();
-            this.gameObject.SetActive(false);
-        }
-    }
+            this.CurrentHealth -= damage;
+            Debug.Log($"Player hit. Remaining health: {this.CurrentHealth}/{this.maxHealth}");
+            // Call on player death if player is killed.
+            if (this.CurrentHealth <= 0)
+            {
+                this.OnPlayerDeath?.Invoke();
+                this.gameObject.SetActive(false);
+            }
 
-    /// <summary>
-    /// Updates the green foreground based on health.
-    /// </summary>
-    private void UpdateHealthBar()
-    {
-        if (this.healthForeground != null)
-        {
-            // Show if health less than max.
-            if (this.CurrentHealth < this.maxHealth)
-            {
-                this.healthbar.SetActive(true);
-                float percent = (float)this.CurrentHealth / (float)this.maxHealth;
-                this.healthForeground.localScale = new Vector3(percent, 1f, 1f);
-            }
-            else
-            {
-                // Hide if full health.
-                this.healthbar.SetActive(false);
-            }
+            ///Call event on damage taken.
+            this.OnTakeDamage?.Invoke();
         }
     }
 
@@ -83,11 +89,6 @@ public class Player : MonoBehaviour, IHealth
     /// </summary>
     private void Start()
     {
-        if (this.healthForeground == null)
-        {
-            Debug.LogError("Health bar not assigned.");
-        }
-
         this.RespawnPlayer();
     }
 
@@ -97,6 +98,13 @@ public class Player : MonoBehaviour, IHealth
     private void RespawnPlayer()
     {
         this.CurrentHealth = this.Health;
-        this.UpdateHealthBar();
+    }
+
+    /// <summary>
+    /// On enable, respawn player health.
+    /// </summary>
+    private void OnEnable()
+    {
+        this.RespawnPlayer();
     }
 }

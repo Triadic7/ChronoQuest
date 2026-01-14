@@ -36,9 +36,17 @@ public class SettingsMenu : Menu
     private TMP_Text playerTwoRightText;
     #endregion
 
+    /// <summary>
+    /// The music volume slider.
+    /// </summary>
     [Header("Audio")]
     [SerializeField]
     private Slider musicVolumeSlider;
+    /// <summary>
+    /// The sound effects slider.
+    /// </summary>
+    [SerializeField] 
+    private Slider sfxVolumeSlider;
 
     #region Keybind Buttons
     [SerializeField]
@@ -101,7 +109,14 @@ public class SettingsMenu : Menu
     /// </summary>
     private bool updatingMusicSlider;
 
+    /// <summary>
+    /// The sound effects manager.
+    /// </summary>
+    private SFXManager sfxManager;
 
+    /// <summary>
+    /// On open display settings.
+    /// </summary>
     public override void Open()
     {
         base.Open();
@@ -115,6 +130,19 @@ public class SettingsMenu : Menu
 
             musicVolumeSlider.onValueChanged.RemoveListener(OnMusicVolumeSliderChanged);
             musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeSliderChanged);
+        }
+
+        if(this.sfxManager == null)
+        {
+            this.sfxManager = GameManager.Instance.SFXManager;
+        }
+
+        // Initialize SFX volume slider.
+        if (this.sfxVolumeSlider != null)
+        {
+            this.sfxVolumeSlider.value = sfxManager.Volume;
+            this.sfxVolumeSlider.onValueChanged.RemoveListener(OnSFXVolumeSliderChanged);
+            this.sfxVolumeSlider.onValueChanged.AddListener(OnSFXVolumeSliderChanged);
         }
 
         // Subscribe to music track changes.
@@ -133,6 +161,15 @@ public class SettingsMenu : Menu
     {
         this.settingsManager.ResetKeybinds();
         this.DisplayKeybinds();
+    }
+
+    /// <summary>
+    /// On sfx slider changed.
+    /// </summary>
+    /// <param name="value">The volume.</param>
+    private void OnSFXVolumeSliderChanged(float value)
+    {
+        sfxManager.SetVolume(value);
     }
 
     /// <summary>
@@ -272,20 +309,21 @@ public class SettingsMenu : Menu
     /// </summary>
     private void Start()
     {
-        settingsManager = GameManager.Instance.Settings;
-        DisplayKeybinds();
+        this.settingsManager = GameManager.Instance.Settings;
+        this.sfxManager = GameManager.Instance.SFXManager;
+        this.DisplayKeybinds();
 
         // Add listeners for player 1.
-        playerOneUpButton.onClick.AddListener(() => StartRebindKey("PlayerOne", "up", playerOneUpText));
-        playerOneDownButton.onClick.AddListener(() => StartRebindKey("PlayerOne", "down", playerOneDownText));
-        playerOneLeftButton.onClick.AddListener(() => StartRebindKey("PlayerOne", "left", playerOneLeftText));
-        playerOneRightButton.onClick.AddListener(() => StartRebindKey("PlayerOne", "right", playerOneRightText));
+        this.playerOneUpButton.onClick.AddListener(() => this.StartRebindKey("PlayerOne", "up", this.playerOneUpText));
+        this.playerOneDownButton.onClick.AddListener(() => this.StartRebindKey("PlayerOne", "down", this.playerOneDownText));
+        this.playerOneLeftButton.onClick.AddListener(() => this.StartRebindKey("PlayerOne", "left", this.playerOneLeftText));
+        this.playerOneRightButton.onClick.AddListener(() => this.StartRebindKey("PlayerOne", "right", this.playerOneRightText));
 
         // Add listeners for player 2.
-        playerTwoUpButton.onClick.AddListener(() => StartRebindKey("PlayerTwo", "up", playerTwoUpText));
-        playerTwoDownButton.onClick.AddListener(() => StartRebindKey("PlayerTwo", "down", playerTwoDownText));
-        playerTwoLeftButton.onClick.AddListener(() => StartRebindKey("PlayerTwo", "left", playerTwoLeftText));
-        playerTwoRightButton.onClick.AddListener(() => StartRebindKey("PlayerTwo", "right", playerTwoRightText));
+        this.playerTwoUpButton.onClick.AddListener(() => this.StartRebindKey("PlayerTwo", "up", this.playerTwoUpText));
+        this.playerTwoDownButton.onClick.AddListener(() => this.StartRebindKey("PlayerTwo", "down", this.playerTwoDownText));
+        this.playerTwoLeftButton.onClick.AddListener(() => this.StartRebindKey("PlayerTwo", "left", this.playerTwoLeftText));
+        this.playerTwoRightButton.onClick.AddListener(() => this.StartRebindKey("PlayerTwo", "right", this.playerTwoRightText));
     }
 
     /// <summary>
@@ -293,10 +331,16 @@ public class SettingsMenu : Menu
     /// </summary>
     private void OnDestroy()
     {
-        if (musicVolumeSlider != null)
+        if (this.musicVolumeSlider != null)
         {
-            musicVolumeSlider.onValueChanged.RemoveListener(OnMusicVolumeSliderChanged);
+            this.musicVolumeSlider.onValueChanged.RemoveListener(OnMusicVolumeSliderChanged);
         }
+
+        if (this.sfxVolumeSlider != null)
+        {
+            this.sfxVolumeSlider.onValueChanged.RemoveListener(OnSFXVolumeSliderChanged);
+        }
+
 
         if (MusicManager.Instance != null)
         {
@@ -310,7 +354,7 @@ public class SettingsMenu : Menu
     /// <param name="value">The volume level to set for music playback.</param>
     private void OnMusicVolumeSliderChanged(float value)
     {
-        if (updatingMusicSlider)
+        if (this.updatingMusicSlider)
         {
             return;
         }
@@ -329,7 +373,7 @@ public class SettingsMenu : Menu
     /// <param name="_">The audio clip.</param>
     private void OnMusicTrackChanged(AudioClip clip)
     {
-        if (musicVolumeSlider == null)
+        if (this.musicVolumeSlider == null)
         {
             return;
         }
@@ -339,9 +383,9 @@ public class SettingsMenu : Menu
             return;
         }
 
-        updatingMusicSlider = true;
-        musicVolumeSlider.value = MusicManager.Instance.Volume;
-        updatingMusicSlider = false;
+        this.updatingMusicSlider = true;
+        this.musicVolumeSlider.value = MusicManager.Instance.Volume;
+        this.updatingMusicSlider = false;
     }
 
     /// <summary>
@@ -350,7 +394,7 @@ public class SettingsMenu : Menu
     private void Update()
     {
         // If waiting for key is false, or keyboard is null, return.
-        if (!waitingForKey || Keyboard.current == null)
+        if (!this.waitingForKey || Keyboard.current == null)
         {
             return;
         }
@@ -360,7 +404,7 @@ public class SettingsMenu : Menu
         {
             if (keyControl.wasPressedThisFrame)
             {
-                ApplyKeybind(keyControl.keyCode);
+                this.ApplyKeybind(keyControl.keyCode);
                 break;
             }
         }
@@ -372,40 +416,40 @@ public class SettingsMenu : Menu
     /// <param name="key">The key.</param>
     private void ApplyKeybind(Key key)
     {
-        waitingForKey = false;
+        this.waitingForKey = false;
 
         // Checks if key player wants to use is already used.
-        if (IsKeyAlreadyBound(key))
+        if (this.IsKeyAlreadyBound(key))
         {
-            currentTextToUpdate.text = "Key already used!";
-            currentTextToUpdate.color = Color.red;
+            this.currentTextToUpdate.text = "Key already used!";
+            this.currentTextToUpdate.color = Color.red;
             return;
         }
 
         // Checks if key isn't allowed.
-        if (!IsAllowedKey(key))
+        if (!this.IsAllowedKey(key))
         {
-            currentTextToUpdate.text = "Invalid key!";
-            currentTextToUpdate.color = Color.red;
+            this.currentTextToUpdate.text = "Invalid key!";
+            this.currentTextToUpdate.color = Color.red;
             return;
         }
 
         // Apply to correct player.
-        if (currentPlayer == "PlayerOne")
+        if (this.currentPlayer == "PlayerOne")
         {
-            ApplyToPlayer(settingsManager.PlayerOneKeybinds, key);
+            this.ApplyToPlayer(this.settingsManager.PlayerOneKeybinds, key);
         }
         else
         {
-            ApplyToPlayer(settingsManager.PlayerTwoKeybinds, key);
+            this.ApplyToPlayer(this.settingsManager.PlayerTwoKeybinds, key);
         }
 
         // Restore text and color from dictionary.
-        currentTextToUpdate.text = key.PrettyName();
-        currentTextToUpdate.color = originalColors[currentTextToUpdate];
+        this.currentTextToUpdate.text = key.PrettyName();
+        this.currentTextToUpdate.color = this.originalColors[this.currentTextToUpdate];
 
         // Apply changes.
-        settingsManager.SetKeybinds(settingsManager.PlayerOneKeybinds, settingsManager.PlayerTwoKeybinds);
+        this.settingsManager.SetKeybinds(this.settingsManager.PlayerOneKeybinds, this.settingsManager.PlayerTwoKeybinds);
     }
 
     /// <summary>
@@ -413,7 +457,7 @@ public class SettingsMenu : Menu
     /// </summary>
     private void ApplyToPlayer(PlayerKeybinds binds, Key key)
     {
-        switch (currentAction)
+        switch (this.currentAction)
         {
             case "up": 
                 binds.up = key; 
@@ -435,25 +479,25 @@ public class SettingsMenu : Menu
     /// </summary>
     private void DisplayKeybinds()
     {
-        if (settingsManager != null) 
+        if (this.settingsManager != null) 
         {
-            var p1 = settingsManager.PlayerOneKeybinds;
-            var p2 = settingsManager.PlayerTwoKeybinds;
+            var p1 = this.settingsManager.PlayerOneKeybinds;
+            var p2 = this.settingsManager.PlayerTwoKeybinds;
 
             // Set player 1 keybind text.
-            playerOneUpText.text = p1.up.PrettyName();
-            playerOneDownText.text = p1.down.PrettyName();
-            playerOneLeftText.text = p1.left.PrettyName();
-            playerOneRightText.text = p1.right.PrettyName();
+            this.playerOneUpText.text = p1.up.PrettyName();
+            this.playerOneDownText.text = p1.down.PrettyName();
+            this.playerOneLeftText.text = p1.left.PrettyName();
+            this.playerOneRightText.text = p1.right.PrettyName();
 
             // Set player 2 keybind text.
-            playerTwoUpText.text = p2.up.PrettyName();
-            playerTwoDownText.text = p2.down.PrettyName();
-            playerTwoLeftText.text = p2.left.PrettyName();
-            playerTwoRightText.text = p2.right.PrettyName();
+            this.playerTwoUpText.text = p2.up.PrettyName();
+            this.playerTwoDownText.text = p2.down.PrettyName();
+            this.playerTwoLeftText.text = p2.left.PrettyName();
+            this.playerTwoRightText.text = p2.right.PrettyName();
 
             // Reset colors to original.
-            foreach (var kvp in originalColors)
+            foreach (var kvp in this.originalColors)
             {
                 kvp.Key.color = kvp.Value;
             }

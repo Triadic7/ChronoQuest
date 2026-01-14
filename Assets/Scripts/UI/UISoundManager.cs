@@ -46,6 +46,11 @@ public class UISoundManager : MonoBehaviour
     private readonly HashSet<int> hookedInstanceIds = new HashSet<int>();
 
     /// <summary>
+    /// The sfx manager.
+    /// </summary>
+    private SFXManager sfxManager;
+
+    /// <summary>
     /// Initializes the singleton instance of the component and ensures it persists across scene loads.
     /// </summary>
     private void Awake()
@@ -58,6 +63,9 @@ public class UISoundManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // Cache sfx manager.
+        this.sfxManager = GameManager.Instance.SFXManager;
     }
 
     /// <summary>
@@ -86,7 +94,7 @@ public class UISoundManager : MonoBehaviour
     /// Attaches event listeners to all UI Selectable components in the current scene to enable automatic handling of
     /// user interactions for playing UI sound effects.
     /// </summary>
-    public void HookSceneUI()
+    private void HookSceneUI()
     {
         if (!autoHookSelectableEvents)
         {
@@ -119,74 +127,11 @@ public class UISoundManager : MonoBehaviour
     /// <summary>
     /// Plays the standard UI click sound effect.
     /// </summary>
-    public void PlayClick()
+    private void PlayClick()
     {
-        PlayClipOrFallback(click, fallbackSoundManagerUiClick: true);
-    }
-
-    private void PlayClipOrFallback(AudioClip clip, bool fallbackSoundManagerUiClick)
-    {
-        if (clip != null)
+        if (sfxManager != null && click != null)
         {
-            InvokeSoundManagerPlay(clip);
-            return;
+            sfxManager.PlaySound(click);
         }
-
-        if (fallbackSoundManagerUiClick)
-        {
-            InvokeSoundManagerPlayUiClick();
-        }
-    }
-
-    /// <summary>
-    /// Invokes the Play method on the sound manager instance to play the specified audio clip.
-    /// </summary>
-    /// <param name="clip">The audio clip to be played.</param>
-    private void InvokeSoundManagerPlay(AudioClip clip)
-    {
-        if (clip == null)
-        {
-            return;
-        }
-
-        object instance = GetSoundManagerInstance();
-        if (instance == null)
-        {
-            return;
-        }
-
-        MethodInfo play = instance.GetType().GetMethod("Play", new[] { typeof(AudioClip), typeof(float) });
-        play?.Invoke(instance, new object[] { clip, volumeScale });
-    }
-
-    /// <summary>
-    /// Invokes the PlayUiClick method on the sound manager instance to play a user interface click sound effect.
-    /// </summary>
-    private void InvokeSoundManagerPlayUiClick()
-    {
-        object instance = GetSoundManagerInstance();
-        if (instance == null)
-        {
-            return;
-        }
-
-        MethodInfo playUiClick = instance.GetType().GetMethod("PlayUiClick", new[] { typeof(float) });
-        playUiClick?.Invoke(instance, new object[] { volumeScale });
-    }
-
-    /// <summary>
-    /// Retrieves the singleton instance of the SoundManager class.
-    /// </summary>
-    /// <returns>An object representing the SoundManager singleton instance.</returns>
-    private static object GetSoundManagerInstance()
-    {
-        Type type = Type.GetType("SoundManager");
-        if (type == null)
-        {
-            return null;
-        }
-
-        PropertyInfo instanceProp = type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-        return instanceProp?.GetValue(null);
     }
 }

@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 4534856314357661822}
   - component: {fileID: 8882870009448092759}
   - component: {fileID: 2896159263418663693}
+  - component: {fileID: 3878676331584953341}
+  - component: {fileID: 558507901193645879}
   m_Layer: 10
   m_Name: Space Boss Prefab
   m_TagString: Untagged
@@ -34,6 +36,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 357089117158439847}
+  - {fileID: 8427757783003790341}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5797995666964113242
@@ -107,10 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe5155e6a5c3ca41bcdb7e9b77601fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  movementSpeed: 0.5
-  startPosition: {x: 0, y: 0, z: 0}
-  aggroZone: {fileID: 0}
-  moveDistance: 8
   enemySpawner: {fileID: 2896159263418663693}
 --- !u!61 &8882870009448092759
 BoxCollider2D:
@@ -174,7 +173,37 @@ MonoBehaviour:
   interval: 0.9
   spawnPoints: []
   loop: 1
+  spawnBetweenPoints: 0
   maxSpawns: -1
+  canSpawnAll: 0
+  spawnAllChance: 0.5
+--- !u!114 &3878676331584953341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2660562687310019050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5919aacde708a474f9c8b3d00469ec12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteFlipByMovement
+  invert: 0
+--- !u!114 &558507901193645879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2660562687310019050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86d34aebf2c578243950f895aee917a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SineMovement
+  distance: 7
+  speed: 1
 --- !u!1 &4384505149814256667
 GameObject:
   m_ObjectHideFlags: 0
@@ -5011,3 +5040,65 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!1001 &8195897340936626104
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7244430913875130934}
+    m_Modifications:
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.12645961
+      objectReference: {fileID: 0}
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.8393563
+      objectReference: {fileID: 0}
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2759682362367220250, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+      propertyPath: m_Name
+      value: Health Bar
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+--- !u!4 &8427757783003790341 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 380769913761031101, guid: 5456169c44ddd214889345cbd2a5c11b, type: 3}
+  m_PrefabInstance: {fileID: 8195897340936626104}
+  m_PrefabAsset: {fileID: 0}
