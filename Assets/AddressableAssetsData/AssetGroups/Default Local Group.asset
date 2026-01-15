@@ -15,8 +15,28 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: a26f3fa785b92d04e975752e35db9fde
   m_SerializeEntries:
+  - m_GUID: 2cddd6b2956392c4db2e11926960f49f
+    m_Address: space
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3dd9ae3ca02a06344a078bce228baaaf
+    m_Address: modern
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 544d53743063ff7419c39b602e42dfd8
+    m_Address: egypt
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6891383371dfc7740bf4530e78d86a83
     m_Address: test
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b1cf7491c4f3370479a32fb473c3b225
+    m_Address: europe
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
