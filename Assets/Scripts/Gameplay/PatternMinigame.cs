@@ -102,8 +102,10 @@ public class PatternMinigame : Game
     {
         foreach (PressurePlate plate in this.instancedPressurePlates)
         {
-
-            Destroy(plate.gameObject);
+            if(plate != null)
+            {
+                Destroy(plate.gameObject);
+            }
         }
     }
 

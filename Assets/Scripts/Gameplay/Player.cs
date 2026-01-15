@@ -45,6 +45,11 @@ public class Player : MonoBehaviour, IHealth
     public event Action OnTakeDamage;
 
     /// <summary>
+    /// Event called when health changed.
+    /// </summary>
+    public event Action OnHealthChanged;
+
+    /// <summary>
     /// Sets if the player will be hurt.
     /// </summary>
     /// <param name="willHurt">Will allow things to hurt player.</param>
@@ -108,6 +113,7 @@ public class Player : MonoBehaviour, IHealth
     private void RespawnPlayer()
     {
         this.CurrentHealth = this.Health;
+        this.OnHealthChanged?.Invoke();
     }
 
     /// <summary>

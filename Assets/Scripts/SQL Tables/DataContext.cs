@@ -44,6 +44,7 @@ public class DataContext
             ObjectiveProgress = 5,
             LocationID = 1,
             NPCId = 1,
+            VideoPreviewKey = "egypt"
         });
         this.db.InsertOrReplace(new StageTable 
         { 
@@ -54,6 +55,7 @@ public class DataContext
             ObjectiveProgress = 50,
             LocationID = 2,
             NPCId = 2,
+            VideoPreviewKey = "europe"
         });
         this.db.InsertOrReplace(new StageTable 
         { 
@@ -64,6 +66,7 @@ public class DataContext
             ObjectiveProgress = 30,
             LocationID = 3,
             NPCId = 3,
+            VideoPreviewKey = "modern"
         });
         this.db.InsertOrReplace(new StageTable 
         { 
@@ -74,6 +77,7 @@ public class DataContext
             ObjectiveProgress = 50,
             LocationID = 4,
             NPCId = 4,
+            VideoPreviewKey = "space",
             IsFinalStage = true 
         });
 
@@ -880,7 +884,7 @@ public class DataContext
     public StageModel GetStageById(int id)
     {
         // Get table from db.
-        var tableRow = this.db.Table<StageTable>().FirstOrDefault(s => s.StageId == id);
+        StageTable tableRow = this.db.Table<StageTable>().FirstOrDefault(s => s.StageId == id);
 
         if (tableRow == null)
         {

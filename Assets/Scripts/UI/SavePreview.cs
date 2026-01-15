@@ -2,7 +2,10 @@ using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 /// <summary>
 /// Class for showing a save preview on the load screen.
@@ -67,6 +70,18 @@ public class SavePreview : MonoBehaviour
     private TMP_Text coopText;
 
     /// <summary>
+    /// Video player that displays the preview of the stage.
+    /// </summary>
+    [SerializeField]
+    private VideoPlayer previewVideoPlayer;
+
+    /// <summary>
+    /// The preview image that will have the mp4 shown.
+    /// </summary>
+    [SerializeField]
+    private RawImage previewRawImage;
+
+    /// <summary>
     /// If the game will be coop or not.
     /// </summary>
     private bool isCoop;
@@ -94,12 +109,48 @@ public class SavePreview : MonoBehaviour
 
             // Set isCoop for UI toggle.
             this.isCoop = save.IsCoop;
+
+            // Addressables key.
+            string key = save.Stage.VideoPreviewKey;
+
+            // Tries to load mp4 from the key.
+            Addressables.LoadAssetAsync<VideoClip>(key).Completed += handle =>
+            {
+                if (handle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    this.previewVideoPlayer.clip = handle.Result;
+                    this.previewVideoPlayer.isLooping = true;
+                    this.previewVideoPlayer.Play();
+                }
+                else
+                {
+                    Debug.LogWarning($"Failed to load preview video {key}.");
+                }
+            };
         }
         else
         {
             this.locationText.text = "New Game";
             this.objectiveText.text = "Start a new adventure and attempt to save the timeline from forces beyond comprehension.";
             this.coopText.text = isCoop ? "Coop" : "Singleplayer";
+
+            // Set default stage 1 key.
+            string key = GameManager.Instance.SaveManager.DataContext.GetStageById(1).VideoPreviewKey;
+
+            // Tries to load mp4 from the key.
+            Addressables.LoadAssetAsync<VideoClip>(key).Completed += handle =>
+            {
+                if (handle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    this.previewVideoPlayer.clip = handle.Result;
+                    this.previewVideoPlayer.isLooping = true;
+                    this.previewVideoPlayer.Play();
+                }
+                else
+                {
+                    Debug.LogWarning($"Failed to load preview video {key}.");
+                }
+            };
         }
 
         // Shows delete button but not confirm delete buttons.

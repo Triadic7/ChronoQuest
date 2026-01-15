@@ -101,7 +101,34 @@ public class HealthBar : MonoBehaviour
 
         // Subscribe to damage taken to update health bar.
         this.healthSource.OnTakeDamage += this.UpdateHealthBar;
+
+        // Subscribe to health changed event if player.
+        if (this.healthSource is Player player)
+        {
+            player.OnHealthChanged += this.UpdateHealthBar;
+        }
+
         this.UpdateHealthBar();
+    }
+
+    /// <summary>
+    /// Unsubscribe on disabled.
+    /// </summary>
+    private void OnDisable()
+    {
+        if (this.healthSource == null)
+        {
+            return;
+        }
+
+        // Unsubscribe from damage event
+        this.healthSource.OnTakeDamage -= this.UpdateHealthBar;
+
+        // Unsubscribe from health changed event if healthSource is Player.
+        if (this.healthSource is Player player)
+        {
+            player.OnHealthChanged -= this.UpdateHealthBar;
+        }
     }
 
     /// <summary>

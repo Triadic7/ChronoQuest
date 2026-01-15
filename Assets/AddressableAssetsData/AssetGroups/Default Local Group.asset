@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: a26f3fa785b92d04e975752e35db9fde
   m_SerializeEntries:
+  - m_GUID: 6891383371dfc7740bf4530e78d86a83
+    m_Address: test
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc60e477ead3906478f9bc1497f85b80
     m_Address: Assets/Art/Characters/CharactersAndLocations.png
     m_ReadOnly: 0

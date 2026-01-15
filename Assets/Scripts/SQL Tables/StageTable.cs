@@ -46,4 +46,10 @@ public class StageTable
     /// Checks if the stage is the final stage.
     /// </summary>
     public bool IsFinalStage { get; set; }
+
+    /// <summary>
+    /// Gets or sets the key to the preview mp4 video.
+    /// </summary>
+    public string VideoPreviewKey { get; set; }
+
 }

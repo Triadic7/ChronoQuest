@@ -61,6 +61,11 @@ public class StageModel
     public int LocationID { get; set; }
 
     /// <summary>
+    /// Gets or sets the key to the preview mp4 video.
+    /// </summary>
+    public string VideoPreviewKey { get; set; }
+
+    /// <summary>
     /// Constructor.
     /// </summary>
     /// <param name="table">The table to convert.</param>
@@ -76,6 +81,7 @@ public class StageModel
         this.LocationID = table.LocationID;
         this.Location = location;
         this.NPCId = table.NPCId;
+        this.VideoPreviewKey = table.VideoPreviewKey;
     }
 
 }
