@@ -63,10 +63,19 @@ public class PatternMinigame : Game
     /// </summary>
     private List<PressurePlate> instancedPressurePlates = new List<PressurePlate>();
 
+    /// <summary>
+    /// The current index in the pattern the player is at.
+    /// </summary>
     private int currentPatternIndex;
 
+    /// <summary>
+    /// Represents the coroutine instance responsible for displaying the pattern.
+    /// </summary>
     private Coroutine displayPatternCoroutine;
 
+    /// <summary>
+    /// Checks if the pattern is being displayed. Used to prevent player input during display.
+    /// </summary>
     private bool isDisplayingPattern;
 
     [SerializeField]
@@ -190,7 +199,6 @@ public class PatternMinigame : Game
         this.currentPattern.Clear();
         this.currentPatternIndex = 0;
 
-        // Use pattern length from stage data, but ensure it's at least 3 for testing.
         int patternLength = Mathf.Max(3, this.patternCount);
 
         for (int i = 0; i < patternLength; i++)
