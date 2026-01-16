@@ -67,6 +67,8 @@ public class PatternMinigame : Game
 
     private Coroutine displayPatternCoroutine;
 
+    private bool isDisplayingPattern;
+
     [SerializeField]
     private List<Sprite> heiroglyphs;
 
@@ -92,7 +94,7 @@ public class PatternMinigame : Game
     {
         base.StartGameObjective();
         this.GeneratePattern();
-        this.displayPatternCoroutine = StartCoroutine(this.DisplayPattern());
+        this.StartDisplayPattern();
     }
 
     /// <summary>
@@ -131,10 +133,26 @@ public class PatternMinigame : Game
     /// </summary>
     public override void GameEnded()
     {
+        this.isDisplayingPattern = false;
         if (this.displayPatternCoroutine != null)
         {
             this.StopCoroutine(this.displayPatternCoroutine);
+            this.displayPatternCoroutine = null;
         }
+    }
+
+    /// <summary>
+    /// Starts the coroutine for displaying the pattern, restarting it if it is already running.
+    /// </summary>
+    private void StartDisplayPattern()
+    {
+        if (this.displayPatternCoroutine != null)
+        {
+            this.StopCoroutine(this.displayPatternCoroutine);
+            this.displayPatternCoroutine = null;
+        }
+
+        this.displayPatternCoroutine = this.StartCoroutine(this.DisplayPattern());
     }
 
     /// <summary>
@@ -189,6 +207,8 @@ public class PatternMinigame : Game
     /// display speed and delay before highlighting the next plate.</returns>
     private IEnumerator DisplayPattern()
     {
+        this.isDisplayingPattern = true;
+
         // Wait a moment before starting the pattern display.
         yield return new WaitForSeconds(1f);
 
@@ -204,6 +224,9 @@ public class PatternMinigame : Game
                 yield return new WaitForSeconds(this.patternDisplaySpeed + this.patternDisplayDelay);
             }
         }
+
+        this.isDisplayingPattern = false;
+        this.displayPatternCoroutine = null;
     }
 
     /// <summary>
@@ -213,6 +236,11 @@ public class PatternMinigame : Game
     /// <param name="plate">The pressure plate that was pressed. Must not be null.</param>
     private void OnPlatePressed(PressurePlate plate)
     {
+        if (this.isDisplayingPattern)
+        {
+            return;
+        }
+
         if (this.currentPattern.Count == 0 || this.currentPatternIndex >= this.currentPattern.Count)
         {
             return;
@@ -250,7 +278,7 @@ public class PatternMinigame : Game
             if (!this.IsGameFinished())
             {
                 this.currentPatternIndex = 0;
-                this.displayPatternCoroutine = this.StartCoroutine(this.DisplayPattern());
+                this.StartDisplayPattern();
             }
         }
     }
