@@ -5364,6 +5364,8 @@ MonoBehaviour:
   deleteButton: {fileID: 7144563225527103563}
   cancelButton: {fileID: 2633842140104476758}
   confirmDeleteButton: {fileID: 2288283130019643865}
+  previewVideoPlayer: {fileID: 0}
+  previewRawImage: {fileID: 0}
 --- !u!1 &3077401670700566252
 GameObject:
   m_ObjectHideFlags: 0
@@ -6354,9 +6356,9 @@ RectTransform:
   - {fileID: 1670281506902723211}
   - {fileID: 5013082112938602167}
   - {fileID: 6539151116811445127}
-  - {fileID: 4737592505934824959}
   - {fileID: 2032473828701983811}
   - {fileID: 5523879709266715821}
+  - {fileID: 4737592505934824959}
   - {fileID: 8932693971712071114}
   - {fileID: 4605221800185200676}
   m_Father: {fileID: 0}

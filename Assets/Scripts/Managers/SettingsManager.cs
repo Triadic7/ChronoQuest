@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditorInternal.ReorderableList;
 
 /// <summary>
 /// Manages player settings like keybinds and music volume.

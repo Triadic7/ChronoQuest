@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -211,16 +212,36 @@ public class GameManager : MonoBehaviour
 
         InputManager inputManager = FindAnyObjectByType<InputManager>();
 
-        if (this.loadMenu == null || inputManager == null || ui == null) 
+        // Checks and subscribes to events.
+        if (this.loadMenu != null)
         {
-            Debug.LogError("Missing a dependency.");
-            return;
+            this.loadMenu.OnGamePlayButtonHit -= this.StartGame;
+            this.loadMenu.OnGamePlayButtonHit += this.StartGame;
+        }
+        else
+        {
+            Debug.LogWarning("LoadMenu not found at startup.");
+        }
+
+        if (inputManager != null)
+        {
+            inputManager.OnPause += this.PauseGame;
+        }
+        else
+        {
+            Debug.LogWarning("InputManager not found at startup.");
+        }
+
+        if (ui != null)
+        {
+            ui.OnStageTimeElapsed += this.AddTimeToCurrentSave;
+        }
+        else
+        {
+            Debug.LogWarning("PlayerGameplayUI not found at startup.");
         }
 
         // Adds event listners.
-        this.loadMenu.OnGamePlayButtonHit += this.StartGame;
-        inputManager.OnPause += this.PauseGame;
-        ui.OnStageTimeElapsed += this.AddTimeToCurrentSave;
         this.GameStageManager.OnStageFinished += this.OnStageFinished;
     }
 
@@ -418,8 +439,10 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// On start.
     /// </summary>
-    private void Start()
+    private IEnumerator Start()
     {
+        // Wait one frame for stuff to load.
+        yield return null;
         this.OnGameInitialized?.Invoke();
         this.LoadMenu();
     }

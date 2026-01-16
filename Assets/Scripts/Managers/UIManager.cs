@@ -137,7 +137,6 @@ public class UIManager : MonoBehaviour
             if (menu != null && !menus.ContainsKey(reg.MenuKey))
             {
                 this.menus.Add(reg.MenuKey, menu);
-                menu.Close();
             }
         }
 
@@ -146,6 +145,17 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("No fade transition found.");
             return;
+        }
+    }
+
+    /// <summary>
+    /// Closes menus.
+    /// </summary>
+    private void Start()
+    {
+        foreach (var menu in this.menus.Values)
+        {
+            menu.Close();
         }
     }
 
