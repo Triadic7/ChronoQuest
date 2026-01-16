@@ -12386,6 +12386,11 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2124351, y: 1.1743135}
   m_EdgeRadius: 0
+--- !u!1 &1635460184 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4306481189661448788, guid: cf791c2de2856174baa0360dcb943286, type: 3}
+  m_PrefabInstance: {fileID: 330336929988147595}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1639435601
 GameObject:
   m_ObjectHideFlags: 0
@@ -12783,6 +12788,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 887203073}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1925474301 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1156100640623529143, guid: cf791c2de2856174baa0360dcb943286, type: 3}
+  m_PrefabInstance: {fileID: 330336929988147595}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1932310163
 GameObject:
   m_ObjectHideFlags: 0
@@ -13636,6 +13646,10 @@ PrefabInstance:
       propertyPath: previewVideoPlayer
       value: 
       objectReference: {fileID: 2074686074}
+    - target: {fileID: 1162320615143919809, guid: cf791c2de2856174baa0360dcb943286, type: 3}
+      propertyPath: panel
+      value: 
+      objectReference: {fileID: 1635460184}
     - target: {fileID: 1170962744631173758, guid: cf791c2de2856174baa0360dcb943286, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -13656,6 +13670,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1986576358206522579, guid: cf791c2de2856174baa0360dcb943286, type: 3}
+      propertyPath: panel
+      value: 
+      objectReference: {fileID: 1925474301}
     - target: {fileID: 2195946688605006740, guid: cf791c2de2856174baa0360dcb943286, type: 3}
       propertyPath: m_SizeDelta.x
       value: 100
